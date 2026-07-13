@@ -40,16 +40,23 @@ two — the longer a branch lives, the more painful the integration.
 - Deleted automatically after the PR is squash-merged.
 
 ### 2. Feature flags
-Flags decouple **deploy** (shipping code) from **release** (turning it on for
-users). This is what lets us merge unfinished work to trunk safely.
+Flags decouple **landing code** from **activating a feature**: you can merge
+unfinished work to trunk with its flag off (dark) so trunk stays releasable, then
+switch the feature on as a separate step.
 
 - The flag registry lives in [`flags/flags.json`](../flags/flags.json).
 - Every flag has per-environment values (`staging`, `production`).
 - New flags default to `staging: true`, `production: false` — visible for
   validation on staging, dark in production until you deliberately flip it.
+- **Values are resolved from the deployed build.** The in-repo resolvers read
+  `flags.json` from whatever release is running, so flipping a *production* flag
+  takes effect on the next release/redeploy — a small, config-only deploy, not a
+  code change. For an *instant* runtime toggle with no redeploy, swap the file
+  source for a hosted flag service (same call sites).
 - Flags are **temporary**. Each carries a `cleanupBy` date; remove the flag and
   the dead code path once the feature is fully rolled out.
-- See [`flags/README.md`](../flags/README.md) for the full lifecycle.
+- See [`flags/README.md`](../flags/README.md) for the full lifecycle and the
+  hosted-service upgrade.
 
 ### 3. Trunk (`main`)
 The single source of truth. Every change lands here through a reviewed PR.
@@ -92,8 +99,10 @@ The live environment users see.
    on.
 6. **Promote to production** by publishing a release (see below). The
    `production` environment gate requires an approval.
-7. **Turn the flag on** in production when you're ready for users to see it
-   (a one-line PR flipping `production: true`).
+7. **Turn the flag on** in production with a one-line PR flipping
+   `production: true`, then release/redeploy so production picks up the new value
+   (file flags are read from the deployed build — the flip takes effect on that
+   deploy, not on merge).
 8. **Clean up** the flag and dead code once the rollout is complete.
 
 ---
@@ -134,11 +143,13 @@ entries under the version heading when you cut a release.
 
 ## Rollback
 
-Two independent levers — reach for the flag first, it's instant and lower-risk:
+Two levers, smallest blast radius first:
 
-- **Flag rollback (fastest):** flip the feature's `production` value back to
-  `false`. No redeploy of infrastructure needed if your app reads flags at
-  runtime; otherwise a one-line PR + release.
+- **Flag rollback (smallest change):** flip the feature's `production` value back
+  to `false`. This is a config-only change — far lower risk than reverting code.
+  With the in-repo file flags it applies on a redeploy: re-run
+  `deploy-production.yml` with the current production tag (or cut a new release).
+  A hosted flag service would make this instant, with no redeploy.
 - **Deploy rollback:** re-run `deploy-production.yml` via **Run workflow** and
   pass the previous good tag as the `ref` input to redeploy the last known-good
   build.

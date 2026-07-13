@@ -32,9 +32,27 @@ jobs:
     env:
       APP_ENV: production
     steps:
-      - name: Resolve deploy ref
+      - name: Resolve and validate deploy ref
         id: ref
-        run: echo "value=${{ github.event.release.tag_name || inputs.ref }}" >> "$GITHUB_OUTPUT"
+        # Never inline ${{ ... }} into a run: script — tag names and dispatch
+        # inputs are attacker-influenceable and can carry shell metacharacters.
+        # Pass them through env and validate against a conservative charset.
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_REF: ${{ inputs.ref }}
+        run: |
+          REF="${RELEASE_TAG:-$INPUT_REF}"
+          if [ -z "$REF" ]; then
+            echo "No ref to deploy." >&2
+            exit 1
+          fi
+          case "$REF" in
+            *[!A-Za-z0-9._/-]*)
+              echo "Refusing to deploy unsafe ref: $REF" >&2
+              exit 1
+              ;;
+          esac
+          printf 'value=%s\n' "$REF" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v4
         with:
@@ -52,6 +70,8 @@ jobs:
       #   rsync:   rsync -az ./dist/ $SSH_USER@$SSH_HOST:/var/www/production/
       # ---------------------------------------------------------------------
       - name: Deploy
+        env:
+          DEPLOY_REF: ${{ steps.ref.outputs.value }}
         run: |
-          echo "Deploying ref '${{ steps.ref.outputs.value }}' to PRODUCTION (APP_ENV=$APP_ENV)"
+          echo "Deploying ref '$DEPLOY_REF' to PRODUCTION (APP_ENV=$APP_ENV)"
           echo "TODO: add the real deploy command — see docs/WORKFLOW.md"

@@ -72,10 +72,15 @@ if [[ -n "$REVIEWER" ]]; then
   # Look up the reviewer's numeric user id for the protection rule.
   REVIEWER_ID="$(gh api "users/$REVIEWER" --jq .id)"
   echo "==> Creating environment: production (required reviewer: $REVIEWER)"
+  # No deployment_branch_policy on purpose: production deploys from release TAGS
+  # (and the rollback path passes a tag as the workflow_dispatch ref). GitHub's
+  # "protected branches only" policy EXCLUDES tags and would reject those
+  # deploys. The required-reviewer gate is the control here. To additionally
+  # restrict which refs may deploy, add a "Selected branches and tags" policy
+  # (e.g. v*) in Settings → Environments. See docs/environments.md.
   gh api -X PUT "repos/$REPO/environments/production" --input - >/dev/null <<JSON
 {
-  "reviewers": [ { "type": "User", "id": $REVIEWER_ID } ],
-  "deployment_branch_policy": { "protected_branches": true, "custom_branch_policies": false }
+  "reviewers": [ { "type": "User", "id": $REVIEWER_ID } ]
 }
 JSON
 else
