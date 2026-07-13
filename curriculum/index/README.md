@@ -25,6 +25,7 @@ idea — as a reference we draw from when laying out the Academy curriculum.
 | 10 | Coaching styles & pedagogy | [`10-coaching-styles-and-pedagogy.md`](10-coaching-styles-and-pedagogy.md) |
 | 11 | Player development & pathways | [`11-player-development-and-pathways.md`](11-player-development-and-pathways.md) |
 | 12 | Laws of the game & youth formats | [`12-laws-and-formats.md`](12-laws-and-formats.md) |
+| 13 | Teaching cues, acronyms & coaching phrases | [`13-teaching-cues-and-acronyms.md`](13-teaching-cues-and-acronyms.md) |
 
 ## Tagging legend
 

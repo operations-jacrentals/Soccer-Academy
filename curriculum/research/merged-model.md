@@ -47,15 +47,25 @@ club's budget, culture, or star coach.
 
 ---
 
-## Deliberately set aside (unique to one club → excluded by the intersection rule)
+## Set aside — *methods*, not words
 
-Kept out *not* because they're bad — several are excellent — but because they
-aren't common to all three, and our rule is to merge on shared ground:
+The intersection rule applies to **methods and model choices**, not to
+vocabulary. We **keep every useful acronym, label, and phrase** — even ones from
+a single club — because memorable words are how we teach concepts to kids. None
+of it gets thrown away; the full set lives in the
+[Teaching cues & acronyms lexicon](../index/13-teaching-cues-and-acronyms.md).
 
-- **Benfica:** the 19-hectare residential campus, dedicated sports-science lab, and analyst department (Benfica LAB). *Resource/scale-specific.* → we take the **principle** (measure & individualize) at homeschool scale, not the infrastructure.
-- **La Masia:** strict *tiki-taka* dogma and the extreme "small technician only" selection. *Too identity-specific.* → we keep possession/positional *tendencies*, not the dogma.
-- **Ajax:** the single rigid **4-3-3** as the only formation, and the explicit "Montessori" branding. → we keep **individualized development** (which all three share) without mandating one formation or one label.
-- **Any single acronym** (TIC vs TIPS): → we adopt the shared four-corner *substance*, using one vocabulary consistently rather than one club's brand.
+**Set aside (single-club *method* mandates that don't generalize):**
+- **Benfica's** 19-hectare residential campus + dedicated sports-science lab. *Resource/scale-specific* → we take the principle (measure & individualize) at our scale, not the infrastructure.
+- **La Masia's** strict *tiki-taka* dogma and "small technician only" selection. *Too narrow* → we keep possession/positional tendencies, not the dogma.
+- **Ajax's** single rigid **4-3-3** as the *only* formation → we don't mandate one shape.
+
+**Explicitly kept (labels & vocabulary — we teach with all of them):**
+- **TIC, TIPS, and the Four Corners** — all three, as teachable player scorecards.
+- **The three Ps**, Ajax's *attractive · offensive · creative · fast · fair*, **"creators, not tacticians,"** **"the ball is the master,"** **"train brains before bodies,"** **"development over winning,"** **"scan first, receive second."**
+- **"Montessori"** as our name for individualized, self-paced development.
+
+> The rule: **merge the *methods* on common ground; keep *all* the words.**
 
 ---
 
