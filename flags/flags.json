@@ -1,0 +1,27 @@
+{
+  "$schema": "./schema.json",
+  "flags": {
+    "parent-dashboard": {
+      "description": "Parent-facing progress dashboard showing education + soccer mastery.",
+      "owner": "operations@jacrentals.com",
+      "created": "2026-07-13",
+      "cleanupBy": "2026-10-13",
+      "environments": {
+        "development": true,
+        "staging": true,
+        "production": false
+      }
+    },
+    "video-drill-library": {
+      "description": "Uploadable, taggable library of soccer drill videos.",
+      "owner": "operations@jacrentals.com",
+      "created": "2026-07-13",
+      "cleanupBy": "2026-10-13",
+      "environments": {
+        "development": true,
+        "staging": true,
+        "production": false
+      }
+    }
+  }
+}

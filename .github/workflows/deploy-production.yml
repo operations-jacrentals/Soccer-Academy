@@ -1,0 +1,57 @@
+name: Deploy to Production
+
+# Production is a deliberate, tagged promotion — not an auto-deploy.
+#   * Publishing a GitHub Release deploys that tag.
+#   * workflow_dispatch lets you redeploy any tag/SHA (rollback / manual promote).
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag or SHA to deploy (rollback / manual promotion)"
+        required: true
+
+# Never cancel a production deploy in flight; serialize them.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy production
+    runs-on: ubuntu-latest
+    # The `production` environment must have required reviewers configured in
+    # repo settings — that is the manual approval gate. See docs/environments.md.
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    env:
+      APP_ENV: production
+    steps:
+      - name: Resolve deploy ref
+        id: ref
+        run: echo "value=${{ github.event.release.tag_name || inputs.ref }}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.value }}
+
+      - name: Validate feature flags
+        run: python scripts/validate-flags.py
+
+      # ---------------------------------------------------------------------
+      # TODO: build the app, then deploy to production.
+      # Add your target's credentials as *Environment secrets* on `production`.
+      #
+      #   Vercel:  vercel deploy --prod --token=$VERCEL_TOKEN
+      #   Netlify: netlify deploy --prod --site $NETLIFY_SITE_ID
+      #   rsync:   rsync -az ./dist/ $SSH_USER@$SSH_HOST:/var/www/production/
+      # ---------------------------------------------------------------------
+      - name: Deploy
+        run: |
+          echo "Deploying ref '${{ steps.ref.outputs.value }}' to PRODUCTION (APP_ENV=$APP_ENV)"
+          echo "TODO: add the real deploy command — see docs/WORKFLOW.md"

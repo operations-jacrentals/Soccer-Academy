@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/operations-jacrentals/Soccer-Academy/flags/schema.json",
+  "title": "Feature flag registry",
+  "type": "object",
+  "required": ["flags"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "flags": {
+      "type": "object",
+      "description": "Map of flag key (kebab-case) to definition.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "additionalProperties": { "$ref": "#/definitions/flag" }
+    }
+  },
+  "definitions": {
+    "flag": {
+      "type": "object",
+      "required": ["description", "owner", "created", "cleanupBy", "environments"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Email or team handle responsible for retiring this flag."
+        },
+        "created": { "type": "string", "format": "date" },
+        "cleanupBy": {
+          "type": "string",
+          "format": "date",
+          "description": "Target date to remove the flag and its dead code path."
+        },
+        "environments": {
+          "type": "object",
+          "required": ["staging", "production"],
+          "additionalProperties": false,
+          "properties": {
+            "development": { "type": "boolean" },
+            "staging": { "type": "boolean" },
+            "production": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

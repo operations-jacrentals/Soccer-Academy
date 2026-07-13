@@ -1,0 +1,13 @@
+# Code owners are automatically requested for review on matching paths.
+# Replace the placeholder below with real GitHub usernames or team handles,
+# e.g. `* @operations-jacrentals/maintainers` or `* @your-username`.
+#
+# Until this is set to a valid owner, "Require review from Code Owners"
+# branch protection has nothing to enforce.
+
+# Default owner for everything in the repo:
+# * @operations-jacrentals/maintainers
+
+# Workflow & deploy config deserves extra scrutiny:
+# /.github/        @operations-jacrentals/maintainers
+# /flags/          @operations-jacrentals/maintainers

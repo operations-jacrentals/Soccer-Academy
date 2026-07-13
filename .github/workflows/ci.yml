@@ -1,0 +1,57 @@
+name: CI
+
+# Runs on every pull request into main, and on pushes to main after merge.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel superseded runs on the same ref to save minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate-flags:
+    name: Validate feature flags
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate flags/flags.json
+        run: python scripts/validate-flags.py
+
+  build-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---------------------------------------------------------------------
+      # TODO: replace the placeholder below with your stack's real steps.
+      #
+      # Node / TypeScript:
+      #   - uses: actions/setup-node@v4
+      #     with: { node-version: "20", cache: "npm" }
+      #   - run: npm ci
+      #   - run: npm run lint
+      #   - run: npm test
+      #   - run: npm run build
+      #
+      # Python:
+      #   - uses: actions/setup-python@v5
+      #     with: { python-version: "3.x" }
+      #   - run: pip install -r requirements.txt
+      #   - run: ruff check .
+      #   - run: pytest
+      # ---------------------------------------------------------------------
+      - name: Placeholder
+        run: |
+          echo "No build/test steps defined yet."
+          echo "Add lint/test/build for your stack — see CONTRIBUTING.md."
