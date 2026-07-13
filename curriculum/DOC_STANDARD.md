@@ -68,17 +68,23 @@ Every factual claim carries its status inline:
 
 ## Compliance backlog
 
-Honest status of docs written **before** this standard. These need grounding or
-labeling to comply (tracked so nothing slips through):
+Status of docs written **before** this standard (tracked so nothing slips
+through). Citations live in [`references/sources.md`](references/sources.md).
 
-| Doc | Issue | Action |
+| Doc | Issue | Status |
 |---|---|---|
-| `research/` academy counts (CIES) | ⚠️ figures from secondary summaries; primary CIES pages blocked fetch | verify against primary CIES, or label ⚠️ Unverified with the secondary source |
-| `research/` facility stats (campus size, staff, "60+ rondos", stage ages) | ⚠️ secondary | verify or label |
-| `index/` difficulty tiers `F/I/A/E` | ✏️ our convention | label as coaching judgment |
-| `index/` LTAD stage tags | needs citation | cite the LTAD model |
-| `index/` numbers (ball sizes, formats, wall distance, ages) | needs citation | cite IFAB / federation standards |
-| `age-08/` entry→exit benchmarks | ✏️ synthesis, not a cited standard | re-ground against real curricula (higher standard) + cite; until then, label ✏️ |
+| `research/` academy counts (CIES) | secondary summaries; primary CIES blocked | **labeled ⚠️** in sources + research docs; primary verification pending |
+| `research/` facility stats (campus, staff, "60+ rondos", Ajax stage ages) | secondary | **labeled ⚠️** (verify if a primary opens) |
+| `index/` difficulty tiers `F/I/A/E` | our convention | **labeled ✏️** coaching judgment |
+| `index/` LTAD stage tags | needed citation | **cited ✅** (Ford et al. 2011) |
+| `index/` format / ball / wall numbers | needed citation | **cited ✅** (US Soccer PDI 2017, IFAB) |
+| `age-08/` entry→exit benchmarks | synthesis, uncited | **regrounded ✅** (US Soccer/FA/LTAD/IFAB); progressions **labeled ✏️** |
+
+**Environment limitation (disclosed per Rule 1):** this session's network egress
+policy **blocks direct fetching of primary-source pages** (HTTP 403 for
+`theifab.com`, `usyouthsoccer.org`, `football-observatory.com`, …). So ✅ items are
+cited to authoritative sources as **surfaced and corroborated via search**, not
+opened directly; ⚠️ items await a primary that can be reached.
 
 **Rule going forward:** new docs meet this standard *at write time* — sourced or
 clearly labeled, never invented.

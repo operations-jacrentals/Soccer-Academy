@@ -31,7 +31,7 @@ idea — as a reference we draw from when laying out the Academy curriculum.
 
 Every catalog entry can carry these tags so it maps cleanly to curriculum design.
 
-**Difficulty tier**
+**Difficulty tier** — ✏️ *coaching-judgment convention (not an external standard); see [DOC_STANDARD](../DOC_STANDARD.md).*
 - `F` — Foundational (first exposure; base technique)
 - `I` — Intermediate (reliable under mild pressure)
 - `A` — Advanced (executed at speed, under real pressure)
@@ -43,7 +43,7 @@ Every catalog entry can carry these tags so it maps cleanly to curriculum design
 - `[Ps]` Psychological — the mind: focus, confidence, resilience, decisions
 - `[S]` Social — the person: communication, teamwork, character, discipline
 
-**LTAD stage** (Long-Term Athlete Development — see [11](11-player-development-and-pathways.md))
+**LTAD stage** ✅ (Long-Term Athlete Development — [Ford et al. 2011](../references/sources.md); see [11](11-player-development-and-pathways.md))
 - `FUN` FUNdamentals (~6–9) · `L2T` Learn to Train (~9–12, the "golden age")
 - `T2T` Train to Train (~12–16) · `T2C` Train to Compete (~16+)
 
