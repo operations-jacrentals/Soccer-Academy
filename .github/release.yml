@@ -1,0 +1,18 @@
+# Configures GitHub's auto-generated release notes (used when you publish a
+# release to promote to production). Groups merged PRs by Conventional Commit
+# type via labels. Add these labels to your repo, or adjust to taste.
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+  categories:
+    - title: "🚀 Features"
+      labels: ["feat", "feature", "enhancement"]
+    - title: "🐛 Fixes"
+      labels: ["fix", "bug"]
+    - title: "🧹 Chores & maintenance"
+      labels: ["chore", "ci", "refactor", "test", "dependencies"]
+    - title: "📚 Documentation"
+      labels: ["docs"]
+    - title: "Other changes"
+      labels: ["*"]
