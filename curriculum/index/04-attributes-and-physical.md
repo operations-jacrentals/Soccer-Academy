@@ -20,6 +20,17 @@ The FA framework — develop the whole player, not just the footballer.
 Great sessions and great players are balanced across all four. This index tags
 every item with its corners so the curriculum can stay balanced.
 
+### Player-evaluation frameworks
+
+Elite academies package the four corners into a named scorecard. Borrow one as
+our assessment rubric (see [10](10-coaching-styles-and-pedagogy.md), [11](11-player-development-and-pathways.md)):
+
+- **Four Corners (FA)** — Technical/Tactical · Physical · Psychological · Social.
+- **TIC (Barcelona / La Masia)** — **T**echnique · **I**ntelligence · **C**ompetitiveness.
+- **TIPS (Ajax / De Toekomst)** — **T**echnique · **I**nsight (game-reading) · **P**ersonality · **S**peed (of thought *and* action). Each dimension carries ~10 criteria.
+
+All three describe the same whole player — pick one vocabulary and use it consistently.
+
 ---
 
 ## Technical / tactical attributes `[T]`

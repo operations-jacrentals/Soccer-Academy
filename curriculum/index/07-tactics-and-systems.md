@@ -42,6 +42,13 @@ Each is a starting shape and a set of trade-offs; teams morph between shapes in 
 
 **System literacy:** formations describe *shape*, not *style*. A 4-3-3 can press high or sit deep. Teach players to read numerical match-ups (e.g., their front three vs. our back four).
 
+## Team identity & game model
+
+- **Game model** — the club's agreed way of playing across all four moments, taught identically at every age so promotion between teams is seamless. The reference every session points back to.
+- **Playing identity / "DNA"** — the recognizable style a club commits to (e.g., proactive, possession-based, positional).
+- **The three Ps (Barcelona)** — **P**ossession · **P**osition · **P**ressing — a compact statement of a positional-play identity.
+- **Recognizable principles (Ajax)** — attractive, offensive, creative, fast, fair, and preferably played in the opponent's half.
+
 ---
 
 ## Attacking concepts
