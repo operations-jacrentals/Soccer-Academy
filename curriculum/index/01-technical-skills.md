@@ -16,6 +16,7 @@ surface of both feet.
 - **Cushion vs. wedge control** — softening the ball vs. trapping against the ground. `F` `[T]` `FUN` `ALL`
 - **Directional first touch** — receiving *into space* / away from pressure, not just stopping it. `I` `[T][Ps]` `L2T` `ALL`
 - **Receiving on the half-turn / open body** — opening up to play forward. `I→A` `[T][Ps]` `L2T` `MID·FWD`
+- **Scanning / checking shoulders** — looking around *before* receiving to build a mental picture; "scan first, receive second." The perceptual habit behind good first touch and decisions. `F→E` `[T][Ps]` `L2T` `ALL`
 - **Aerial control** — thigh, chest, instep, head to bring a bouncing/dropping ball down. `I` `[T][P]` `L2T` `ALL`
 - **Close control** — keeping the ball within playing distance in tight areas. `F→A` `[T][P]` `FUN` `ALL`
 - **Shielding / screening** — using the body to protect the ball from a defender. `F→A` `[T][P][Ps]` `L2T` `ALL`

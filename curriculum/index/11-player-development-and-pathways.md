@@ -57,6 +57,19 @@ prioritize *technique and skill moves* now; this window doesn't fully return.
 - **UEFA / KNVB (Dutch) / Belgian models** — age-appropriate formats and curricula.
 - **Age-appropriate game formats** — 4v4 → 7v7 → 9v9 → 11v11 as players grow (see [12](12-laws-and-formats.md)).
 
+## Development philosophy & structures (elite-academy patterns)
+
+Recurring principles the top academies (Benfica, La Masia, Ajax) share — see the
+[research dossier](../research/README.md):
+
+- **Development over winning** — results are a by-product; the individual's development outranks the team result, especially in youth.
+- **Unified game model** — one playing identity taught identically at every age (see [07](07-tactics-and-systems.md)).
+- **Individualized / self-paced development** — each player on their own trajectory; a **Montessori-style** environment where children progress at their own pace with expert guidance (a natural fit for homeschooling).
+- **Individual Development Plan (IDP)** — a living per-player plan of targets across the four corners, reviewed each term.
+- **"Creators, not tacticians"** — protect creativity and 1v1 improvisation in the youngest years before layering structure.
+- **Feeder / satellite / regional training centres** — networked local centres that identify and develop talent before the main campus (e.g., Benfica's CFTs).
+- **Merit-based progression** — advancement earned through development, not age alone.
+
 ## The pathway
 
 Grassroots / homeschool play → structured academy training → youth competition →

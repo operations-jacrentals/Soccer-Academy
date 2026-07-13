@@ -87,6 +87,15 @@ Psychological / character
 
 ---
 
+## Performance analysis (the discipline)
+
+The people, tools, and workflow that turn the metrics above into coaching:
+
+- **Video / match analysis** — filming sessions and games, clipping key moments, reviewing with players (self *and* opposition analysis).
+- **Performance-analysis department** — a dedicated analytics/sports-science unit (e.g., **Benfica LAB**) that monitors players individually and feeds training.
+- **Individual monitoring** — tracking each player's data and clips over time to guide their development plan.
+- At youth level, a phone camera + a shared folder + a good question ("what did you see here?") delivers most of the value.
+
 ## Using metrics well in a youth academy
 
 - **Development > outcomes.** Track *process* markers (skill benchmarks, decision quality, effort, minutes across positions) more than goals/wins.

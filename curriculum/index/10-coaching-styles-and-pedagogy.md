@@ -69,8 +69,10 @@ discovery for decision-making and creativity.
 
 ## Youth development models (whole-club pedagogy)
 
-- **La Masia (Barcelona)** — technical, positional, "the ball is the master"; small-sided emphasis.
-- **Ajax — TIPS & TIC** — Technique, Insight, Personality, Speed; Technique, Insight, Communication.
+- **La Masia (Barcelona)** — technical, positional, "the ball is the master"; small-sided emphasis. Player model: **TIC** (Technique, Intelligence, Competitiveness).
+- **Ajax — De Toekomst** — offensive, creative 4-3-3; individualized, development-first. Player model: **TIPS** (Technique, Insight, Personality, Speed).
+- **Benfica — Seixal / Campus** — holistic, sports-science-driven (Benfica LAB); regional feeder centres.
+  <br/>_(Framework definitions in [04](04-attributes-and-physical.md); full comparison in the [research dossier](../research/README.md).)_
 - **Clairefontaine (France)** — technical foundation + athleticism.
 - **The England DNA (FA)** — a national playing and development identity across the four corners.
 

@@ -18,6 +18,10 @@ for our plan: **cover every index building block, age-by-age, 8 → 13, in order
 
 ## The shared DNA (our non-negotiables)
 
+> The full intersection derivation — comparing all three dimension-by-dimension and
+> merging only what they have in common — is in **[`merged-model.md`](merged-model.md)**.
+> The short version:
+
 Everything the three converge on becomes a founding principle for us:
 
 1. **One coherent philosophy of play, taught identically at every age.**
