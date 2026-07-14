@@ -1,10 +1,71 @@
-# Age 8 — Benchmarks & Day-Level Metrics (Gamified Progress Spec)
+# Age 8 — Milestones & Measurement
 
-How we **measure** the [15 day-plans](sessions/trimester-1-ball-mastery.md) (D1–D15) to power
-**gamified player progress** — levels, badges, and personal bests. Complements (never
-replaces) the [Emerging/Developing/Secure assessment](03-assessment.md). Written to the
+How we **measure** the [15 day-plans](sessions/trimester-1-ball-mastery.md) (D1–D15).
+**V1 is deliberately simple: one binary milestone per day, one checkbox per player.**
+Gamification (badges, ladders, PB arcs) is **deferred** — researched below as the
+foundation, but **not yet adopted**. Complements (never replaces) the
+[Emerging/Developing/Secure assessment](03-assessment.md). Written to the
 [Documentation Standard](../DOC_STANDARD.md): every number is **✅ sourced** (with link) or
 **✏️ coaching judgment** — nothing invented.
+
+---
+
+## V1 — The milestone checkbox system (what we run now) ✏️
+
+**The mechanic:** a **roster** of players lives at the top of the interactive year
+document; it auto-creates **one checkbox per player under each day's milestone**. The
+box gets **checked the first time the child hits the milestone** — in any of the day's
+three sessions — and stays checked. That's the whole system: no scores, no levels,
+no comparisons. The day-type repeats ~13 weeks, so an unchecked box simply means
+"not yet" — there is always another go.
+
+**Milestone design rules ✏️:**
+- **Binary and observable** — hit it or not yet; a coach (or the child) can call it in the moment.
+- **Deliberately small** — an inclusive first rung (research below: no age-8 norms exist
+  anywhere authoritative, and the inclusive floor is how the German FA designs its
+  youngest badge). Small thresholds get checked *during play*, which keeps the coach
+  coaching, not recording.
+- **Attempts count on bravery days** — peak days (D3/D8) measure *tries*, not successes;
+  a failed body feint checks the box.
+- **Child vs. the skill, never child vs. child** — no standings (KNVB ✅).
+
+### The 15 milestones (+1 anytime) ✏️
+
+| Day | Milestone (check when first hit) |
+|---|---|
+| **D1** Ball-mastery basics | **10 tick-tocks in a row** (both feet) |
+| **D2** Dribbling & turns | **Beat 1 player to a gate** |
+| **D3** 1v1 & body feint · peak | **Attempted 1 body feint in a game** |
+| **D4** First touch | **5 clean first touches in a row** |
+| **D5** Creativity & checkpoint | **Showed your own move in the game** |
+| **D6** Inside-foot passing | **5 consecutive passes with your partner** |
+| **D7** Give-and-go | **Completed 1 give-and-go** |
+| **D8** 1v1 moves · peak | **Attempted 1 step-over or drag-back in a game** |
+| **D9** Half-turn & scanning | **5 consecutive scans before receiving** |
+| **D10** Finishing & combine | **3 on-target finishes in a row** |
+| **D11** Finding space | **5-pass team streak in keep-ball** |
+| **D12** Rondo | **4-pass rondo streak** (the day-plan's own point rule) |
+| **D13** Defending · peak | **1 patient win-back (stayed on feet)** |
+| **D14** Goalkeeping taster | **5 clean catches in a row** |
+| **D15** Festival, rules & checkpoint | **1 restart done correctly, unprompted** |
+| **Anytime** | **Juggled 5×** (drop from hands) |
+
+_All thresholds ✏️ coaching judgment (see the negative finding in the research below —
+no authoritative age-8 numeric norms exist to adopt). The milestone **forms** (attempt
+counting, consecutive-count challenges, streaks) trace to the sourced practices below._
+
+**How it feeds the rubric:** a milestone checked = evidence for 🌱→🌿 on that skill;
+checked *in a game* (D2, D3, D5, D8 are game-milestones by construction) = evidence
+toward 🌳 Secure at the [assessment checkpoints](03-assessment.md).
+
+---
+
+# Research foundation (for the deferred layers below)
+
+> **Status note:** everything below this line is the research that grounds V1's design
+> choices and will ground the **future** progress layer (PB arcs, badges, boards). The
+> **PB day-arc (b–c) and gamification layer (d) are NOT yet adopted** — V1 above is the
+> operative system.
 
 > **Provenance summary:** the **metric *forms*** (30-second touch counts, 60-second gate
 > dribbles, timed pass completions, attempt counting, milestone badge ladders) are ✅
@@ -153,7 +214,7 @@ and we decline them.)
 
 ---
 
-## (b) The measurement model — day-level, session-updated
+## (b) DEFERRED — the personal-best day arc (not yet adopted)
 
 ### One number per day, updated across the three sessions ✏️
 
@@ -204,7 +265,7 @@ tallies at the huddle = **~15 primary numbers per child per week**, one index ca
 
 ---
 
-## (c) The D1–D15 metric table
+## (c) DEFERRED — the D1–D15 PB metric table (not yet adopted)
 
 **Benchmark-type key:** **PB-self** = personal best vs. own previous mark (no external
 norm exists — see finding 4); **PB-pair/team** = cooperative record vs. the group's own
@@ -250,7 +311,7 @@ judged on courage, not outcomes.
 
 ---
 
-## (d) The gamification layer — levels, badges, boards
+## (d) DEFERRED — the gamification layer: levels, badges, boards (not yet adopted)
 
 Vocabulary reuses what already exists: **🌱 Emerging / 🌿 Developing / 🌳 Secure**
 ([assessment](03-assessment.md)), the **Coerver pyramid blocks**
