@@ -232,13 +232,19 @@ SAQ-ladder/balance — one drill never inflates two spokes.
 structurally true (history is never overwritten) and makes **ranking unrepresentable** —
 the ethos is enforced *in the schema*, not just by policy.
 
+The backend is **one Google Sheet, one tab per data set** (`Soccer Academy — Age 8
+Tracker`, in the `/Soccer Academy — Backend/` Drive folder) — more organised than
+scattered files, and the tabs share a `player_id` join key:
+
 ```
-/Soccer Academy — Backend/
-├── Reports Log     (Sheet, APPEND-ONLY)   ← source of truth
-├── Height Log      (Sheet, term cadence)  ← serial standing height → height-velocity context
-├── Roster          (existing)             ← player_id ↔ name (join key)
-├── Attendance Log  (existing, unchanged)  ← S1/S2/S3 hours, orthogonal
-└── Players/<id>_Profile  (derived, PRIVATE)
+Soccer Academy — Age 8 Tracker   (one Sheet, tabs below)
+├── Start Here          ← how the workbook fits together (this section, in-sheet)
+├── Roster              ← player_id ↔ name (join key)
+├── Attendance Log      ← 1 row = 1 attended session = 1 hour (orthogonal)
+├── Reports Log         ← APPEND-ONLY source of truth
+├── Metrics Reference   ← metric_id → spoke · unit · direction · day
+└── Height Log          ← serial standing height → height-velocity context
+                          (per-child derived Profile card stays PRIVATE, off-workbook)
 ```
 
 **`Reports Log` — one row per session measurement:** `report_id · ts · day_date ·
