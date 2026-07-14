@@ -23,19 +23,19 @@ rondo à la La Masia. Everything with the ball, from minute one.
 | **③ Group play** | a **small-sided game** / simple positional game / futsal — apply it; ref as **game-leader** | 🇪🇸 La Masia game · 🇳🇱 KNVB ✅ | ~20 min |
 | **Huddle** | one question + the **word of the day**; praise effort | — | ~5 min |
 
-## The three daily sessions ✏️ (Tactical-Periodization principle: integrated + varied)
+## The three daily sessions ✏️
 
-You run **3 × 1-hr sessions a day** — so they should **differ**, not repeat. Each
-still uses the Rondo → Individual → Group shape, but with a different emphasis:
+You run **3 × 1-hr sessions a day**, and **every session uses the same structure and
+hour split** (Rondo → Individual → Group). They differ only in the **focus of the
+day** — the specific skill or game — never in shape or timing.
 
-| Session | Emphasis | Feel |
-|---|---|---|
-| **A · Technical** | ball mastery & 1v1 (Coerver focus of the day) | sharp, high-quality reps |
-| **B · Games / deliberate play** | small-sided games, futsal, street-style free play | free, joyful — the *play* that the [evidence](../mastery-model.md) says matters |
-| **C · Physical + recovery** | movement (ABCs), injury-prevention (FIFA 11+), lighter game | athletic base, kept safe |
-
-Rotate the emphasis day to day; keep a **build-and-recover rhythm** across the week
-(don't stack three maximal days). **No standings** ✅ (KNVB).
+- **Physical develops *inside* every session**, not as a separate one — movement in
+  the warm-up and athleticism through the games (**LTAD:** no formal fitness at this
+  age). ✅
+- **Deliberate play** lives in the **Group** phase (small-sided games / futsal) of
+  every session — the [play the evidence values](../mastery-model.md). ✅
+- **Recovery** sits **between** sessions, and the week keeps a **build-and-recover
+  rhythm** (don't stack three maximal hours). **No standings** ✅ (KNVB).
 
 ## Coaching principles (age 8)
 

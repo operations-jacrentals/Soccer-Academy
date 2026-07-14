@@ -32,7 +32,8 @@ use instead:
 - ✅ **Play counts as much as practice — especially young.** Future pros logged more
   hours of soccer *play* (street / futsal / pickup), not just structured practice,
   between ages 6–12 — the **"early engagement" hypothesis.** Our 15 weekly hours are
-  therefore split **practice + deliberate play + physical**, not drill-grind.
+  therefore weave **practice and deliberate play** together (every session's Group
+  phase is a game), not drill-grind; physical develops within the warm-up and games.
   → [Ford & Williams — early engagement](https://eric.ed.gov/?id=EJ855746)
 
 ## Safety guardrails (Rule 2 — protect the child)
