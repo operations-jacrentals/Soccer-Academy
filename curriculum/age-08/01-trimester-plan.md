@@ -13,9 +13,11 @@ How the [age-8 targets](README.md) spread across the year. Read with the
 ## The year, split ✏️
 
 **40 training weeks ÷ 3 trimesters ≈ ~13 weeks each** (~200 one-hour sessions per
-trimester at 15/week). Trimesters follow the **Coerver pyramid**, not the school
-calendar — each is a stage, and a child advances when ready, not on a date.
-Cadence & hours: [mastery model](../mastery-model.md).
+trimester at 15/week). Each trimester runs a **5-day circuit** (Mon–Fri) — five
+day-types that **repeat each week** and progress across the ~13 weeks — so a full
+cycle fits cleanly in one week (no day spilling into the next). Trimesters follow
+the **Coerver pyramid**, not the school calendar — each is a stage, and a child
+advances when ready, not on a date. Cadence & hours: [mastery model](../mastery-model.md).
 
 ## Age-8 planning principles
 

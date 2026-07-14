@@ -132,9 +132,9 @@ expected to start** → **where we project them before they turn 9.**
 - **[Term plan](01-trimester-plan.md)** — the year across three trimesters (Me & the Ball → …& a Friend → Playing the Game).
 - **[Session template](02-session-template.md)** — the repeatable Warm-up → Individual → Group session + the 3-sessions-a-day split.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
-- **Day library** — **18 day-*plans*** (D1–D18) you **repeat and progress** at your cadence (not 18-and-done); each day-plan runs in all three of that day's sessions:
-  - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (D1–D6)
-  - [Trimester 2 — Passing & 1v1](sessions/trimester-2-passing-and-1v1.md) (D7–D12)
-  - [Trimester 3 — Group Play](sessions/trimester-3-group-play.md) (D13–D18)
+- **Day library** — a **5-day circuit** per trimester (**15 day-*plans*, D1–D15**) that **repeats each week** and progresses across the ~13-week trimester (not 15-and-done); each day-plan runs in all three of that day's sessions:
+  - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (D1–D5)
+  - [Trimester 2 — Passing & 1v1](sessions/trimester-2-passing-and-1v1.md) (D6–D10)
+  - [Trimester 3 — Group Play](sessions/trimester-3-group-play.md) (D11–D15)
 
 **Next:** repeat the same artifacts for **age 9**, carrying each child's IDP forward.
