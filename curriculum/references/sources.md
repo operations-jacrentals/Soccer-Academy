@@ -30,6 +30,10 @@ by federations — see US Soccer below.)_
 
 ## US Soccer — Player Development Initiatives (2017)
 
+> **Scope:** used **only for neutral regulatory numbers** (formats, ball/field/goal
+> sizes), which converge with FIFA and KNVB. The *method and philosophy* are
+> anchored to the elite talent systems instead — see [Youth method foundations](#youth-method-foundations-elite-talent-systems).
+
 Official small-sided game standards. Format & ball size are ✅ canonical; exact
 field/goal ranges are ⚠️ (from a search summary of the PDF I could not open).
 
@@ -72,6 +76,41 @@ field/goal ranges are ⚠️ (from a search summary of the PDF I could not open)
   Train to Win, Active for Life. Developed by **Istvan Balyi**.
   → peer-reviewed: [Ford et al. (2011), *J. Sports Sciences* — the LTAD model](https://www.tandfonline.com/doi/full/10.1080/02640414.2010.536849)
 - Note: age 8 = **FUNdamentals**, on the cusp of **Learn to Train** (the "golden age").
+
+## Youth method foundations (elite talent systems)
+
+The re-anchored *method* — see [research/youth-method-foundations.md](../research/youth-method-foundations.md).
+
+- ✅ **Futsal foundation** — confined space → more touches / faster decisions;
+  institutionalized in Portugal, Spain, Brazil. → [FIFA Training Centre — Brazil & Spain pathways](https://www.fifatrainingcentre.com/en/environment/research-brief/high-performance/talent-pathways/talent-pathways-in-brazil-and-spain.php) · [Portugal futsal success](https://www.cjffutsal.com/the-future-of-us-futsal-learning-from-portugals-success-story)
+- ✅ **Coerver Coaching (Wiel Coerver, Dutch)** — ball-mastery **pyramid** (Ball
+  Mastery → Receiving/Passing → 1v1 → Speed → Finishing → Group Play); **"5 S's"**
+  = Skills, Smarts, Speed, Strength, Spirit. → [Coerver Coaching](https://voor.sport/en/mag/the-coerver-method-more-than-just-ball-mastery)
+- ✅ **KNVB (Dutch)** — street-football roots, child-centred; small-sided **2v2
+  (4–5), 4v4 (U7), 6v6 (U8/U9)**. → [KNVB Dutch Youth Football](https://knvb.h5mag.com/dutch_youth_football/the_decision)
+- ✅ **La Masia (Spain)** — rondo + positional play from youngest ages. → [Barça Innovation Hub](https://barcainnovationhub.fcbarcelona.com/blog/the-models-of-youth-teams-in-football/)
+
+### National federations — native-language primary sources (translated)
+
+- ✅ **🇪🇸 Spain (RFEF):** youngest competitive band **Benjamín = ages 8–9**, played
+  as **Fútbol-7 / Fútbol-8** (reduced field, advanced offside line) for more
+  touches. Guiding rule (translated): *"no adelantar contenidos — técnica
+  individual primero, conceptos colectivos después"* → **"don't rush content —
+  individual technique first, collective concepts later."** Spanish academies use
+  the **Método Integrado** (ball in every task, several components trained at once).
+  → [RFFM competition bases, Fútbol-7/5 (PDF, ES)](https://rffm-cms.s3.eu-west-1.amazonaws.com/Bases_y_Normas_de_competicion_F7_y_F5_Temporada_2024_2025_7c060e99b1.pdf) · [La Masía: un modelo de formación (ES)](http://www.futbolofensivo.com/2018/06/la-masia-un-modelo-de-formacion-en-el-futbol-base/)
+- ✅ **🇳🇱 Netherlands (KNVB):** **Onder 8–Onder 10 play 6v6** on a quarter field
+  **42.5 × 30 m**; the referee is a **spelbegeleider ("game leader")** who lets
+  players discover the game; formats follow **"deliberate play"** — informal,
+  street-like, child-centred; **no results/standings published** at these ages.
+  → [KNVB — het nieuwe pupillenvoetbal, O8–O10 (NL)](https://knvb.h5mag.com/pupillenvoetbal/onder_8_t-m_onder_10) · [KNVB research: wedstrijdvormen pupillen 2016 (PDF, NL)](http://assets.knvb.nl/sites/knvb.nl/files/Onderzoeksrapport%20wedstrijdvormen%20pupillen%20KNVB.pdf)
+- ✅ **🇵🇹 Portugal (FPF / Benfica):** FPF publishes **"Etapas de Desenvolvimento do
+  Jogador"** (player-development stages) for football and futsal; Benfica states its
+  mission as developing elite players through a **"metodologia interdisciplinar"**
+  (interdisciplinary methodology).
+  → [FPF — Etapas de Desenvolvimento do Jogador (PDF, PT)](https://www.fpf.pt/Portals/0/Etapas%20de%20Desenvolvimento%20do%20Jogador%20no%20Futebol%20ETNF-%20S15-20%20Junho%202018.pdf) · [SL Benfica — Futebol Formação (PT/EN)](https://www.slbenfica.pt/en-us/futebol-formacao/formacao)
+
+_Native-language sources are translated inline; per the [egress limitation](#methodology--limitation-read-this) the PDFs could not be opened directly, so figures are as surfaced/translated via search and corroborated._
 
 ## Academy production statistics (⚠️ secondary — unverified)
 
