@@ -7,7 +7,7 @@ Portugal's model of a modern, sports-science-driven, holistic campus.
 
 - **Facility:** Benfica Campus, Seixal — opened 2006, ~19 hectares, six pitches, residential (~80 athletes), auditoriums, gyms, injury-prevention and testing labs, the "360S" simulator.
 - **Scale:** ~200 staff including ~50 coaches; pathway spans **ages 6–23**.
-- **Output:** CIES's current **#1 academy worldwide** (by their weighted index) and ~93 graduates active across pro football.
+- **Output:** CIES's current **#1 academy worldwide** (by their weighted index) and ~93 graduates active across pro football. ⚠️ *Unverified — secondary source; see [references/sources.md](../references/sources.md).*
 
 ## Philosophy & identity
 

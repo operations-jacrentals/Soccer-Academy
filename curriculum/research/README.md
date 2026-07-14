@@ -8,7 +8,7 @@ These are the "how" — proven development systems — that we pair with our
 
 A deliberate funnel (see chat history / the research reports):
 
-1. **Most professional players produced, by quantity** (worldwide, currently active — CIES data) → River Plate, Benfica, Defensor Sporting led the raw counts.
+1. **Most professional players produced, by quantity** (worldwide, currently active — CIES data) → River Plate, Benfica, Defensor Sporting led the raw counts. ⚠️ *CIES figures are secondary/unverified (primary fetch blocked) — see [references/sources.md](../references/sources.md).*
 2. **Most publicly available data, documents, and studies to actually learn from** → **Benfica** was the clear winner of that group, and the exercise surfaced that the two *most-documented* academies in the world are **Barcelona (La Masia)** and **Ajax (De Toekomst)**.
 3. **Final selection:** the three richest, most-replicable, best-documented models —
 

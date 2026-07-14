@@ -20,7 +20,7 @@ development work at each stage.
 10. **Determining the Outcome of a Match** — goals, winner, tie-breaks.
 11. **Offside** — position + involvement; the game's most-debated law.
 12. **Fouls and Misconduct** — direct/indirect free-kick offenses, cards, handball.
-13. **Free Kicks** — direct vs. indirect, wall distance (9.15 m / 10 yd).
+13. **Free Kicks** — direct vs. indirect, wall distance **9.15 m / 10 yд** ✅ ([IFAB Law 13](../references/sources.md)).
 14. **The Penalty Kick** — award, procedure, encroachment.
 15. **The Throw-In** — technique, restart from the touchline.
 16. **The Goal Kick** — restart from the goal area.
@@ -49,7 +49,7 @@ Smaller formats = more touches, more decisions, more involvement, faster learnin
 | U13+ | **11v11** | the full game once players can handle the space |
 
 **Ball & field sizing**
-- **Size 3** ball (youngest, ~U8 and below) · **Size 4** (~U9–U12) · **Size 5** (U13+/adult).
+- **Size 3** ball (~U8 and below) · **Size 4** (~U9–U12) · **Size 5** (U13+/adult). ✅ Formats and ball sizes per [US Soccer PDI 2017](../references/sources.md); full-size ball spec per [IFAB Law 2](../references/sources.md).
 - Field, goal, and penalty-area dimensions scale down for younger ages.
 
 **Other youth modifications**
