@@ -120,6 +120,48 @@ See [research/training-regimen.md](../research/training-regimen.md).
 - ✅ **Ajax session:** 15–20 min progressive rondo; **thirds** (body control / individual / group); 60+ rondo variations. → [Ajax youth development](https://www.ajaxuniverse.com/youth-development)
 - ✅ **Tactical Periodization** (Vítor Frade, Portuguese school): physical/technical/tactical/psychological as an inseparable whole; weekly **morphocycle**. → [Barça Innovation Hub](https://barcainnovationhub.fcbarcelona.com/blog/tactical-periodization-football-load-planning/) · [What is Tactical Periodization?](https://jobsinfootball.com/blog/what-is-tactical-periodization/) · [Vítor Frade](https://www.tacticalperiodisation.com/pt/vitor-frade/)
 
+## Drills — by family (coaching sources)
+
+The **drill forms** used in the [age-8 day-plans](../age-08/sessions/) and the
+[interactive year mockup]. **Hierarchy note:** these sit *below* the governing
+standards (IFAB/federations) and the elite-federation *method* (Coerver/RFEF/KNVB/
+FPF) — they supply age-appropriate **drill shapes**, not standards or philosophy.
+
+**Calibration:** the drills themselves are **non-proprietary, widely-taught youth
+games** — each **✅ corroborated across multiple independent coaching sources** (so
+the *form* is well-established), while any single write-up is **secondary coaching
+content**, not a governing standard. Per the [egress limitation](#methodology--limitation-read-this)
+the pages were surfaced via search, not opened directly. Representative citations:
+
+### Ball mastery (D1, D3, D6 — sole rolls · toe taps · foundations · turns)
+- ✅ **Ball-mastery matrix / “Coerver” touches** — sole rolls, toe taps, foundations, both feet, count touches.
+  → [Willamette United FC — Ball Mastery Matrix (PDF)](https://willametteunitedfc.com/wp-content/uploads/2020/04/WUFC-Ball-Mastery-Matrix.pdf) · [Coerver 6 steps to ball mastery](http://www.playgreatsoccer.com/6-steps-ball-mastery.php) · [SportSessionPlanner — Ball Mastery (Coerver)](https://www.sportsessionplanner.com/s/2RMU/Ball-Mastery-Coerver-Training-Session---Welty.html)
+
+### Dribbling & 1v1 (D2, D3, D5, D10 — gates · sharks & minnows · king of the ring · feints)
+- ✅ **Sharks & Minnows** (shielding/turning, U6–U8). → [SoccerXpert — Sharks and Minnows](https://soccerxpert.com/drills/details/id1228)
+- ✅ **Dribble through the gates** / gate races (most gates in 60s, weaker-foot rounds). → [SoccerXpert — Dribbling Through Gates](https://soccerxpert.com/drills/details/dribbling-through-gates-race) · [SoccerDrive — Gatekeepers (U10)](https://www.soccerdrive.com/soccer-drills/gatekeepers-soccer-dribbling-activity)
+- ✅ **King of the Ring** (close control + protect your ball). → [Soccer Coach Weekly — King of the Ring](https://www.soccercoachweekly.net/drills-and-games/small-sided-games/king-of-the-ring) · [footy4kids — King of the Ring](https://www.footy4kids.co.uk/soccer-drills/defending/king-of-the-ring/)
+- ✅ **1v1 to gates/goals** & body-feint / step-over moves. → [SoccerXpert — 1v1 Reaction Gate](https://soccerxpert.com/drills/details/1v1-gate-challenge) · [AthletesUntapped — youth dribbling drills](https://athletesuntapped.com/blog/soccer-dribbling-drills-for-youth-players/)
+
+### Rondos (D7, D8, D9, D14 — 3v1 · 4v1 · 4v2 keep-ball)
+- ✅ **Rondo (keep-away, uneven numbers)** — 3v1/4v1/4v2/5v2; one/two-touch under pressure. → [Coaching American Soccer — Rondo Drills](https://coachingamericansoccer.com/soccer-drills/soccer-rondo-drills/) · [360Player — 7 rondo variations](https://www.360player.com/blog/7-fun-competitive-rondo-variations)
+
+### Passing & receiving (D4, D7, D8, D9, D12 — inside-foot · give-and-go · half-turn · scan)
+- ✅ **Inside-foot (push) pass & receive** — the base pass, both feet, count completions. → [Coaching American Soccer — Push Pass & Receive](https://coachingamericansoccer.com/youth-soccer-instructional-coaching-manual/instruction-and-drills/soccer-push-pass-and-receive/) · [SportSessionPlanner — Passing & Receiving U8](https://www.sportsessionplanner.com/s/SAHIh/Basic-Passing-and-Receiving-Concepts---U8.html)
+- ✅ **Give-and-go / wall pass** — pass then move. → [Coaching American Soccer — The Give-and-Go](https://coachingamericansoccer.com/intermediate-soccer-skills/soccer-give-and-go/) · [SoccerDrive — Wall Passing drills](https://www.soccerdrive.com/soccer-drills/category/wall-passing) · [Jersey Watch — youth passing drills](https://www.jerseywatch.com/blog/simple-youth-soccer-passing-drills) · [footy4kids — Passing](https://www.footy4kids.co.uk/soccer-drills/passing/)
+
+### Defending (D15 — jockey & poke, “don’t dive in”)
+- ✅ **Jockey → poke, stay on your feet, goal-side.** → [AthletesUntapped — Jockey technique](https://athletesuntapped.com/blog/soccer-jockey-technique-defenders/) · [Soccer Coach Weekly — jockeying drill](https://www.soccercoachweekly.net/drills-and-games/drills/soccer-drill-to-improve-jockeying-skills) · [Lexington United — Teaching 1v1 Defending](https://lexingtonunited.org/teaching-1-vs-1-defending/)
+
+### Goalkeeping taster (D16 — ready position · circle catch · “W” hands)
+- ✅ **Circle Catch / soft “W” hands, ready position** — everyone tries. → [FreeYouthSoccerDrills — Soccer goalie drills](http://www.freeyouthsoccerdrills.com/soccer-goalie.html) · [Rise FC — youth goalkeeper drills](https://www.risefcsoccer.com/youth-soccer-goalkeeper-drills/)
+
+### Small-sided games & futsal (D13, D17, D18 — SSG · festival · max-touch environment)
+- ✅ **Futsal / small-sided = ~6× the touches** — the max-touch environment behind every Group phase. → [Senda Athletics — barefoot futsal](https://sendaathletics.com/blogs/news/senda-spotlight-barefoot-futsal) · [Rise FC — beginner futsal drills](https://www.risefcsoccer.com/futsal-training-drills-for-beginner/)
+- SSG formats (4v4 → 7v7) & ball sizes are set by **US Soccer / KNVB** above, not by these coaching pages.
+
+_[interactive year mockup]: the single-document Age-8 visualization; drills there map 1:1 to the day-plans and to the citations in this section._
+
 ## Mastery & training hours (evidence)
 
 See [mastery-model.md](../mastery-model.md).

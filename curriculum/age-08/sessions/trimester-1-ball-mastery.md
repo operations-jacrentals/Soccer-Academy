@@ -1,19 +1,20 @@
-# Age 8 · Trimester 1 — Ball Mastery (session library)
+# Age 8 · Trimester 1 — Ball Mastery (day library)
 
-Six runnable sessions for **Trimester 1** of the [trimester plan](../01-trimester-plan.md).
+Six **day-plans** (D1–D6) for **Trimester 1** of the [trimester plan](../01-trimester-plan.md).
+Each is one day's plan — **run in all three of that day's sessions** for same-day mastery.
 Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the Ball."*
 
 > **Provenance:** the **progression** (Coerver Ball Mastery → the pyramid) and the
 > **technique-first, max-touch** frame are ✅ **sourced**
 > ([foundations](../../research/youth-method-foundations.md) · [references](../../references/sources.md)).
-> The **specific activities, counts, and session order** are ✏️ **coaching
+> The **specific activities, counts, and day order** are ✏️ **coaching
 > judgment**, drawing on the [drill catalog](../../index/03-training-methodology-and-drills.md).
-> Every session uses the [Rondo → Individual → Group shape](../02-session-template.md); a
-> **ball each**, ~60 min ✏️, **no standings** (KNVB ✅).
+> Every day-plan uses the [Rondo → Individual → Group shape](../02-session-template.md) and
+> is **run ×3 that day**; a **ball each**, ~60 min ✏️, **no standings** (KNVB ✅).
 
 ---
 
-### S1 — Ball-mastery basics ✏️ (Coerver: Ball Mastery ✅)
+### D1 — Ball-mastery basics ✏️ (Coerver: Ball Mastery ✅)
 - **Words:** "Both feet," "Try it!"
 - **Rondo (15m):** ball each, free dribble; on "freeze," stop it with the sole.
 - **Individual (20m):** in a box — **sole rolls, toe taps, foundations (side-to-side)**, both feet; "count your touches." Cue: **"Both feet."**
@@ -21,7 +22,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Huddle:** "Which move felt best with your weaker foot?"
 - **Corners/Smarts:** [T] mastery · [Ps] confidence · [S] listening · **Smarts:** count touches.
 
-### S2 — Dribbling in space ✏️
+### D2 — Dribbling in space ✏️
 - **Words:** "Head up."
 - **Rondo (15m):** "traffic" — everyone dribbles in a grid without bumping.
 - **Individual (20m):** dribble the grid, **head up** on a coach signal (hold up fingers → call the number = smarts). Change speed on a call.
@@ -29,7 +30,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Huddle:** "How did you find space?"
 - **Corners/Smarts:** [T] close control · [P] agility · **Smarts:** count the fingers (numeracy).
 
-### S3 — Change of direction ✏️
+### D3 — Change of direction ✏️
 - **Words:** "Both feet," "Head up."
 - **Rondo (15m):** free dribble; freeze + turn away from the coach.
 - **Individual (20m):** **inside / outside / sole cuts** to change direction on a cone/call; both feet; add a light "shark."
@@ -37,7 +38,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Huddle:** "When did changing direction beat someone?"
 - **Corners/Smarts:** [T] turns · [P] decel/re-accel · [Ps] bravery.
 
-### S4 — First touch (intro receiving) ✏️ (Coerver: Receiving ✅)
+### D4 — First touch (intro receiving) ✏️ (Coerver: Receiving ✅)
 - **Words:** "First touch out of your feet."
 - **Rondo (15m):** pairs, one ball — gentle rolls to each other, cushion & stop.
 - **Individual (20m):** receive a rolled pass and take a **first touch into space** (to a cone), either foot. Cue: **"check your shoulders"** before you receive.
@@ -45,7 +46,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Huddle:** "Where did your first touch go — into space or stuck?"
 - **Corners/Smarts:** [T] first touch · [Ps] focus · [S] working with a partner.
 
-### S5 — 1v1 dribbling & the body feint ✏️ (Coerver: 1v1 intro ✅)
+### D5 — 1v1 dribbling & the body feint ✏️ (Coerver: 1v1 intro ✅)
 - **Words:** "Try it!"
 - **Rondo (15m):** free dribble; practice a **body feint** (drop the shoulder).
 - **Individual (20m):** **body feint → accelerate past**; then **step-over** for those ready; both sides.
@@ -53,7 +54,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Huddle:** "Did the defender buy your fake?"
 - **Corners/Smarts:** [T] feints · [Ps] courage to fail · [S] encouraging others.
 
-### S6 — Creativity & review ✏️
+### D6 — Creativity & review ✏️
 - **Words:** "Try it!," "Head up."
 - **Rondo (15m):** free "show your favourite move."
 - **Individual (20m):** **invent-a-move** station + revisit sole rolls/cuts/feints (child's choice = autonomy).

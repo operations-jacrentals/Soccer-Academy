@@ -6,6 +6,7 @@ evidence, per the [Documentation Standard](DOC_STANDARD.md).
 ## The cadence
 
 - **3 sessions/day × 1 hr × 5 days = 15 hrs/week.**
+- The **three daily sessions all run the same plan** — repetition for **same-day mastery** (see [session template](age-08/02-session-template.md)).
 - **40 training weeks/year** → **600 hrs/year.**
 - **Age 8 → 17 (9 years) → ~5,400 hours.**
 
