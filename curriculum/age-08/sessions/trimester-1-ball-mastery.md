@@ -9,14 +9,16 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 > ([foundations](../../research/youth-method-foundations.md) · [references](../../references/sources.md)).
 > The **specific activities, counts, and day order** are ✏️ **coaching
 > judgment**, drawing on the [drill catalog](../../index/03-training-methodology-and-drills.md).
-> Every day-plan uses the [Rondo → Individual → Group shape](../02-session-template.md) and
-> is **run ×3 that day**; a **ball each**, ~60 min ✏️, **no standings** (KNVB ✅).
+> Every day-plan uses the [Warm-up → Individual → Group shape](../02-session-template.md)
+> (warm-up = ball-manipulation now, a rondo once passing arrives; the **day's focus is
+> the Individual block**) and is **run ×3 that day**; a **ball each**, ~60 min ✏️,
+> **no standings** (KNVB ✅).
 
 ---
 
 ### D1 — Ball-mastery basics ✏️ (Coerver: Ball Mastery ✅)
 - **Words:** "Both feet," "Try it!"
-- **Rondo (15m):** ball each, free dribble; on "freeze," stop it with the sole.
+- **Warm-up (15m):** ball each, free dribble; on "freeze," stop it with the sole.
 - **Individual (20m):** in a box — **sole rolls, toe taps, foundations (side-to-side)**, both feet; "count your touches." Cue: **"Both feet."**
 - **Group (20m):** 1v1 to gates — lots of dribbling.
 - **Huddle:** "Which move felt best with your weaker foot?"
@@ -24,7 +26,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 
 ### D2 — Dribbling in space ✏️
 - **Words:** "Head up."
-- **Rondo (15m):** "traffic" — everyone dribbles in a grid without bumping.
+- **Warm-up (15m):** "traffic" — everyone dribbles in a grid without bumping.
 - **Individual (20m):** dribble the grid, **head up** on a coach signal (hold up fingers → call the number = smarts). Change speed on a call.
 - **Group (20m):** free dribble game to score by stopping the ball on any line.
 - **Huddle:** "How did you find space?"
@@ -32,7 +34,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 
 ### D3 — Change of direction ✏️
 - **Words:** "Both feet," "Head up."
-- **Rondo (15m):** free dribble; freeze + turn away from the coach.
+- **Warm-up (15m):** free dribble; freeze + turn away from the coach.
 - **Individual (20m):** **inside / outside / sole cuts** to change direction on a cone/call; both feet; add a light "shark."
 - **Group (20m):** 1v1 to gates — beat the defender by changing direction.
 - **Huddle:** "When did changing direction beat someone?"
@@ -40,7 +42,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 
 ### D4 — First touch (intro receiving) ✏️ (Coerver: Receiving ✅)
 - **Words:** "First touch out of your feet."
-- **Rondo (15m):** pairs, one ball — gentle rolls to each other, cushion & stop.
+- **Warm-up (15m):** pairs, one ball — gentle rolls to each other, cushion & stop.
 - **Individual (20m):** receive a rolled pass and take a **first touch into space** (to a cone), either foot. Cue: **"check your shoulders"** before you receive.
 - **Group (20m):** 2v2 tiny game — reward a good first touch.
 - **Huddle:** "Where did your first touch go — into space or stuck?"
@@ -48,7 +50,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 
 ### D5 — 1v1 dribbling & the body feint ✏️ (Coerver: 1v1 intro ✅)
 - **Words:** "Try it!"
-- **Rondo (15m):** free dribble; practice a **body feint** (drop the shoulder).
+- **Warm-up (15m):** free dribble; practice a **body feint** (drop the shoulder).
 - **Individual (20m):** **body feint → accelerate past**; then **step-over** for those ready; both sides.
 - **Group (20m):** 1v1 to goal/gates — try a move each turn (no penalty for failing).
 - **Huddle:** "Did the defender buy your fake?"
@@ -56,7 +58,7 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 
 ### D6 — Creativity & review ✏️
 - **Words:** "Try it!," "Head up."
-- **Rondo (15m):** free "show your favourite move."
+- **Warm-up (15m):** free "show your favourite move."
 - **Individual (20m):** **invent-a-move** station + revisit sole rolls/cuts/feints (child's choice = autonomy).
 - **Group (20m):** small-sided festival — just play; celebrate tries.
 - **Huddle + checkpoint:** quick [assessment](../03-assessment.md) note per child (enjoys the ball? head-up? tries a move?).

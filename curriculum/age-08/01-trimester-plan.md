@@ -67,7 +67,8 @@ Cadence & hours: [mastery model](../mastery-model.md).
 - **Not rigid:** a child ahead keeps progressing up the Coerver pyramid; a beginner
   spends longer on Ball Mastery. Individualize via each child's **IDP** →
   [assessment](03-assessment.md).
-- **Session structure:** every session uses the **Rondo → Individual → Group** shape →
+- **Session structure:** every session uses the **Warm-up → Individual → Group** shape
+  (warm-up = a rondo by default; the **day's focus is the Individual block**) →
   [session template](02-session-template.md).
 - **Cadence** (sessions/week, weeks/trimester) is a family/scheduling choice ✏️ — total
   contact time and touches matter more than the exact split.

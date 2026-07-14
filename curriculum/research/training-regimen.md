@@ -22,8 +22,11 @@ sourced replacement for the (American) *Play-Practice-Play* model. Cited per the
 
 **→ Our session shape (replaces Play-Practice-Play):**
 
-> **Rondo / ball warm-up → Individual play (skill / 1v1) → Group play (small-sided game)**
+> **Warm-up → Individual play (skill / 1v1) → Group play (small-sided game)**
 > — everything with the ball (Ajax's thirds + Barça's rondo-warm-up). ✅
+> The **① Warm-up is a rondo by default** (Barça's signature); its form flexes to the
+> day (ball-manipulation in the early ball-mastery weeks). The **day's focus lives in
+> the ② Individual block** — that's what changes day to day.
 
 ## The week — Tactical Periodization / the morphocycle ✅
 

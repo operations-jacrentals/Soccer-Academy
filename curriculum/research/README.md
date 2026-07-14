@@ -20,7 +20,7 @@ A deliberate funnel (see chat history / the research reports):
 
    - **[`merged-model.md`](merged-model.md)** — the three merged by their **intersection** (what all three share) into the single model we adopt.
    - **[`youth-method-foundations.md`](youth-method-foundations.md)** — the **elite young-age method** (Dutch/Spanish/Portuguese + futsal + Coerver), from native-language sources — the "how" for young ages.
-   - **[`training-regimen.md`](training-regimen.md)** — **what the top-3 clubs actually do**: the Rondo → Individual → Group session (Ajax/Barça) and the Tactical-Periodization week (Benfica/Portuguese).
+   - **[`training-regimen.md`](training-regimen.md)** — **what the top-3 clubs actually do**: the Warm-up → Individual → Group session (Ajax/Barça; warm-up = a rondo by default) and the Tactical-Periodization week (Benfica/Portuguese).
    - **[`synthesis-and-blueprint.md`](synthesis-and-blueprint.md)** — the shared DNA turned into our **age 8–13 blueprint**.
 
 ## How this feeds our curriculum

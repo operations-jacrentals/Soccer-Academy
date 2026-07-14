@@ -55,7 +55,7 @@ High single-sport volume from age 8 carries real risk; we build against it.
 
 The 15 weekly hours run on the **top-3 clubs' regimen**, not a US model → see
 [research/training-regimen.md](research/training-regimen.md):
-- **Session shape:** Rondo → Individual play → Group play (Ajax thirds + Barça rondo).
+- **Session shape:** Warm-up → Individual → Group (Ajax thirds; the warm-up is a Barça rondo by default). The **day's focus is the Individual block.**
 - **Weekly shape:** Tactical-Periodization principles — integrated, varied daily emphasis, build-and-recover.
 
 > **Bottom line:** the ambition (early, high-volume, deliberate → elite) is sound;

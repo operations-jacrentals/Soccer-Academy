@@ -4,22 +4,30 @@ The repeatable shape of every 1-hour session — taken from **our top-3 clubs**
 (Ajax's thirds + Barça's rondo-warm-up), organized across the week by **Tactical-
 Periodization** principles. No US model.
 
-> **Provenance:** the **session shape** (Rondo → Individual → Group) and the
+> **Provenance:** the **session shape** (Warm-up → Individual → Group) and the
 > **integrated, varied week** are ✅ **sourced** →
 > [research/training-regimen.md](../research/training-regimen.md),
 > [references](../references/sources.md). The **minute allocations, the 3-session
 > split, and example activities** are ✏️ **coaching judgment**. Cadence & target:
 > [mastery-model](../mastery-model.md).
 
-## The session shape — Rondo → Individual → Group ✅
+## The session shape — Warm-up → Individual → Group ✅
 
-Ajax's documented **thirds** (⅓ warm-up · ⅓ individual · ⅓ group), opened with a
-rondo à la La Masia. Everything with the ball, from minute one.
+Ajax's documented **thirds** (⅓ warm-up · ⅓ individual · ⅓ group), with the warm-up
+run as a **rondo** à la La Masia. Everything with the ball, from minute one.
+
+> **The day's focus lives in the Individual block** (②) — that's what changes day to
+> day. The **Warm-up** (①) is a **fixed slot whose form flexes**: a **rondo** by
+> default (Barça's signature), but in the early ball-mastery weeks it's a
+> ball-manipulation warm-up — a true rondo needs a little passing, so rondos become
+> the everyday warm-up once passing arrives (Trimester 2+). A rondo trains first
+> touch, scanning, passing and decisions at once, so it **primes** the focus rather
+> than competing with it.
 
 | Part | What it is | Source | Time ✏️ |
 |---|---|---|---|
-| **① Rondo / ball warm-up** | ball-mastery + a simple **rondo** (3v1/4v1) — activate *and* introduce the day's topic | 🇪🇸 La Masia · 🇳🇱 Ajax ✅ | ~15 min |
-| **② Individual play** | the day's single focus — ball mastery, 1v1, technique | 🇳🇱 Ajax thirds · Coerver ✅ | ~20 min |
+| **① Warm-up (rondo by default)** | ball-manipulation **or** a simple **rondo** (3v1/4v1) — activate *and* introduce the day's topic | 🇪🇸 La Masia rondo · 🇳🇱 Ajax warm-up third ✅ | ~15 min |
+| **② Individual play — the day's focus** | the day's single focus — ball mastery, dribbling, 1v1, passing, technique | 🇳🇱 Ajax thirds · Coerver ✅ | ~20 min |
 | **③ Group play** | a **small-sided game** / simple positional game / futsal — apply it; ref as **game-leader** | 🇪🇸 La Masia game · 🇳🇱 KNVB ✅ | ~20 min |
 | **Huddle** | one question + the **word of the day**; praise effort | — | ~5 min |
 
@@ -28,7 +36,7 @@ rondo à la La Masia. Everything with the ball, from minute one.
 A day is **three 1-hr sessions** (3 × 1 hr = 3 hrs) — and **all three run the same
 plan.** Repeating the day's plan builds **same-day mastery**: players meet a skill
 in the morning session and own it by the evening session. The structure and split
-are identical in each session (Rondo → Individual → Group); the **focus changes day
+are identical in each session (Warm-up → Individual → Group); the **focus changes day
 to day**, climbing the Coerver pyramid across the trimester.
 
 - **Physical develops *inside* each session** (warm-up movement + games; **LTAD:** no
@@ -49,7 +57,7 @@ to day**, climbing the Coerver pyramid across the trimester.
 
 ## Example session — Technical (Focus: change of direction) ✏️
 
-1. **① Rondo/warm-up (15m):** ball-mastery in a box (sole rolls, both feet) → **3v1 rondo**.
+1. **① Warm-up (15m):** ball-mastery in a box (sole rolls, both feet) → a **3v1 rondo** if ready.
 2. **② Individual (20m):** change-of-direction move (inside/outside/sole) vs. a passive → active "shark." Cues: **"Both feet," "Head up."**
 3. **③ Group (20m):** small-sided game; celebrate any change of direction that beats a defender.
 4. **Huddle (5m):** "When did changing direction help you?" Word of the day: **"Head up."**
@@ -59,5 +67,5 @@ to day**, climbing the Coerver pyramid across the trimester.
 - **Ball**: size 3 (younger) → size 4 — regulatory only ✅ → [references](../references/sources.md).
 - **Futsal-style small spaces** for touches; water breaks; injury-prevention; limit deliberate heading → [index/12](../index/12-laws-and-formats.md).
 
-> To adapt for another focus, keep the **Rondo → Individual → Group** shape and swap
-> the individual-play focus and the word of the day.
+> To adapt for another focus, keep the **Warm-up → Individual → Group** shape and swap
+> the **Individual-block focus** and the word of the day.

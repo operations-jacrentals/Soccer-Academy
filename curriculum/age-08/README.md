@@ -30,7 +30,7 @@ expected to start** → **where we project them before they turn 9.**
 - **Coerver ball-mastery pyramid** (Ball Mastery → Receiving/Passing → 1v1 → Group Play) as the content spine → [Coerver](../references/sources.md).
 - **Futsal-style, maximum-touch** small-sided environment → [futsal / KNVB](../references/sources.md).
 - **Street / deliberate play & discovery**; **development over winning — no standings** → [KNVB](../references/sources.md).
-- **Session shape:** **Rondo → Individual → Group** (Ajax thirds + Barça rondo-warm-up), organized across the week by **Tactical-Periodization** principles → [training regimen](../research/training-regimen.md), [session template](02-session-template.md).
+- **Session shape:** **Warm-up → Individual → Group** (Ajax thirds; the warm-up is a Barça rondo by default). The **day's focus lives in the Individual block**; organized across the week by **Tactical-Periodization** principles → [training regimen](../research/training-regimen.md), [session template](02-session-template.md).
 - Whole child across the **Four Corners** → [FA](../references/sources.md); **one focus per session**, **one ball per pair**, development over winning.
 - **Words of the year** ✏️ ([index/13](../index/13-teaching-cues-and-acronyms.md)): **"Head up" · "Both feet" · "Try it!" · "Find space" · "Next play."**
 - Full method: [youth-method-foundations](../research/youth-method-foundations.md) · [training regimen](../research/training-regimen.md).
@@ -130,7 +130,7 @@ expected to start** → **where we project them before they turn 9.**
 ## The age-8 unit
 
 - **[Term plan](01-trimester-plan.md)** — the year across three trimesters (Me & the Ball → …& a Friend → Playing the Game).
-- **[Session template](02-session-template.md)** — the repeatable Rondo → Individual → Group session + the 3-sessions-a-day split.
+- **[Session template](02-session-template.md)** — the repeatable Warm-up → Individual → Group session + the 3-sessions-a-day split.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
 - **Day library** — **18 day-*plans*** (D1–D18) you **repeat and progress** at your cadence (not 18-and-done); each day-plan runs in all three of that day's sessions:
   - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (D1–D6)
