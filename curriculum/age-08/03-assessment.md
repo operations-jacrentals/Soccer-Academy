@@ -46,8 +46,16 @@ One short page per child (the format the top academies use → [index/11](../ind
 - **What lights them up** — to keep it fun and intrinsic.
 - **Notes** — growth since last check (celebrate it out loud).
 
+> **Auto-drafted from the card.** The [player card](04-reports-and-player-profile.md)
+> reads these three straight off the child's own hexagon *shape*: **Strengths** ← the
+> longest spokes (`shape.signature`); **Next steps** ← the lowest *technical* spoke
+> (`shape.next_quest`, with Pace/Physical maturation-guarded out) + a weaker-foot flag;
+> **What lights them up** ← their signature move. The card is self-referential — it never
+> ranks child vs. child (see §5.4 no-card-vs-card display rule).
+
 > **Golden rule:** measure to **encourage and guide**, never to pressure or rank.
-> Effort, bravery, and joy are the headline metrics at age 8.
+> Effort, bravery, and joy are the headline metrics at age 8. The card enforces this in
+> the schema itself — there is **no overall number and no cross-child field**.
 
 ## What's next
 
