@@ -128,7 +128,11 @@ expected to start** → **where we project them before they turn 9.**
 ## The age-8 unit
 
 - **[Term plan](01-term-plan.md)** — the year across three terms (Me & the Ball → …& a Friend → Playing the Game).
-- **[Session template](02-session-template.md)** — the repeatable Play-Practice-Play session.
+- **[Session template](02-session-template.md)** — the repeatable Play → Learn → Play session.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
+- **Session library** — 18 runnable sessions:
+  - [Term 1 — Ball Mastery](sessions/term-1-ball-mastery.md) (S1–S6)
+  - [Term 2 — Passing & 1v1](sessions/term-2-passing-and-1v1.md) (S7–S12)
+  - [Term 3 — Group Play](sessions/term-3-group-play.md) (S13–S18)
 
-**Next:** repeat the same four artifacts for **age 9**, carrying each child's IDP forward.
+**Next:** repeat the same artifacts for **age 9**, carrying each child's IDP forward.
