@@ -31,6 +31,16 @@ run as a **rondo** à la La Masia. Everything with the ball, from minute one.
 | **③ Group play** | a **small-sided game** / simple positional game / futsal — apply it; ref as **game-leader** | 🇪🇸 La Masia game · 🇳🇱 KNVB ✅ | ~20 min |
 | **Huddle** | one question + the **word of the day**; praise effort | — | ~5 min |
 
+### The within-session load curve
+
+Intensity is not flat across the session — it follows a curve: the **Warm-up ramps
+up**, the **Individual** block is technical/moderate, the **Group small-sided game
+is the session's peak** (SSGs reach **~80–90% of max heart rate** ✅ → [references](../references/sources.md)),
+and the **Huddle cools down**. That whole curve then **scales with the day's load**
+in the [weekly morphocycle](../mastery-model.md) — a *recover* day sits low, the
+*peak* day runs hot. So it's the **week's build-and-recover rhythm, one level down.**
+(The shape is ✅ sourced; the exact per-phase percentages are ✏️ illustrative.)
+
 ## The day: three sessions, one plan ✏️
 
 A day is **three 1-hr sessions** (3 × 1 hr = 3 hrs) — and **all three run the same
