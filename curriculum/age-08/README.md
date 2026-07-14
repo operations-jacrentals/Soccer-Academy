@@ -121,7 +121,10 @@ expected to start** → **where we project them before they turn 9.**
 - ✏️ **Coaching judgment:** the entry→exit skill progressions and the "words/checks of the year" — aligned to the sourced priorities, not federation-mandated numbers.
 - ⚠️ **Unverified:** Ajax stage-age split (secondary). See [DOC_STANDARD backlog](../DOC_STANDARD.md).
 
-## What's next
+## The age-8 unit
 
-Term plan → weekly session template (PPP) → assessment sheet — each built on
-sourced standards, then repeat for age 9.
+- **[Term plan](01-term-plan.md)** — the year across three terms (Me & the Ball → …& a Friend → Playing the Game).
+- **[Session template](02-session-template.md)** — the repeatable Play-Practice-Play session.
+- **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
+
+**Next:** repeat the same four artifacts for **age 9**, carrying each child's IDP forward.
