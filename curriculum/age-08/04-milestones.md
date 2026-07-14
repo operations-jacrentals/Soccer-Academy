@@ -13,11 +13,23 @@ foundation, but **not yet adopted**. Complements (never replaces) the
 ## V1 — The milestone checkbox system (what we run now) ✏️
 
 **The mechanic:** a **roster** of players lives at the top of the interactive year
-document; it auto-creates **one checkbox per player under each day's milestone**. The
-box gets **checked the first time the child hits the milestone** — in any of the day's
-three sessions — and stays checked. That's the whole system: no scores, no levels,
-no comparisons. The day-type repeats ~13 weeks, so an unchecked box simply means
-"not yet" — there is always another go.
+document. It drives two things on every day card:
+
+1. **Milestone checkbox — in the day *row* (always visible).** One checkbox per player
+   sits in the day's header strip, so a coach scanning the **collapsed** list of 15 days
+   sees at a glance *who still needs what* — the point of the week-end review. The box is
+   **checked the first time the child hits the milestone** (in any of the day's three
+   sessions) and stays checked. No scores, no levels, no comparisons. The day-type repeats
+   ~13 weeks, so an unchecked box just means "not yet."
+2. **Attendance — 3 boxes per player, inside the day.** Each day = 3 one-hour sessions;
+   the day body carries **S1 · S2 · S3** checkboxes per player. Tick a box for each session
+   the child attended. Each ticked box = **1 session = 1 hour**, and every player's chip in
+   the roster shows their **running hours total** — so *sessions/hours over time* is tracked
+   without the coach recording anything per drill.
+
+_(Prototype note ✏️: state saves per device (browser storage); the 3 attendance boxes
+capture one cycle of that day-type — true multi-week hour accumulation across the ~13
+repeats is a shared-storage app feature, not built here.)_
 
 **Milestone design rules ✏️:**
 - **Binary and observable** — hit it or not yet; a coach (or the child) can call it in the moment.

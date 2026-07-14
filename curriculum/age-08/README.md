@@ -132,7 +132,7 @@ expected to start** → **where we project them before they turn 9.**
 - **[Term plan](01-trimester-plan.md)** — the year across three trimesters (Me & the Ball → …& a Friend → Playing the Game).
 - **[Session template](02-session-template.md)** — the repeatable Warm-up → Individual → Group session + the 3-sessions-a-day split.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
-- **[Milestones & measurement](04-milestones.md)** — V1: **one binary milestone per day, one checkbox per player** (roster-driven, in the interactive year doc); thresholds small on purpose; no standings. Gamification researched but **deferred**.
+- **[Milestones & measurement](04-milestones.md)** — V1: **one binary milestone per day** (checkbox per player, in the day row) + **3 attendance boxes per player per day** (sessions × 1 hr = hours logged on each roster chip). Roster-driven, no standings. Gamification researched but **deferred**.
 - **Day library** — a **5-day circuit** per trimester (**15 day-*plans*, D1–D15**) that **repeats each week** and progresses across the ~13-week trimester (not 15-and-done); each day-plan runs in all three of that day's sessions:
   - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (D1–D5)
   - [Trimester 2 — Passing & 1v1](sessions/trimester-2-passing-and-1v1.md) (D6–D10)
