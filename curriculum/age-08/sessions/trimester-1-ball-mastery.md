@@ -1,6 +1,6 @@
-# Age 8 · Term 1 — Ball Mastery (session library)
+# Age 8 · Trimester 1 — Ball Mastery (session library)
 
-Six runnable sessions for **Term 1** of the [term plan](../01-term-plan.md).
+Six runnable sessions for **Trimester 1** of the [trimester plan](../01-trimester-plan.md).
 Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the Ball."*
 
 > **Provenance:** the **progression** (Coerver Ball Mastery → the pyramid) and the
@@ -62,4 +62,4 @@ Coerver pyramid block: **Ball Mastery** (+ intro receiving). Theme: *"Me & the B
 - **Corners/Smarts:** all four; **Smarts:** each child names their move.
 
 ---
-_Next: [Term 2 — Passing & 1v1](term-2-passing-and-1v1.md)._
+_Next: [Trimester 2 — Passing & 1v1](trimester-2-passing-and-1v1.md)._

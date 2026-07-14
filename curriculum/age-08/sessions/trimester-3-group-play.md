@@ -1,6 +1,6 @@
-# Age 8 · Term 3 — Group Play (session library)
+# Age 8 · Trimester 3 — Group Play (session library)
 
-Six runnable sessions for **Term 3** of the [term plan](../01-term-plan.md).
+Six runnable sessions for **Trimester 3** of the [trimester plan](../01-trimester-plan.md).
 Coerver pyramid block: **Group Play** (individual skill → team play). Theme:
 *"Playing the Game."* Environment: **futsal-style small-sided** ✅.
 

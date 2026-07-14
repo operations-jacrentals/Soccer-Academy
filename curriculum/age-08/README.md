@@ -42,7 +42,7 @@ expected to start** → **where we project them before they turn 9.**
 > **Reading the tables:** *Coming in* = a reasonable start-of-year floor for a
 > typical 8-year-old with prior play; *Before 9* = our projected year-end target.
 > Both columns are **✏️ coaching judgment aligned to the sourced priorities above**
-> — for a **true beginner**, treat "Coming in" as the first-term target.
+> — for a **true beginner**, treat "Coming in" as the first-trimester target.
 
 ---
 
@@ -129,12 +129,12 @@ expected to start** → **where we project them before they turn 9.**
 
 ## The age-8 unit
 
-- **[Term plan](01-term-plan.md)** — the year across three terms (Me & the Ball → …& a Friend → Playing the Game).
+- **[Term plan](01-trimester-plan.md)** — the year across three trimesters (Me & the Ball → …& a Friend → Playing the Game).
 - **[Session template](02-session-template.md)** — the repeatable Rondo → Individual → Group session + the 3-daily-session split.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
 - **Session library** — **18 session-*types*** you **repeat and progress** at your cadence (not 18-and-done):
-  - [Term 1 — Ball Mastery](sessions/term-1-ball-mastery.md) (S1–S6)
-  - [Term 2 — Passing & 1v1](sessions/term-2-passing-and-1v1.md) (S7–S12)
-  - [Term 3 — Group Play](sessions/term-3-group-play.md) (S13–S18)
+  - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (S1–S6)
+  - [Trimester 2 — Passing & 1v1](sessions/trimester-2-passing-and-1v1.md) (S7–S12)
+  - [Trimester 3 — Group Play](sessions/trimester-3-group-play.md) (S13–S18)
 
 **Next:** repeat the same artifacts for **age 9**, carrying each child's IDP forward.

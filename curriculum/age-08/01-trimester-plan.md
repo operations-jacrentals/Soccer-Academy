@@ -1,4 +1,4 @@
-# Age 8 — Term Plan
+# Age 8 — Trimester Plan
 
 How the [age-8 targets](README.md) spread across the year. Read with the
 [birds-eye TOC](README.md) and the [Documentation Standard](../DOC_STANDARD.md).
@@ -10,17 +10,24 @@ How the [age-8 targets](README.md) spread across the year. Read with the
 > [research/youth-method-foundations.md](../research/youth-method-foundations.md) ·
 > [references](../references/sources.md).
 
+## The year, split ✏️
+
+**40 training weeks ÷ 3 trimesters ≈ ~13 weeks each** (~200 one-hour sessions per
+trimester at 15/week). Trimesters follow the **Coerver pyramid**, not the school
+calendar — each is a stage, and a child advances when ready, not on a date.
+Cadence & hours: [mastery model](../mastery-model.md).
+
 ## Age-8 planning principles
 
 - **Individual technique first, collective concepts later** ✅ (RFEF *Método Integrado*).
-- **Technique runs all year** — terms shift *emphasis*, following the **Coerver pyramid** ✅ (Ball Mastery → Receiving/Passing → 1v1 → Group Play). ✏️
+- **Technique runs all year** — trimesters shift *emphasis*, following the **Coerver pyramid** ✅ (Ball Mastery → Receiving/Passing → 1v1 → Group Play). ✏️
 - **Maximum touches** — **futsal-style** small spaces; **one ball per pair**. ✅
 - **Street / deliberate play & discovery** ✅ (KNVB); **development over winning — no standings** ✅.
 - **Short blocks** — attention is **one task at a time** ✅.
 
 ---
 
-## Term 1 — "Me & the Ball" · Coerver **Ball Mastery** ✏️
+## Trimester 1 — "Me & the Ball" · Coerver **Ball Mastery** ✏️
 
 - **Focus:** ball mastery (both feet), running with the ball, first touch, **individual creativity**.
 - **Coerver blocks:** Ball Mastery → (intro) Receiving. ✅
@@ -31,7 +38,7 @@ How the [age-8 targets](README.md) spread across the year. Read with the
 - **Words:** "Head up," "Both feet," "Try it!"
 - **Before we move on:** enjoys the ball; dribbles in space with some head-up; tries a move without fear. ✏️
 
-## Term 2 — "Me, the Ball & a Friend" · Coerver **Receiving/Passing + 1v1 Moves** ✏️
+## Trimester 2 — "Me, the Ball & a Friend" · Coerver **Receiving/Passing + 1v1 Moves** ✏️
 
 - **Focus:** beating a defender 1v1 (moves in games), running at pace, **intro passing & the give-and-go**, intro finishing.
 - **Coerver blocks:** Receiving & Passing + 1v1 Moves. ✅
@@ -42,7 +49,7 @@ How the [age-8 targets](README.md) spread across the year. Read with the
 - **Words:** "Find space," "Both feet."
 - **Before we move on:** attempts moves *in games*; plays a simple 1‑2; shares the ball. ✏️
 
-## Term 3 — "Playing the Game" · Coerver **Group Play** ✏️
+## Trimester 3 — "Playing the Game" · Coerver **Group Play** ✏️
 
 - **Focus:** futsal-style small-sided games — finding space, basic rules, **intro defending (jockey)**, everyone tries **goalkeeping**.
 - **Coerver block:** Group Play (individual skill → team play). ✅
@@ -62,5 +69,5 @@ How the [age-8 targets](README.md) spread across the year. Read with the
   [assessment](03-assessment.md).
 - **Session structure:** every session uses the **Rondo → Individual → Group** shape →
   [session template](02-session-template.md).
-- **Cadence** (sessions/week, weeks/term) is a family/scheduling choice ✏️ — total
+- **Cadence** (sessions/week, weeks/trimester) is a family/scheduling choice ✏️ — total
   contact time and touches matter more than the exact split.

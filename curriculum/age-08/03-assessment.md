@@ -34,7 +34,7 @@ last check.)*
 ## Cadence ✏️
 
 - **Start of year** — baseline (which "coming in" targets are already there?).
-- **Mid-year** — progress check; adjust the [term plan](01-term-plan.md) emphasis.
+- **Mid-year** — progress check; adjust the [trimester plan](01-trimester-plan.md) emphasis.
 - **Before 9** — year-end; set the handoff to the age-9 plan.
 
 ## Individual Development Plan (IDP)
@@ -51,6 +51,6 @@ One short page per child (the format the top academies use → [index/11](../ind
 
 ## What's next
 
-Age 8 now has: [birds-eye TOC](README.md) · [term plan](01-term-plan.md) ·
+Age 8 now has: [birds-eye TOC](README.md) · [trimester plan](01-trimester-plan.md) ·
 [session template](02-session-template.md) · this assessment. The same four
 artifacts get built for **age 9**, carrying each child's IDP forward.

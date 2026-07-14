@@ -1,10 +1,10 @@
-# Age 8 · Term 2 — Passing & 1v1 (session library)
+# Age 8 · Trimester 2 — Passing & 1v1 (session library)
 
-Six runnable sessions for **Term 2** of the [term plan](../01-term-plan.md).
+Six runnable sessions for **Trimester 2** of the [trimester plan](../01-trimester-plan.md).
 Coerver pyramid blocks: **Receiving & Passing** + **1v1 Moves**. Theme: *"Me, the
 Ball & a Friend."*
 
-> **Provenance:** same as [Term 1](term-1-ball-mastery.md) — Coerver progression &
+> **Provenance:** same as [Trimester 1](trimester-1-ball-mastery.md) — Coerver progression &
 > technique-first are ✅ sourced; specific activities/order are ✏️ coaching
 > judgment on the [drill catalog](../../index/03-training-methodology-and-drills.md).
 > Rondo → Individual → Group, ball each / one per pair, no standings.
@@ -60,4 +60,4 @@ Ball & a Friend."*
 - **Corners/Smarts:** all four; "Next play" after a miss.
 
 ---
-_Next: [Term 3 — Group Play](term-3-group-play.md)._
+_Next: [Trimester 3 — Group Play](trimester-3-group-play.md)._
