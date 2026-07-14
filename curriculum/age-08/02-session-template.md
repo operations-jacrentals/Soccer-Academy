@@ -1,51 +1,62 @@
-# Age 8 — Weekly Session Template
+# Age 8 — Session & Weekly Template
 
-The repeatable shape of every age-8 session, built from the **elite talent
-systems'** young-age building blocks (Dutch/Spanish/Portuguese + futsal), not from
-a single federation's branded method.
+The repeatable shape of every 1-hour session — taken from **our top-3 clubs**
+(Ajax's thirds + Barça's rondo-warm-up), organized across the week by **Tactical-
+Periodization** principles. No US model.
 
-> **Provenance:** the **building blocks** are ✅ **sourced** — street free-play &
-> "let them discover" (**KNVB**), ball mastery & 1v1 (**Coerver**), rondo &
-> small-sided games (**La Masia / futsal**), technique-first (**RFEF**). See
-> [research/youth-method-foundations.md](../research/youth-method-foundations.md)
-> and [references](../references/sources.md). The **play → learn → play shape** is a
-> common structure (many federations use it); the **minute allocations and example
-> drills** are ✏️ **coaching judgment**.
+> **Provenance:** the **session shape** (Rondo → Individual → Group) and the
+> **integrated, varied week** are ✅ **sourced** →
+> [research/training-regimen.md](../research/training-regimen.md),
+> [references](../references/sources.md). The **minute allocations, the 3-session
+> split, and example activities** are ✏️ **coaching judgment**. Cadence & target:
+> [mastery-model](../mastery-model.md).
 
-## The shape — Play → Learn → Play
+## The session shape — Rondo → Individual → Group ✅
 
-| Phase | What it is | Source | Time ✏️ |
+Ajax's documented **thirds** (⅓ warm-up · ⅓ individual · ⅓ group), opened with a
+rondo à la La Masia. Everything with the ball, from minute one.
+
+| Part | What it is | Source | Time ✏️ |
 |---|---|---|---|
-| **Arrival — street free-play** | a ball each the instant they arrive; free play/tag, no coaching | KNVB *deliberate play* / street ✅ | 5 min |
-| **PLAY (1)** | small-sided game (futsal-style, up to 4v4/5v5); watch, minimal talk; ref = **game-leader** who lets them discover | KNVB *spelbegeleider* ✅ | ~15 min |
-| **LEARN — ball mastery → 1v1** | the day's single focus: Coerver **ball mastery** (both feet) → **1v1 move**; pairs / one ball each | Coerver pyramid ✅; RFEF *technique-first* ✅ | ~20 min |
-| **PLAY (2) — game + rondo** | back to a small-sided game / **rondo** so the focus shows up in real play | La Masia rondo ✅ / futsal ✅ | ~15 min |
-| **Huddle** | 1–2 questions + the **word of the day**; praise **effort** | — | 5 min |
+| **① Rondo / ball warm-up** | ball-mastery + a simple **rondo** (3v1/4v1) — activate *and* introduce the day's topic | 🇪🇸 La Masia · 🇳🇱 Ajax ✅ | ~15 min |
+| **② Individual play** | the day's single focus — ball mastery, 1v1, technique | 🇳🇱 Ajax thirds · Coerver ✅ | ~20 min |
+| **③ Group play** | a **small-sided game** / simple positional game / futsal — apply it; ref as **game-leader** | 🇪🇸 La Masia game · 🇳🇱 KNVB ✅ | ~20 min |
+| **Huddle** | one question + the **word of the day**; praise effort | — | ~5 min |
 
-*Total ≈ 60 min* ✏️ (fit it to your schedule; keep blocks short — attention is one task at a time ✅).
+## The three daily sessions ✏️ (Tactical-Periodization principle: integrated + varied)
+
+You run **3 × 1-hr sessions a day** — so they should **differ**, not repeat. Each
+still uses the Rondo → Individual → Group shape, but with a different emphasis:
+
+| Session | Emphasis | Feel |
+|---|---|---|
+| **A · Technical** | ball mastery & 1v1 (Coerver focus of the day) | sharp, high-quality reps |
+| **B · Games / deliberate play** | small-sided games, futsal, street-style free play | free, joyful — the *play* that the [evidence](../mastery-model.md) says matters |
+| **C · Physical + recovery** | movement (ABCs), injury-prevention (FIFA 11+), lighter game | athletic base, kept safe |
+
+Rotate the emphasis day to day; keep a **build-and-recover rhythm** across the week
+(don't stack three maximal days). **No standings** ✅ (KNVB).
 
 ## Coaching principles (age 8)
 
-- **Technique first, collective concepts later** ✅ (RFEF) — the day's focus is almost always individual ball skill.
-- **Maximum touches** ✅ — futsal-style small spaces, a ball each or one per pair; **no lines/queues**.
-- **Let them discover** ✅ (KNVB) — coach as *game-leader*; guide with a cue, don't over-instruct.
-- **Say the cue, don't lecture** — use the [words of the year](../index/13-teaching-cues-and-acronyms.md).
-- **Development over winning** ✅ — like KNVB U8–U10, **we keep no standings**; effort and trying are the headline.
-- **Encourage constantly** — U8 players have a **high need for adult approval** ✅.
-- **Adjust on the fly with STEP** — Space · Task · Equipment · People → [index/03](../index/03-training-methodology-and-drills.md).
+- **Ball-first** — the ball is in play from the first minute (La Masia). ✅
+- **Rondo is the engine** — control under pressure, scanning, decisions. → [index/03](../index/03-training-methodology-and-drills.md)
+- **Technique first, collective concepts later** ✅ (RFEF).
+- **Let them discover** — coach as *game-leader* (KNVB); say the cue, don't lecture.
+- **Development over winning** ✅; effort and trying are the headline.
+- **Adjust with STEP** — Space · Task · Equipment · People → [index/10](../index/10-coaching-styles-and-pedagogy.md).
 
-## Example session (Focus: ball mastery → change of direction) ✏️
+## Example session — Technical (Focus: change of direction) ✏️
 
-1. **Arrival (5m):** ball each, free dribble; on "freeze," stop the ball with the sole.
-2. **PLAY 1 (15m):** small-sided game to two mini-goals; just watch — who changes direction well?
-3. **LEARN (20m):** Coerver-style **ball mastery** in a box (sole rolls, both feet) → add a **change-of-direction move** (inside/outside/sole) → light "shark" defender. Cues: **"Both feet," "Head up."**
-4. **PLAY 2 (15m):** small-sided game / 3v1 rondo; celebrate any change of direction that beats a defender.
-5. **Huddle (5m):** "When did changing direction help you?" Word of the day: **"Head up."**
+1. **① Rondo/warm-up (15m):** ball-mastery in a box (sole rolls, both feet) → **3v1 rondo**.
+2. **② Individual (20m):** change-of-direction move (inside/outside/sole) vs. a passive → active "shark." Cues: **"Both feet," "Head up."**
+3. **③ Group (20m):** small-sided game; celebrate any change of direction that beats a defender.
+4. **Huddle (5m):** "When did changing direction help you?" Word of the day: **"Head up."**
 
 ## Setup & safety
 
-- Age-appropriate **ball**: size 3 (younger) → size 4 — regulatory only ✅ → [references](../references/sources.md); the **futsal-style small-space** environment is the elite choice.
-- Water breaks; small goals; limit deliberate heading at this age → [index/12](../index/12-laws-and-formats.md).
+- **Ball**: size 3 (younger) → size 4 — regulatory only ✅ → [references](../references/sources.md).
+- **Futsal-style small spaces** for touches; water breaks; injury-prevention; limit deliberate heading → [index/12](../index/12-laws-and-formats.md).
 
-> To adapt for another focus, keep the **Play → Learn → Play** shape and swap only
-> the **Learn** block and the **word of the day**.
+> To adapt for another focus, keep the **Rondo → Individual → Group** shape and swap
+> the individual-play focus and the word of the day.

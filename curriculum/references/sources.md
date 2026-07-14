@@ -112,6 +112,24 @@ The re-anchored *method* — see [research/youth-method-foundations.md](../resea
 
 _Native-language sources are translated inline; per the [egress limitation](#methodology--limitation-read-this) the PDFs could not be opened directly, so figures are as surfaced/translated via search and corroborated._
 
+## Training regimen — session & week (top-3 clubs)
+
+See [research/training-regimen.md](../research/training-regimen.md).
+
+- ✅ **La Masia session:** rondo warm-up → positional game → training game. → [A session at FC Barcelona](https://juegodeposicion.wordpress.com/2020/11/24/a-session-in-fc-barcelona/) · [9campnou](https://9campnou.com/all-you-need-to-know-about-fc-barcelona-training-sessions-2021-guide/)
+- ✅ **Ajax session:** 15–20 min progressive rondo; **thirds** (body control / individual / group); 60+ rondo variations. → [Ajax youth development](https://www.ajaxuniverse.com/youth-development)
+- ✅ **Tactical Periodization** (Vítor Frade, Portuguese school): physical/technical/tactical/psychological as an inseparable whole; weekly **morphocycle**. → [Barça Innovation Hub](https://barcainnovationhub.fcbarcelona.com/blog/tactical-periodization-football-load-planning/) · [What is Tactical Periodization?](https://jobsinfootball.com/blog/what-is-tactical-periodization/) · [Vítor Frade](https://www.tacticalperiodisation.com/pt/vitor-frade/)
+
+## Mastery & training hours (evidence)
+
+See [mastery-model.md](../mastery-model.md).
+
+- ⚠️ **The "10,000-hour rule"** = the *average* for top violinists in Ericsson's 1993 study, popularized (and oversimplified) by Gladwell; Ericsson himself rebuts the "rule." → [Salon — Ericsson's rebuttal](https://www.salon.com/2016/04/10/malcolm_gladwell_got_us_wrong_our_research_was_key_to_the_10000_hour_rule_but_heres_what_got_oversimplified/)
+- ✅ **Footballers reach professional level at ~4,500–6,000 hours.** → [systematic review of elite footballers (Frontiers)](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1826135/full)
+- ✅ **Deliberate practice explains ~18% of variance in sport performance.** → [Macnamara, Hambrick & Oswald 2014, *Psychological Science*](https://journals.sagepub.com/doi/abs/10.1177/0956797614535810)
+- ✅ **Early engagement** — soccer *play* hours ages 6–12 predict progression to pro. → [Ford & Williams (ERIC)](https://eric.ed.gov/?id=EJ855746)
+- ✅ **Early single-sport specialization risks** — overuse injury, burnout (~3.76× before age 12), dropout; multi-sport advised until maturity. → [AAP, *Pediatrics* 2016](https://publications.aap.org/pediatrics/article/138/3/e20162148/52612/Sports-Specialization-and-Intensive-Training-in)
+
 ## Academy production statistics (⚠️ secondary — unverified)
 
 - ⚠️ CIES Football Observatory player-production counts used in `research/`

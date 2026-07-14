@@ -17,6 +17,7 @@ expected to start** → **where we project them before they turn 9.**
 - **Elite grassroots (🇪🇸 Spain Benjamín 8–9; 🇳🇱 Dutch; 🇵🇹 Portuguese):** **individual technique first** (RFEF), ball mastery, 1v1, and **fun**; the "me → ball → friend → game" progression. → [foundations](../research/youth-method-foundations.md), [sources](../references/sources.md)
 - **Academy-model stage:** Ajax **Stage 2** — *technique & creativity* (⚠️ the stage-age split is secondary; see [research](../research/ajax-de-toekomst-model.md)).
 - **One-line goal:** *fall in love with the ball, and become a brave, two-footed dribbler who tries things.* ✏️
+- **Cadence & target:** 15 hrs/week (3×1 hr × 5 days) × 40 weeks ≈ **600 hrs/yr → ~5,400 hrs by 17** — an evidence-based professional-range volume (**not** the 10,000-hour myth). → [mastery model](../mastery-model.md)
 
 ## Format & equipment ✅ (elite small-sided · IFAB regulatory)
 
@@ -29,9 +30,10 @@ expected to start** → **where we project them before they turn 9.**
 - **Coerver ball-mastery pyramid** (Ball Mastery → Receiving/Passing → 1v1 → Group Play) as the content spine → [Coerver](../references/sources.md).
 - **Futsal-style, maximum-touch** small-sided environment → [futsal / KNVB](../references/sources.md).
 - **Street / deliberate play & discovery**; **development over winning — no standings** → [KNVB](../references/sources.md).
-- Whole child across the **Four Corners** → [FA](../references/sources.md); **one focus per session**, **one ball per pair**, **Play → Learn → Play** → [session template](02-session-template.md).
+- **Session shape:** **Rondo → Individual → Group** (Ajax thirds + Barça rondo-warm-up), organized across the week by **Tactical-Periodization** principles → [training regimen](../research/training-regimen.md), [session template](02-session-template.md).
+- Whole child across the **Four Corners** → [FA](../references/sources.md); **one focus per session**, **one ball per pair**, development over winning.
 - **Words of the year** ✏️ ([index/13](../index/13-teaching-cues-and-acronyms.md)): **"Head up" · "Both feet" · "Try it!" · "Find space" · "Next play."**
-- Full method: [research/youth-method-foundations.md](../research/youth-method-foundations.md).
+- Full method: [youth-method-foundations](../research/youth-method-foundations.md) · [training regimen](../research/training-regimen.md).
 
 ## Design around these characteristics ✅ (US Youth Soccer)
 
@@ -128,9 +130,9 @@ expected to start** → **where we project them before they turn 9.**
 ## The age-8 unit
 
 - **[Term plan](01-term-plan.md)** — the year across three terms (Me & the Ball → …& a Friend → Playing the Game).
-- **[Session template](02-session-template.md)** — the repeatable Play → Learn → Play session.
+- **[Session template](02-session-template.md)** — the repeatable Rondo → Individual → Group session + the 3-daily-session split.
 - **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
-- **Session library** — 18 runnable sessions:
+- **Session library** — **18 session-*types*** you **repeat and progress** at your cadence (not 18-and-done):
   - [Term 1 — Ball Mastery](sessions/term-1-ball-mastery.md) (S1–S6)
   - [Term 2 — Passing & 1v1](sessions/term-2-passing-and-1v1.md) (S7–S12)
   - [Term 3 — Group Play](sessions/term-3-group-play.md) (S13–S18)

@@ -60,7 +60,7 @@ How the [age-8 targets](README.md) spread across the year. Read with the
 - **Not rigid:** a child ahead keeps progressing up the Coerver pyramid; a beginner
   spends longer on Ball Mastery. Individualize via each child's **IDP** →
   [assessment](03-assessment.md).
-- **Session structure:** every session uses the **Play → Learn → Play** shape →
+- **Session structure:** every session uses the **Rondo → Individual → Group** shape →
   [session template](02-session-template.md).
 - **Cadence** (sessions/week, weeks/term) is a family/scheduling choice ✏️ — total
   contact time and touches matter more than the exact split.
