@@ -34,6 +34,10 @@ Short statements of "how we play," easy to chant and coach to.
 - **Defending principles** — pressure · cover · balance · compactness · control. → [07](07-tactics-and-systems.md)
 - **The four moments** — in possession · out of possession · attacking transition · defensive transition. → [07](07-tactics-and-systems.md)
 
+## Tactical concepts (teachable labels)
+
+- **Half-space** · **the 5-lane grid** · **Zone 14** ("the golden square") · **la pausa** · **overload-to-isolate** · **third-man run** · **rest defense / rest attack**. → [07](07-tactics-and-systems.md)
+
 ## Coaching cues & phrases (say these on the pitch)
 
 Short, sticky, repeatable. Say the cue, don't explain the theory.
@@ -54,6 +58,7 @@ Short, sticky, repeatable. Say the cue, don't explain the theory.
 ## Method & session terms (labels for *how* we train)
 
 - **Rondo** · **Juego de Posición / positional play** · **Small-Sided Game (SSG)** · **overload / underload** · **transition game**. → [03](03-training-methodology-and-drills.md)
+- **PPP** — Play–Practice–Play (US Soccer session model) · **morphocycle** (the tactical-periodization week) · **structured training / PSS** (Seirul·lo's preferential simulation situations). → [03](03-training-methodology-and-drills.md)
 - **RAMP** warm-up — Raise · Activate · Mobilize · Potentiate. → [03](03-training-methodology-and-drills.md)
 - **STEP** — adjust **S**pace · **T**ask · **E**quipment · **P**eople. → [03](03-training-methodology-and-drills.md), [10](10-coaching-styles-and-pedagogy.md)
 - **Whole–part–whole** · **guided discovery** · **constraints-led** · **TGfU**. → [10](10-coaching-styles-and-pedagogy.md)
@@ -66,11 +71,22 @@ Short, sticky, repeatable. Say the cue, don't explain the theory.
 - **LTAD** — Long-Term Athlete Development (FUN · L2T · T2T · T2C…). → [11](11-player-development-and-pathways.md)
 - **PHV** — Peak Height Velocity (the growth spurt); **bio-banding**; **RAE** (Relative Age Effect). → [09](09-metrics-and-statistics.md), [11](11-player-development-and-pathways.md)
 - **IDP** — Individual Development Plan. → [11](11-player-development-and-pathways.md)
+- **FTEM** — Foundations · Talent · Elite · Mastery (development pathway) · **DMSP** — Developmental Model of Sport Participation (sampling → specializing → investment). → [11](11-player-development-and-pathways.md)
 
 ## Mental-skill cues
 
 - **Process / performance / outcome goals** — control what you can. → [05](05-psychology-and-mental.md)
 - **Cue words · self-talk · "reset" · pre-performance routine** — focus and composure tools. → [05](05-psychology-and-mental.md)
+- **TARGET** — mastery-climate structures (Task · Authority · Recognition · Grouping · Evaluation · Time) · **4Cs** — mental toughness (Control · Commitment · Challenge · Confidence). → [05](05-psychology-and-mental.md)
+- **3+1 Cs** — coach–athlete relationship (Closeness · Commitment · Complementarity · Co-orientation). → [10](10-coaching-styles-and-pedagogy.md)
+
+## Analytics & load labels
+
+Shorthand for the measurement layer — definitions in [09](09-metrics-and-statistics.md).
+
+- **xG · xGOT · SCA/GCA · PPDA · field tilt · sequences** — performance-analytics metrics.
+- **RPE / sRPE · ACWR · TRIMP · monotony & strain** — training-load monitoring.
+- **Injury incidence / burden · availability %** — injury-surveillance & availability.
 
 ---
 

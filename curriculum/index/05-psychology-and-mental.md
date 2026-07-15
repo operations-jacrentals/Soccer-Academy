@@ -12,6 +12,7 @@ to an academy whose mission pairs soccer with "smarts" and character.
 - **Self-Determination Theory (SDT)** — three needs drive intrinsic motivation: **autonomy** (choice), **competence** (progress), **relatedness** (belonging). Design environments that feed all three.
 - **Growth vs. fixed mindset (Dweck)** — ability is grown through effort vs. fixed talent. Praise process, effort, and strategy — not "you're a natural."
 - **Achievement goal orientation** — *task/mastery* (beat your own best) vs. *ego/outcome* (beat others). Bias young players toward mastery.
+- **Motivational climate & the TARGET model** — the climate the coach *creates* (mastery- vs. performance-oriented). Build a mastery climate with **TARGET**: **T**ask (varied, self-referenced challenges) · **A**uthority (give players real choices) · **R**ecognition (praise effort/improvement, privately) · **G**rouping (mixed, cooperative) · **E**valuation (self-referenced progress) · **T**ime (flexible pace). (Ames; Epstein.)
 - **Grit & perseverance** — sustained passion + effort toward long goals.
 
 ## Confidence & self-belief
@@ -33,7 +34,7 @@ to an academy whose mission pairs soccer with "smarts" and character.
 ## Emotional regulation & resilience
 
 - **Emotional regulation** — managing frustration, anger, nerves in the moment.
-- **Resilience / mental toughness** — bouncing back from setbacks, mistakes, and losses.
+- **Resilience / mental toughness (4Cs, Clough)** — bouncing back from setbacks, mistakes, and losses; the **4Cs** frame it as **Control · Commitment · Challenge · Confidence**. Treated as *trainable*, not a fixed trait.
 - **Reacting to mistakes** — the "next play" mentality; short memory for errors.
 - **Coping with adversity & failure** — reframing, learning, persisting; failure as feedback.
 - **Burnout prevention** — protecting enjoyment; avoiding over-training and early over-specialization.
@@ -75,3 +76,9 @@ to an academy whose mission pairs soccer with "smarts" and character.
 > explicit reps — a breathing routine before finishing drills, a "next play" cue
 > after mistakes, process goals each session — into ordinary training rather than
 > treating psychology as a separate lecture.
+
+---
+
+*Provenance: named frameworks (SDT, Dweck's mindsets, Yerkes-Dodson, IZOF, and the
+added TARGET climate model and 4Cs mental toughness) are cited by origin in
+[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology--coaching-frameworks-index05-10).*
