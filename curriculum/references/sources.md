@@ -85,13 +85,75 @@ field/goal ranges are ⚠️ (from a search summary of the PDF I could not open)
   → [Inside World Football (24 Oct 2025)](https://www.insideworldfootball.com/2025/10/24/benfica-tops-ranking-academy-football-factories-barca-river-plate-make-top-three)
   · [CIES Golden factories](https://football-observatory.com/Golden-factories-top-academies-worldwide-3019)
 
+## Metrics & analytics (index/09)
+
+Named, published football metrics and sports-science methods used in
+[`index/09`](../index/09-metrics-and-statistics.md). Cited **by origin** per Rule 1
+(never invent a metric or formula). Per the methodology note above, these were
+**surfaced and corroborated via search**, not opened directly.
+
+### Advanced / analytics metrics
+
+- ✅ **xGOT (Expected Goals on Target)** — post-shot model; **xGOT − xG = shooting goals added (SGA)**; keeper-facing use for shot-stopping. (Opta / Stats Perform — established.)
+  → [Opta Analyst — What are Expected Goals on Target?](https://theanalyst.com/articles/what-are-expected-goals-on-target-xgot)
+  · [Stats Perform — Introducing xGOT](https://www.statsperform.com/insights/introducing-expected-goals-on-target-xgot/)
+- ✅ **SCA / GCA (Shot- / Goal-Creating Actions)** — the two offensive actions before a shot / goal; FBref using StatsBomb data.
+  → [FBref — Goal & Shot Creation (Premier League)](https://fbref.com/en/comps/9/gca/Premier-League-Stats)
+  · [Sports-Reference — Goal Creation & advanced stats on FBref](https://www.sports-reference.com/blog/2020/04/goal-creation-possession-passing-and-more-advanced-stats-on-fbref/)
+- ✅ **Sequences framework** — build-up attacks (10+ passes → shot/box touch), direct attacks (own half, ≥50% toward goal), direct speed, 10+ pass sequences. (Opta.)
+  → [Opta Analyst — Possessions and Sequences in Football](https://theanalyst.com/articles/possessions-and-sequences-in-football)
+  · [Opta Sports — Advanced metrics: Sequences framework](https://www.optasports.com/news/advanced-metrics-sequences-framework/)
+- ✅ **Duels (aerial/ground) success %, take-on/tackle success %, ball recoveries** — event definitions. (Opta.)
+  → [Opta Analyst — Football Stats Definitions](https://theanalyst.com/articles/opta-football-stats-definitions)
+
+### Rating & ranking systems
+
+- ⚠️ **World Football Elo** — Elo adapted for football (match importance, goal margin, home advantage). *Secondary summary; primary is eloratings.net.*
+  → [World Football Elo Ratings (Wikipedia)](https://en.wikipedia.org/wiki/World_Football_Elo_Ratings)
+- ✅ **SPI (Soccer Power Index, ESPN)** — forward-looking, offense/defense split; publisher's own explainer.
+  → [ESPN — Soccer Power Index explained](https://www.espn.com/soccer/story/_/id/37367780/soccer-power-index-explained)
+- ⚠️ **Composite player match ratings (WhoScored / SofaScore / FotMob)** — **proprietary / black-box** algorithms; cite each provider's own explainer. A 2025 peer-reviewed comparison found offensive actions weigh heaviest across systems (✅ for that finding).
+  → [WhoScored — Ratings explained](https://www.whoscored.com/explanations)
+  · [SofaScore — Rating (about)](https://corporate.sofascore.com/about/rating)
+  · [Comparing player rating systems, *J. Sports Sciences* (2025)](https://www.tandfonline.com/doi/full/10.1080/02640414.2025.2471208)
+
+### Training-load monitoring
+
+- ✅ **session-RPE (sRPE), training monotony & strain (Foster)** — sRPE = RPE × duration; monotony = weekly mean ÷ SD; strain = weekly load × monotony.
+  → [Haddad et al. 2017, *Frontiers in Neuroscience* — Session-RPE review (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5673663/)
+- ✅ **TRIMP (Training Impulse, Banister)** — HR-based internal load (HR-reserve × duration × intensity weighting). Named method (Banister 1991), corroborated in the review above.
+
+### Injury surveillance & availability
+
+- ✅ **Football injury consensus statement (Fuller et al. 2006)** — standard injury definitions & data-collection procedures.
+  → [Consensus statement on injury definitions in football (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2491990/)
+- ✅ **Injury incidence (/1000 player-hours), burden (= incidence × mean severity), severity grades** (slight/minimal/mild/moderate/severe/career-ending); training vs match reported separately; 2020 IOC methodology update.
+  → [FA Injury & Illness Surveillance Study, *Sports Medicine* (2020) (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7768595/)
+
+### Fitness & movement testing
+
+- ✅ **30-15 IFT → MAS (Maximal Aerobic Speed)** — Buchheit's intermittent test; final speed (VIFT) individualizes interval prescription.
+  → [Science for Sport — 30-15 Intermittent Fitness Test](https://www.scienceforsport.com/30-15-intermittent-fitness-test/)
+  · [Testing in Football: A Narrative Review (PMC, 2024)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11598473/)
+- ✅ **Nordic hamstring (eccentric strength) · Functional Movement Screen (FMS)** — used widely for injury screening/monitoring in football.
+  → [Testing in Football: A Narrative Review (PMC, 2024)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11598473/)
+  · [FMS in elite young soccer players 14–20 (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5675373/)
+
+### Where the data comes from (providers)
+
+- ✅ **Event data** (Opta / Stats Perform, StatsBomb / Hudl, Wyscout) vs **tracking data** (SkillCorner, Second Spectrum, Hawk-Eye); aggregated free by **FBref**.
+  → [Opta Analyst — Football Stats Definitions](https://theanalyst.com/articles/opta-football-stats-definitions)
+
 ---
 
 ## Real formulas & frameworks referenced (never invented)
 
 Named, published — cite when used:
 - **ACWR** — acute:chronic workload ratio (training-load monitoring).
-- **xG / xT / PPDA** — published football-analytics metrics (model-based). → [index/09](../index/09-metrics-and-statistics.md)
+- **xG / xT / PPDA · xGOT / SGA · SCA / GCA · sequences framework** — published football-analytics metrics (model-based). → [Metrics & analytics](#metrics--analytics-index09) · [index/09](../index/09-metrics-and-statistics.md)
+- **session-RPE, training monotony & strain (Foster) · TRIMP (Banister)** — training-load methods. → [Metrics & analytics](#metrics--analytics-index09)
+- **Injury incidence / burden & consensus definitions (Fuller et al. 2006; IOC 2020)** — injury-surveillance standards. → [Metrics & analytics](#metrics--analytics-index09)
+- **30-15 IFT / MAS (Buchheit) · Nordic hamstring · FMS** — fitness & movement testing. → [Metrics & analytics](#metrics--analytics-index09)
 - **PHV / maturity offset** — Mirwald et al. equation (biological maturity estimate).
 - **FIFA 11+** — injury-prevention warm-up program.
 - **Yerkes–Dodson law** — arousal↔performance relationship. → [index/05](../index/05-psychology-and-mental.md)
