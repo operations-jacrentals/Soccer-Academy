@@ -113,7 +113,7 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 .lionbox.roar .rig{animation:lunge .95s cubic-bezier(.34,1.3,.5,1);}
 @keyframes lunge{0%{transform:none}20%{transform:translate(5%,1%) scale(.95)}52%{transform:translate(-8%,-3%) scale(1.09)}75%{transform:translate(-5%,-1.5%) scale(1.05)}100%{transform:none}}
 .lionbox.roar .jaw{animation:jawopen .95s ease-out;}
-@keyframes jawopen{0%{transform:none}25%{transform:rotate(18deg)}60%{transform:rotate(15deg)}100%{transform:none}}
+@keyframes jawopen{0%{transform:none}25%{transform:rotate(-16deg)}60%{transform:rotate(-13deg)}100%{transform:none}}
 .lionbox.roar .breath{animation:breathflare .95s ease-out;}
 @keyframes breathflare{0%{opacity:.35;transform:scale(.6)}30%{opacity:1;transform:scale(1.35)}100%{opacity:.35;transform:scale(1)}}
 .lionbox.tierup .rig{animation:tierglow 1.6s ease-in-out;}
@@ -137,6 +137,10 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 .pawrow .pawlbl{font-size:.6rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#C8CFE8;}
 .paw{width:18px;height:18px;opacity:.25;}
 .paw.lit{opacity:1;filter:drop-shadow(0 0 3px rgba(255,91,73,.7));}
+.brainbox{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;margin-top:4px;}
+.brainbox svg{width:92px;display:block;}
+.cards.compare .brainbox svg{width:70px;}
+.brain-lbl{font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9CC3FF;text-align:center;line-height:1.35;}
 
 /* ---------- grid zone ---------- */
 .gridhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);
@@ -155,6 +159,19 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 .dupbtn{background:var(--royal);color:var(--gold);font-weight:900;font-size:.74rem;letter-spacing:.1em;
   text-transform:uppercase;padding:12px 16px;border-radius:12px;border:2px solid var(--gold);min-height:44px;}
 .dupbtn:active{transform:scale(.97);}
+
+/* soccer events — bonus-only, live with the week row */
+.eventbar{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;}
+.ev-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.ev-name{font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);width:44px;flex:0 0 auto;}
+.ev-gp{font-size:.72rem;font-weight:800;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:6px 11px;}
+.ev-gp b{font-size:.9rem;}
+.ev-add{margin-left:auto;font-size:.7rem;font-weight:900;letter-spacing:.06em;border:2px dashed var(--gold-line);color:var(--gold-deep);border-radius:10px;padding:9px 13px;min-height:42px;}
+.ev-add[aria-expanded="true"]{background:var(--gold-soft);}
+.ev-menu{display:flex;gap:6px;flex-wrap:wrap;padding-left:53px;}
+.ev-type{font-size:.72rem;font-weight:800;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:10px 13px;min-height:42px;color:var(--ink);}
+.ev-type:active{transform:scale(.95);background:var(--gold-soft);}
+.ev-note{font-size:.64rem;color:var(--slate);line-height:1.5;margin:0;}
 
 /* week row of day tiles */
 .weekrow-outer{overflow-x:auto;margin-top:12px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
@@ -202,8 +219,7 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 .block-name{font-size:.66rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--slate);margin-bottom:3px;}
 .block-txt{font-size:.86rem;line-height:1.5;margin:0;}
 .block-txt b{color:var(--gold-deep);}
-.block .anim{width:min(215px,42%);flex:0 0 auto;border-radius:9px;background:var(--surface-2);align-self:center;}
-@media (max-width:560px){ .block{flex-wrap:wrap;} .block .anim{width:min(230px,100%);margin-left:55px;} }
+.animwrap .anim{width:min(230px,100%);border-radius:9px;background:var(--surface-2);}
 .block textarea{width:100%;min-height:74px;border:1px solid var(--gold-line);border-radius:9px;background:var(--surface-2);
   color:var(--ink);font-family:inherit;font-size:.85rem;line-height:1.45;padding:8px;resize:vertical;}
 .editbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 14px 8px;font-size:.72rem;color:var(--slate);}
@@ -251,6 +267,23 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 .bravebtn{margin-left:auto;background:var(--vermilion);color:#fff;font-weight:900;font-size:.78rem;
   letter-spacing:.08em;border-radius:11px;padding:13px 16px;min-height:46px;}
 .bravebtn:active{transform:scale(.95);}
+.cg-row{display:flex;align-items:center;gap:9px;border-top:1px dashed rgba(255,91,73,.35);padding:8px 0 7px;}
+.cg-main{flex:1 1 auto;min-width:0;}
+.cg-name{font-size:.78rem;font-weight:900;color:var(--vermilion);}
+.cg-def{font-size:.64rem;color:var(--slate);line-height:1.4;font-weight:600;}
+.cg-count{font-size:.68rem;font-weight:800;color:var(--slate);min-width:52px;text-align:right;flex:0 0 auto;}
+.cg-count b{font-size:1.15rem;font-weight:900;color:var(--ink);}
+.cg-btn{width:46px;height:46px;border-radius:11px;background:var(--vermilion);color:#fff;font-weight:900;font-size:1.25rem;display:grid;place-items:center;flex:0 0 auto;}
+.cg-btn:active{transform:scale(.92);}
+.cg-btn:disabled{opacity:.4;cursor:default;}
+.cg-btn.medal{background:var(--gold);color:var(--royal);font-size:1.05rem;}
+
+/* drill diagrams behind a click-wall */
+.animtoggle{display:inline-flex;align-items:center;gap:7px;font-size:.7rem;font-weight:900;letter-spacing:.06em;color:var(--slate);border:1px solid var(--line);border-radius:9px;padding:9px 13px;min-height:42px;margin-top:8px;background:var(--surface-2);}
+.animtoggle[aria-expanded="true"]{background:var(--gold-soft);border-color:var(--gold-line);color:var(--gold-dark);}
+.animwrap{margin-top:8px;}
+.block .prtime{margin:8px 0 0;}
+.sess-done-wrap{padding:0 14px 14px;}
 .sess-done{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:2px solid var(--line);padding-top:11px;}
 .donebtn{flex:1 1 220px;background:var(--gold);color:var(--royal);font-weight:900;font-size:.9rem;
   letter-spacing:.09em;text-transform:uppercase;border-radius:13px;padding:15px 16px;min-height:52px;border:2px solid var(--gold-deep);}
@@ -397,7 +430,7 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
     </section>
 
     <footer class="foot">
-      <p class="ethos">Every number on this page is <b>yours-vs-yours</b>: beat your own last best. No standings, no overall rating — a leaderboard is unrepresentable here, on purpose. Brave tries feed the lion. 🦁</p>
+      <p class="ethos">Every number on this page is <b>yours-vs-yours</b>: beat your own last best. No standings, no overall rating — a leaderboard is unrepresentable here, on purpose. Courage Counts feed the lion. 🦁</p>
       <button class="resetbtn" data-action="reset">Reset demo data</button>
     </footer>
   </div>
@@ -421,7 +454,8 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus
 (function(){
 'use strict';
 /* =============== utilities =============== */
-var LS_KEY='soccerSmarts.age8.v1';
+var LS_KEY='soccerSmarts.age8.v2';
+var LS_V1='soccerSmarts.age8.v1';
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
@@ -430,7 +464,8 @@ function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a
 
 /* =============== config: spokes, metrics, weeks, days =============== */
 var SPOKES=['PAC','SHO','PAS','DRI','DEF','PHY'];
-var SPOKE_NAME={PAC:'Pace',SHO:'Finishing',PAS:'Passing',DRI:'Dribbling',DEF:'Defending',PHY:'Physical'};
+var SPOKE_NAME={PAC:'Pace',SHO:'Shooting',PAS:'Passing',DRI:'Dribbling',DEF:'Defending',PHY:'Physical'};
+var HEX_LBL=['PACE','SHOOTING','PASSING','DRIBBLING','DEFENDING','PHYSICAL'];
 var NUDGE={DRI:.5,PAS:.5,SHO:1.15,DEF:2.2,PAC:2.2,PHY:2.2};
 var JUMP={DRI:2.2,PAS:2.2,SHO:3.2,DEF:4.5,PAC:3.5,PHY:3.5};
 
@@ -513,7 +548,7 @@ var DAYS=[
   hud:'“Did the defender buy your fake?”',
   aInd:'feint',aGrp:'fourgoals',
   measures:['beatdef','gauntlet'],
-  braveLbl:'Brave 1v1 moves tried — a failed move still counts',braveBig:true},
+  braveLbl:'Today’s feint tried on a real defender — sold it or not, the try counts.',braveBig:true},
  {id:'D4',week:'A',dow:'Thu',title:'First touch into dribble',family:'Dribbling · receiving',spokes:['DRI'],
   warm:'Pairs, one ball — gentle rolls; <b>cushion</b> it soft and stop it.',
   ind:'Receive the roll, first touch <b>OUT of your feet into space</b>, then dribble to the cone. Check your shoulders first.',
@@ -524,11 +559,11 @@ var DAYS=[
  {id:'D5',week:'A',dow:'Fri',title:'Creativity & skill-move showcase',family:'Dribbling · creativity',spokes:['DRI'],checkpoint:true,
   warm:'Free stage — <b>show your favourite move</b>.',
   ind:'<b>Invent-a-move</b> station + trick menu: sole roll, cut, feint, Cruyff, <b>your move</b>. Child’s choice.',
-  grp:'Mini <b>festival</b> — just play. Shout out every brave try.',
+  grp:'Mini <b>festival</b> — just play. Shout out every Courage Count you spot.',
   hud:'“Name your move. What will you show next week?”',
   aInd:'cruyff',aGrp:'ssg44',
   measures:['trickmenu','juggle','mymoveshow'],
-  braveLbl:'My-Move attempts — every time they dared it in the game',braveBig:true},
+  braveLbl:'My-Move dared in the real game — every show counts, polished or not.',braveBig:true},
  {id:'D6',week:'B',dow:'Mon',title:'Inside-foot passing',family:'Passing',spokes:['PAS'],
   warm:'<b>3v1 rondo</b> — keepers pass, middle chases. Everyone rotates.',
   ind:'<b>Inside-foot pass</b> to a partner through a gate — weight it “just right”. Both feet; two-touch, then one-touch.',
@@ -586,7 +621,7 @@ var DAYS=[
   hud:'“Why not dive in straight away?”',
   aInd:'jockeya',aGrp:'ssg44',
   measures:['jockey','poke'],
-  braveLbl:'Patient win-backs — jockey, wait, win it (process, not outcome)',braveBig:true},
+  braveLbl:'Jockey tried against a real attacker — patience shown, win or not.',braveBig:true},
  {id:'D14',week:'C',dow:'Thu',title:'Goalkeeping taster — “Safe Hands”',family:'Goalkeeping',spokes:['SHO'],
   warm:'<b>Circle Catch</b> — roll &amp; catch in pairs. Soft <b>“W” hands</b>.',
   ind:'<b>Ready position</b> → scoop the roller → roll or throw it out. Everyone has a go in goal.',
@@ -625,7 +660,7 @@ function tierOf(pts){var t=1;for(var i=1;i<TIER_MAX;i++)if(pts>=THR[i])t=i+1;ret
 
 /* =============== state =============== */
 var S=null;
-var UI={week:'A',openDay:null,prPlayer:'jack',staged:{},openHist:{},editDay:null,pendingPhoto:null};
+var UI={week:'A',openDay:null,prPlayer:'jack',staged:{},openHist:{},editDay:null,pendingPhoto:null,evMenu:null,openAnims:{}};
 var FXQ=[];
 
 function defaultDrills(){return {};}
@@ -641,7 +676,7 @@ function seedState(){
            blue:{D1:[1,1,1],D2:[1,1,0],D3:[1,1,1],D4:[1,1,1],D5:[0,1,1],D6:[1,1,1],D7:[1,1,0],D8:[0,0,0]}};
  ['jack','blue'].forEach(function(p){for(var d=1;d<=15;d++){var k='D'+d;act[p][k]=(base[p][k]||[0,0,0]).slice();}});
  return {
-  v:1,
+  v:2,
   players:[
    {id:'jack',name:'Jack',seed:811723,photo:null},
    {id:'blue',name:'Blue',seed:240311,photo:null}
@@ -652,21 +687,24 @@ function seedState(){
           trickmenu:3,juggle:11,mymoveshow:2,pass:24,targethit:7,passwf:16,onetwo:14,wallstreak:9,gate12:6,rondostreak:8,
           beforeloss:11,splitpass:2,halfturn:15,rtp:4.5,scan:6,teamstreak:10,support:5,switchplay:2,finish:6,finishwf:4,
           firsttime:3,dash:4.9,ddash:6.8,ladder:12,jockey:6.5,poke:5,keeper:6,scoop:7,reaction:4,rules:3,fairplay:4,festival:5},
-     roarPts:74,braveTotal:58,prBeats:19,smarts:{scan:6,rules:3}},
+     roarPts:74,courage:{attempts:31,weakFoot:12,bounceBacks:12,medals:3},gameBrain:24,prBeats:19,smarts:{scan:6,rules:3}},
    blue:{spokes:{PAC:26,SHO:24,PAS:49,DRI:38,DEF:31,PHY:27},
      prs:{touch:29,toetap:35,fig8:7,gate:10,gatewf:7,slalom:15.5,beatdef:5,gauntlet:20,cushion:18,walltouch:22,trapgo:7.5,
           trickmenu:2,juggle:7,mymoveshow:3,pass:27,targethit:8,passwf:19,onetwo:17,wallstreak:12,gate12:7,rondostreak:11,
           beforeloss:14,splitpass:3,halfturn:18,rtp:3.5,scan:8,teamstreak:12,support:7,switchplay:3,finish:5,finishwf:3,
           firsttime:2,dash:5.1,ddash:7.2,ladder:10,jockey:7.5,poke:4,keeper:5,scoop:6,reaction:3,rules:4,fairplay:6,festival:6},
-     roarPts:69,braveTotal:41,prBeats:14,smarts:{scan:8,rules:4}}
+     roarPts:69,courage:{attempts:22,weakFoot:8,bounceBacks:9,medals:2},gameBrain:31,prBeats:14,smarts:{scan:8,rules:4}}
   },
   grids:[
    {id:'g1',cycle:1,label:'Cycle 1',createdAt:'2026-05-25',frozen:true,attendance:g1a,
-    brave:{jack:{D3:5,D5:4,D13:3},blue:{D3:3,D5:6,D13:2}},awards:{jack:awardsFor(g1a.jack),blue:awardsFor(g1a.blue)}},
+    brave:{jack:{D3:5,D5:4,D13:3},blue:{D3:3,D5:6,D13:2}},events:[],gamesPlayed:{},awards:{jack:awardsFor(g1a.jack),blue:awardsFor(g1a.blue)}},
    {id:'g2',cycle:2,label:'Cycle 2',createdAt:'2026-06-15',frozen:true,attendance:g2a,
-    brave:{jack:{D3:7,D5:3,D8:4},blue:{D3:4,D5:5,D8:3}},awards:{jack:awardsFor(g2a.jack),blue:awardsFor(g2a.blue)}},
+    brave:{jack:{D3:7,D5:3,D8:4},blue:{D3:4,D5:5,D8:3}},events:[],gamesPlayed:{},awards:{jack:awardsFor(g2a.jack),blue:awardsFor(g2a.blue)}},
    {id:'g3',cycle:3,label:'Cycle 3',createdAt:'2026-07-06',frozen:false,attendance:act,
-    brave:{jack:{D3:6,D5:3,D8:2},blue:{D3:4,D5:5}},awards:{jack:awardsFor(act.jack),blue:awardsFor(act.blue)}}
+    courage:{jack:{D3:{a:3,w:1,b:2,m:1},D5:{a:2,w:1,b:0,m:0},D8:{a:1,w:0,b:1,m:0}},blue:{D3:{a:2,w:1,b:1,m:0},D5:{a:3,w:0,b:2,m:0}}},
+    events:[{playerId:'jack',day:'D2',type:'watch'},{playerId:'blue',day:'D3',type:'fifa'},{playerId:'jack',day:'D5',type:'game'},
+     {playerId:'blue',day:'D6',type:'game'},{playerId:'jack',day:'D8',type:'club'},{playerId:'jack',day:'D9',type:'game'}],
+    gamesPlayed:{jack:2,blue:1},awards:{jack:awardsFor(act.jack),blue:awardsFor(act.blue)}}
   ],
   activeGridId:'g3',
   drillEdits:defaultDrills(),
@@ -674,7 +712,40 @@ function seedState(){
  };
 }
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
-function load(){try{var s=localStorage.getItem(LS_KEY);if(!s)return null;var o=JSON.parse(s);if(o&&o.v===1&&o.players&&o.card&&o.grids)return o;}catch(e){}return null;}
+function load(){try{var s=localStorage.getItem(LS_KEY);if(!s)return null;var o=JSON.parse(s);if(o&&o.v===2&&o.players&&o.card&&o.grids)return o;}catch(e){}return null;}
+/* one-time v1 -> v2 migration: braveTotal lumps into courage.attempts, Game Brain seeded
+   small from existing smarts logs, events/gamesPlayed start empty. v1 is left untouched. */
+function migrate(){
+ try{
+  if(localStorage.getItem(LS_KEY))return;
+  var raw=localStorage.getItem(LS_V1); if(!raw)return;
+  var o=JSON.parse(raw); if(!o||o.v!==1||!o.players||!o.card||!o.grids)return;
+  o.v=2;
+  Object.keys(o.card).forEach(function(pid){
+   var c=o.card[pid];
+   c.courage={attempts:(+c.braveTotal||0),weakFoot:0,bounceBacks:0,medals:0};
+   var gb=0; if(c.smarts)Object.keys(c.smarts).forEach(function(){gb+=2;});
+   c.gameBrain=gb;
+   delete c.braveTotal;
+  });
+  o.grids.forEach(function(g){
+   g.events=g.events||[]; g.gamesPlayed=g.gamesPlayed||{};
+   g.attendance=g.attendance||{};
+   o.players.forEach(function(pl){
+    g.attendance[pl.id]=g.attendance[pl.id]||{};
+    for(var di=1;di<=15;di++){var dk='D'+di;if(!g.attendance[pl.id][dk])g.attendance[pl.id][dk]=[0,0,0];}
+   });
+   if(!g.courage){
+    g.courage={};
+    if(g.brave)Object.keys(g.brave).forEach(function(pid){
+     g.courage[pid]={};
+     Object.keys(g.brave[pid]).forEach(function(d){g.courage[pid][d]={a:(+g.brave[pid][d]||0),w:0,b:0,m:0};});
+    });
+   }
+  });
+  localStorage.setItem(LS_KEY,JSON.stringify(o));
+ }catch(e){}
+}
 function activeGrid(){for(var i=0;i<S.grids.length;i++)if(S.grids[i].id===S.activeGridId)return S.grids[i];return S.grids[S.grids.length-1];}
 function playerById(id){for(var i=0;i<S.players.length;i++)if(S.players[i].id===id)return S.players[i];return S.players[0];}
 
@@ -722,9 +793,9 @@ function shape(p){
  return {superpower:best,quest:quest};
 }
 function journey(p){
- var c=S.card[p];
- if(c.prBeats>=30&&c.braveTotal>=50)return 'gold';
- if(c.prBeats>=12&&c.braveTotal>=15)return 'silver';
+ var c=S.card[p],ct=courageTot(c);
+ if(c.prBeats>=30&&ct>=50)return 'gold';
+ if(c.prBeats>=12&&ct>=15)return 'silver';
  return 'bronze';
 }
 
@@ -740,170 +811,337 @@ function crestSVG(w,cls){
   '<g clip-path="url(#none)">'+inner+'</g></svg>';
 }
 function hexSVG(spokes){
- var cx=110,cy=100,R=76,i,a,pts=[],axes='',rings='',labels='';
+ var cx=120,cy=102,R=74,i,a,pts=[],axes='',rings='',labels='';
  function pt(frac,rr){var x=cx+Math.cos(a)*rr*frac,y=cy+Math.sin(a)*rr*frac;return x.toFixed(1)+','+y.toFixed(1);}
  [.25,.5,.75,1].forEach(function(f){var p=[];for(i=0;i<6;i++){a=(-90+i*60)*Math.PI/180;p.push(pt(f,R));}
   rings+='<polygon points="'+p.join(' ')+'" fill="none" stroke="rgba(238,242,255,.14)" stroke-width="1"/>';});
  for(i=0;i<6;i++){a=(-90+i*60)*Math.PI/180;
   axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a)*R).toFixed(1)+'" y2="'+(cy+Math.sin(a)*R).toFixed(1)+'" stroke="rgba(238,242,255,.14)" stroke-width="1"/>';
-  var lx=cx+Math.cos(a)*(R+18),ly=cy+Math.sin(a)*(R+15)+4;
-  labels+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" font-size="12" font-weight="800" letter-spacing="1.5" fill="#C8CFE8">'+SPOKES[i]+'</text>';
+  var lx=cx+Math.cos(a)*(R+17),ly=cy+Math.sin(a)*(R+14)+3.5;
+  labels+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" font-size="8.4" font-weight="800" letter-spacing="1.1" fill="#C8CFE8">'+HEX_LBL[i]+'</text>';
   var f=.08+.92*clamp((spokes[SPOKES[i]]||0)/100,0,1);
   pts.push(pt(f,R));
  }
  var tips='';for(i=0;i<6;i++){var xy=pts[i].split(',');tips+='<circle cx="'+xy[0]+'" cy="'+xy[1]+'" r="3.4" fill="#F5B62C"/>';}
- return '<svg viewBox="0 0 220 205" role="img" aria-label="Skill hexagon — spoke lengths only, no numbers">'+
+ return '<svg viewBox="0 0 240 212" role="img" aria-label="Skill hexagon — Pace, Shooting, Passing, Dribbling, Defending, Physical — spoke lengths only, no numbers">'+
   rings+axes+
   '<polygon points="'+pts.join(' ')+'" fill="rgba(245,182,44,.42)" stroke="#F5B62C" stroke-width="2.5" stroke-linejoin="round"/>'+
   tips+labels+'</svg>';
 }
-function manePath(cx,cy,rIn,rOut,n,arcStart,arcEnd){
- var d='',i,step=(arcEnd-arcStart)/n;
+function maneLocks(cx,cy,rIn,rOut,n,a0,a1,rr){
+ /* overlapping locks with rounded tips — reads as fur, not rays */
+ var d='',span=(a1-a0)/n,i;
  for(i=0;i<n;i++){
-  var a1=(arcStart+i*step)*Math.PI/180,a2=(arcStart+(i+.5)*step)*Math.PI/180,a3=(arcStart+(i+1)*step)*Math.PI/180;
-  var x1=cx+Math.cos(a1)*rIn,y1=cy+Math.sin(a1)*rIn,
-      x2=cx+Math.cos(a2)*rOut,y2=cy+Math.sin(a2)*rOut,
-      x3=cx+Math.cos(a3)*rIn,y3=cy+Math.sin(a3)*rIn;
-  d+=(i===0?'M':'L')+x1.toFixed(1)+','+y1.toFixed(1)+' L'+x2.toFixed(1)+','+y2.toFixed(1)+' L'+x3.toFixed(1)+','+y3.toFixed(1)+' ';
+  var a=(a0+(i+.5)*span)*Math.PI/180;
+  var rO=rIn+(rOut-rIn)*(.84+rr()*.32);
+  var aw=span*.78*Math.PI/180;           /* wide base = overlap */
+  var bend=(rr()-.5)*.16;
+  var x1=cx+Math.cos(a-aw)*rIn,y1=cy+Math.sin(a-aw)*rIn;
+  var x2=cx+Math.cos(a+aw)*rIn,y2=cy+Math.sin(a+aw)*rIn;
+  var mid=rIn+(rO-rIn)*.6;
+  var c1x=cx+Math.cos(a-aw*.72)*mid,c1y=cy+Math.sin(a-aw*.72)*mid;
+  var c2x=cx+Math.cos(a+aw*.72)*mid,c2y=cy+Math.sin(a+aw*.72)*mid;
+  var t1=a+bend-aw*.22,t2=a+bend+aw*.22;
+  var p1x=cx+Math.cos(t1)*rO,p1y=cy+Math.sin(t1)*rO;
+  var p2x=cx+Math.cos(t2)*rO,p2y=cy+Math.sin(t2)*rO;
+  var cpx=cx+Math.cos(a+bend)*rO*1.05,cpy=cy+Math.sin(a+bend)*rO*1.05;
+  d+='M'+x1.toFixed(1)+','+y1.toFixed(1)+' Q'+c1x.toFixed(1)+','+c1y.toFixed(1)+' '+p1x.toFixed(1)+','+p1y.toFixed(1)+
+     ' Q'+cpx.toFixed(1)+','+cpy.toFixed(1)+' '+p2x.toFixed(1)+','+p2y.toFixed(1)+
+     ' Q'+c2x.toFixed(1)+','+c2y.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1)+' Z ';
  }
- return d+'Z';
+ return d;
 }
 function flame(cx,cy,w,h,cls,fill){
  return '<path class="'+(cls||'')+'" fill="'+fill+'" d="M'+cx+','+cy+' C'+(cx-w*.55)+','+(cy-h*.25)+' '+(cx-w*.28)+','+(cy-h*.62)+' '+cx+','+(cy-h)+
   ' C'+(cx+w*.28)+','+(cy-h*.62)+' '+(cx+w*.55)+','+(cy-h*.25)+' '+cx+','+cy+' Z"/>';
 }
-function lionSVG(pid){
+function lionSVG(pid,uniq){
  var pl=playerById(pid),c=S.card[pid];
  var pts=c.roarPts,g=clamp(pts/FULL,0,1),tier=tierOf(pts);
  var seq=tierSeq(pl.seed),feats={};seq.slice(0,tier).forEach(function(f){feats[f]=1;});
- var great=!!feats.greatlion;
- var scl=(0.60+0.40*g)*(great?1.04:1);
- var headScl=1.22-0.24*g;                 /* cubs have big heads */
- var muscle=1+0.45*g+(feats.scars?0.08:0)+(great?0.06:0);
+ var great=!!feats.greatlion,cubby=tier<=3,cub=1-g;
+ var scl=(0.60+0.40*g)*(great?1.05:1);
+ var headScl=1.52-0.34*g;
+ var muscle=1+0.40*g+(feats.scars?0.07:0)+(great?0.05:0);
+ var pawK=1+0.5*cub, earK=1+0.55*cub;
  var maneStage=feats.fullmane?3:(feats.halfmane?2:(feats.tuft?1:0));
- var maneR=[0,30,36,42][maneStage]*(0.82+0.18*g);
- var u=pid; /* id suffix */
- var BODY='url(#bodyg-'+u+')',OUT='#5C3D0A',MANE=feats.flamemane?('url(#flameg-'+u+')'):'#A65E0B';
+ var maneR=[0,20,28,36][maneStage]*(0.86+0.14*g);
+ var rr=mulberry(pl.seed*11+7);
+ var u=(uniq||pid);
+ /* palette */
+ var COAT=great?['#FFE49B','#F2BB45','#A8761C']:['#E9C077','#CE9A42','#8F6224'];
+ var FAR=great?'#C08E28':'#7E571E';
+ var LEGDK=great?'#D6A32E':'#B07E2E';
+ var OUT='rgba(58,33,6,.55)';
+ var MANE_DK=feats.flamemane?'#C2401F':'#3F2606';
+ var MANE_MD=feats.flamemane?'url(#flameg-'+u+')':'url(#manemd-'+u+')';
+ var MANE_HI=feats.flamemane?'url(#flamehi-'+u+')':'url(#manehi-'+u+')';
  var s='';
- /* defs */
+ /* ---------- defs ---------- */
  s+='<defs>'+
-  '<linearGradient id="bodyg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
-   '<stop offset="0" stop-color="'+(great?'#FFD34D':'#F5B62C')+'"/><stop offset="1" stop-color="#D99A0F"/></linearGradient>'+
+  '<linearGradient id="coatg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="'+COAT[0]+'"/><stop offset=".45" stop-color="'+COAT[1]+'"/><stop offset="1" stop-color="'+COAT[2]+'"/></linearGradient>'+
+  '<linearGradient id="bellyg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#F4E3BC"/><stop offset="1" stop-color="#D7B77E"/></linearGradient>'+
+  '<linearGradient id="manemd-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#7A4E12"/><stop offset="1" stop-color="#472B08"/></linearGradient>'+
+  '<radialGradient id="manebase-'+u+'"><stop offset="0" stop-color="#8A5A16"/><stop offset=".7" stop-color="#5F3A0C"/><stop offset="1" stop-color="#3F2606"/></radialGradient>'+
+  '<linearGradient id="manehi-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#B9822A"/><stop offset="1" stop-color="#6E4210"/></linearGradient>'+
   '<linearGradient id="flameg-'+u+'" x1="0" y1="1" x2="0" y2="0">'+
    '<stop offset="0" stop-color="#FF5B49"/><stop offset=".55" stop-color="#F5B62C"/><stop offset="1" stop-color="#FFE9A8"/></linearGradient>'+
+  '<linearGradient id="flamehi-'+u+'" x1="0" y1="1" x2="0" y2="0">'+
+   '<stop offset="0" stop-color="#F5B62C"/><stop offset="1" stop-color="#FFF3C4"/></linearGradient>'+
+  '<linearGradient id="steelg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#F4F8FF"/><stop offset=".35" stop-color="#B9C7DE"/><stop offset=".7" stop-color="#7183A6"/><stop offset="1" stop-color="#485879"/></linearGradient>'+
+  '<linearGradient id="goldm-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#FFF6CE"/><stop offset=".3" stop-color="#FFD34D"/><stop offset=".65" stop-color="#D99A0F"/><stop offset="1" stop-color="#7A5406"/></linearGradient>'+
+  '<linearGradient id="leathg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="#9A5B36"/><stop offset="1" stop-color="#5A2E15"/></linearGradient>'+
+  '<radialGradient id="eyeg-'+u+'"><stop offset="0" stop-color="#FFD98A"/><stop offset=".55" stop-color="#E8992B"/><stop offset="1" stop-color="#7A4A10"/></radialGradient>'+
+  '<radialGradient id="shadg-'+u+'"><stop offset="0" stop-color="rgba(16,27,59,.38)"/><stop offset=".7" stop-color="rgba(16,27,59,.16)"/><stop offset="1" stop-color="rgba(16,27,59,0)"/></radialGradient>'+
   '<radialGradient id="aurag-'+u+'"><stop offset="0" stop-color="rgba(245,182,44,.55)"/><stop offset="1" stop-color="rgba(245,182,44,0)"/></radialGradient>'+
-  '<pattern id="chainp-'+u+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
-   '<rect width="7" height="7" fill="rgba(85,97,138,.55)"/><circle cx="3.5" cy="3.5" r="2.2" fill="none" stroke="#C9D2EA" stroke-width="1"/></pattern>'+
+  '<pattern id="chainp-'+u+'" width="5" height="5" patternUnits="userSpaceOnUse">'+
+   '<rect width="5" height="5" fill="#3A4866"/><circle cx="2.5" cy="2.5" r="1.6" fill="none" stroke="#9FB3D6" stroke-width=".7"/></pattern>'+
+  '<filter id="fur-'+u+'" x="-12%" y="-12%" width="124%" height="124%">'+
+   '<feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="'+(pl.seed%97)+'" result="n"/>'+
+   '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.1"/></filter>'+
+  '<filter id="mane-'+u+'" x="-18%" y="-18%" width="136%" height="136%">'+
+   '<feTurbulence type="fractalNoise" baseFrequency=".38" numOctaves="2" seed="'+(pl.seed%89)+'" result="n"/>'+
+   '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter>'+
+  '<filter id="soft-'+u+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4"/></filter>'+
  '</defs>';
- /* aura behind everything */
- if(feats.aura)s+='<circle class="aurap" cx="120" cy="118" r="'+(great?102:92)+'" fill="url(#aurag-'+u+')"/>';
- s+='<ellipse cx="120" cy="186" rx="'+(58+26*g)+'" ry="7" fill="rgba(16,27,59,.18)"/>';
- /* rig scaled about bottom-center */
- s+='<g transform="translate(120,184) scale('+scl.toFixed(3)+') translate(-120,-184)">';
- /* war banner (behind body) */
- if(feats.banner)s+='<g><line x1="152" y1="92" x2="152" y2="20" stroke="'+OUT+'" stroke-width="3.4"/>'+
-  '<path d="M152,22 L200,30 L176,39 L200,48 L152,56 Z" fill="#F5B62C" stroke="#8C5E07" stroke-width="1.6"/>'+
-  '<circle cx="168" cy="38" r="4.6" fill="#101B3B"/></g>';
- /* roaring flame aura hugging the back */
- if(feats.roarflame){
-  s+=flame(78,96,16,26,'flick','rgba(255,91,73,.55)')+flame(104,84,18,30,'flick','rgba(245,182,44,.5)')+
-     flame(136,80,18,32,'flick','rgba(255,91,73,.5)')+flame(168,88,16,26,'flick','rgba(245,182,44,.5)')+
-     flame(192,102,14,22,'flick','rgba(255,91,73,.45)');
- }
- /* tail */
+ /* aura + ground shadow (unscaled so the lion always sits on the ground) */
+ if(feats.aura)s+='<circle class="aurap" cx="120" cy="112" r="'+(great?102:92)+'" fill="url(#aurag-'+u+')"/>';
+ s+='<ellipse cx="122" cy="184" rx="'+(52+34*g)+'" ry="8.5" fill="url(#shadg-'+u+')"/>';
+ /* ---------- rig, scaled about bottom-center ---------- */
+ s+='<g transform="translate(120,183) scale('+scl.toFixed(3)+') translate(-120,-183)">';
+ /* war banner behind everything */
+ if(feats.banner)s+='<g><rect x="154" y="14" width="3.6" height="86" rx="1.6" fill="url(#steelg-'+u+')" stroke="#2E3A5C" stroke-width=".8"/>'+
+  '<path d="M158,17 L210,25 L191,36 L210,47 L158,55 Z" fill="url(#goldm-'+u+')" stroke="#7A5406" stroke-width="1.2"/>'+
+  '<path d="M160,20 L204,27" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none"/>'+
+  '<g fill="#5A3208"><circle cx="176" cy="36" r="4"/><circle cx="171" cy="30.5" r="1.7"/><circle cx="176" cy="29" r="1.7"/><circle cx="181" cy="30.5" r="1.7"/></g></g>';
+ /* roaring flame corona along the back */
+ if(feats.roarflame)s+=flame(88,90,15,26,'flick','rgba(255,91,73,.5)')+flame(112,78,17,30,'flick','rgba(245,182,44,.48)')+
+  flame(140,78,18,32,'flick','rgba(255,91,73,.48)')+flame(166,88,15,26,'flick','rgba(245,182,44,.45)')+
+  flame(186,100,13,20,'flick','rgba(255,91,73,.4)');
+ /* ---------- tail ---------- */
+ var tailD='M186,116 C208,110 219,92 213,66';
+ s+='<path d="'+tailD+'" fill="none" stroke="#6B4413" stroke-width="7.5" stroke-linecap="round"/>'+
+    '<path d="'+tailD+'" fill="none" stroke="url(#coatg-'+u+')" stroke-width="4.6" stroke-linecap="round"/>';
  if(feats.macetail){
-  s+='<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="'+OUT+'" stroke-width="7" stroke-linecap="round"/>'+
-   '<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="#D99A0F" stroke-width="4" stroke-linecap="round"/>'+
-   '<g><circle cx="210" cy="62" r="9" fill="#55618A" stroke="#101B3B" stroke-width="1.6"/>'+
-   '<path d="M210,49 l2.6,7 h-5.2Z M223,62 l-7,2.6 v-5.2Z M197,62 l7,2.6 v-5.2Z M219,52 l-2,6.4 -4.4,-3.6Z M201,52 l2,6.4 4.4,-3.6Z" fill="#55618A"/></g>';
+  s+='<g><circle cx="213" cy="58" r="9" fill="url(#steelg-'+u+')" stroke="#2E3A5C" stroke-width="1.4"/>'+
+   '<path d="M213,44 l2.8,7.5 h-5.6Z M228,58 l-7.5,2.8 v-5.6Z M198,58 l7.5,2.8 v-5.6Z M224,47 l-2.4,7 -4.6,-3.9Z M202,47 l2.4,7 4.6,-3.9Z M224,69 l-6.8,-1.7 3.4,-4.4Z M202,69 l6.8,-1.7 -3.4,-4.4Z" fill="url(#steelg-'+u+')" stroke="#2E3A5C" stroke-width=".8"/>'+
+   '<circle cx="210" cy="54.5" r="2.6" fill="rgba(255,255,255,.55)"/></g>';
  }else{
-  s+='<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="'+OUT+'" stroke-width="7" stroke-linecap="round"/>'+
-   '<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="#D99A0F" stroke-width="4" stroke-linecap="round"/>'+
-   '<circle cx="210" cy="63" r="'+(5+3*g)+'" fill="#A65E0B"/>';
+  s+='<g filter="url(#mane-'+u+')"><path d="M209,70 C203,62 204,50 211,42 C219,48 221,60 216,70 C214,73 211,73 209,70 Z" fill="'+MANE_DK+'"/></g>';
  }
- /* far legs */
- s+='<rect x="162" y="136" width="12" height="44" rx="5.5" fill="#C9940D"/>'+
-    '<rect x="96" y="136" width="12" height="44" rx="5.5" fill="#C9940D"/>';
- /* body */
- s+='<path d="M82,126 C82,100 108,88 138,88 C166,88 192,100 194,126 C195,146 184,162 160,164 L112,164 C92,162 82,146 82,126 Z" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2.4"/>';
- /* chest muscle */
- s+='<ellipse cx="96" cy="124" rx="'+(15*muscle).toFixed(1)+'" ry="24" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>';
- /* cub spots */
- if(tier<=3)s+='<g fill="#A65E0B" opacity=".38"><circle cx="130" cy="112" r="4"/><circle cx="150" cy="124" r="3.4"/><circle cx="138" cy="140" r="3.8"/><circle cx="166" cy="112" r="3"/><circle cx="118" cy="132" r="3"/></g>';
- /* scars */
- if(feats.scars)s+='<g stroke="#7A4C10" stroke-width="2.4" stroke-linecap="round"><path d="M158,108 l12,14 M166,106 l-4,18"/><path d="M126,124 l10,10"/></g>';
- /* chain mail over torso */
- if(feats.chainmail)s+='<path d="M96,102 C112,92 164,92 182,104 C190,116 190,138 182,150 C160,158 118,158 102,150 C94,136 92,116 96,102 Z" fill="url(#chainp-'+u+')" stroke="#38466F" stroke-width="1.6" opacity=".92"/>';
- /* near legs */
- s+='<rect x="150" y="140" width="13" height="42" rx="6" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>'+
-    '<rect x="84" y="140" width="13" height="42" rx="6" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>';
- /* paws */
- s+='<ellipse cx="90" cy="181" rx="10" ry="5.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
-    '<ellipse cx="157" cy="181" rx="10" ry="5.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
-    '<ellipse cx="103" cy="179" rx="8" ry="4.5" fill="#C9940D"/>'+
-    '<ellipse cx="169" cy="179" rx="8" ry="4.5" fill="#C9940D"/>';
- /* bracers (front-leg bands) */
- if(feats.bracers)s+='<rect x="82" y="148" width="17" height="11" rx="3" fill="#8FA2C6" stroke="#38466F" stroke-width="1.4"/>'+
-  '<rect x="94" y="146" width="16" height="10" rx="3" fill="#8FA2C6" stroke="#38466F" stroke-width="1.4" opacity=".85"/>';
- /* boots */
- if(feats.boots)s+='<g stroke="#5C2318" stroke-width="1.6">'+
-  '<path d="M81,166 h19 v12 a5,5 0 0 1 -5,5 h-9 a5,5 0 0 1 -5,-5 Z" fill="#8A4030"/>'+
-  '<path d="M148,166 h17 v12 a5,5 0 0 1 -5,5 h-7 a5,5 0 0 1 -5,-5 Z" fill="#8A4030"/>'+
-  '<path d="M95,164 h15 v11 a4,4 0 0 1 -4,4 h-7 a4,4 0 0 1 -4,-4 Z" fill="#7A3226" opacity=".9"/>'+
-  '<path d="M161,164 h14 v11 a4,4 0 0 1 -4,4 h-6 a4,4 0 0 1 -4,-4 Z" fill="#7A3226" opacity=".9"/>'+
-  '<path d="M81,169 h19 M148,169 h17" stroke="#F5B62C" stroke-width="2"/></g>';
- /* chest plate */
- if(feats.chestplate)s+='<path d="M80,106 C74,122 76,142 88,156 C100,152 108,136 106,116 C100,104 88,102 80,106 Z" fill="url(#bodyg-'+u+')" stroke="#8C5E07" stroke-width="2.6"/>'+
-  '<g fill="#8C5E07"><circle cx="88" cy="116" r="1.8"/><circle cx="94" cy="128" r="1.8"/><circle cx="90" cy="142" r="1.8"/></g>';
- /* pauldrons */
- if(feats.pauldrons)s+='<circle cx="158" cy="98" r="11" fill="#D99A0F" stroke="#8C5E07" stroke-width="2" opacity=".9"/>'+
-  '<circle cx="106" cy="100" r="14" fill="#F5B62C" stroke="#8C5E07" stroke-width="2.4"/>'+
-  '<circle cx="106" cy="100" r="6" fill="none" stroke="#8C5E07" stroke-width="1.6"/>';
- /* ember smoke rising from the mane */
- if(feats.ember)s+='<g><circle class="emberp" cx="58" cy="56" r="2.6" fill="#FF5B49"/>'+
-  '<circle class="emberp" style="animation-delay:.7s" cx="74" cy="46" r="2.2" fill="#F5B62C"/>'+
-  '<circle class="emberp" style="animation-delay:1.3s" cx="88" cy="54" r="1.8" fill="#FF5B49"/>'+
-  '<circle class="emberp" style="animation-delay:1.9s" cx="66" cy="42" r="1.6" fill="#F5B62C"/></g>';
- /* ---- head group ---- */
- s+='<g transform="translate(70,86) scale('+headScl.toFixed(3)+')">';
- /* mane behind head */
- if(maneStage===1)s+='<path d="'+manePath(0,0,20,32,5,-150,-30)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>';
- if(maneStage===2)s+='<path d="'+manePath(0,0,21,Math.max(30,maneR),9,-200,20)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>';
- if(maneStage===3)s+='<path class="'+(feats.flamemane?'flick':'')+'" d="'+manePath(0,0,21,maneR+4,12,0,360)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>'+
-   '<path d="'+manePath(0,0,20,maneR-6,10,0,360)+'" fill="'+(feats.flamemane?'url(#flameg-'+u+')':'#8C5E07')+'" opacity=".55"/>';
- /* ear */
- s+='<circle cx="13" cy="-17" r="6.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.8"/>';
- /* head */
- s+='<circle cx="0" cy="0" r="21" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2.2"/>';
- /* muzzle (upper) */
- s+='<path d="M-14,-1 C-25,-2 -30,4 -28,9 C-25,14 -14,15 -6,12 L-4,2 Z" fill="#F8CE6B" stroke="'+OUT+'" stroke-width="1.8"/>';
- /* jaw (animates open on roar) */
- s+='<g class="jaw" style="transform-box:fill-box;transform-origin:85% 15%;">'+
-  '<path d="M-26,11 C-22,19 -9,21 -3,16 L-5,10 C-12,13 -20,12 -26,11 Z" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
-  '<path d="M-23,12 C-19,15 -12,16 -7,14" fill="none" stroke="#8A2A1E" stroke-width="1.8" stroke-linecap="round"/></g>';
- /* fangs */
- if(feats.fangs)s+='<path d="M-22,12 l1.6,10 3,-9Z" fill="#FFF6E3" stroke="'+OUT+'" stroke-width="1"/>'+
-  '<path d="M-13,14 l1.2,8 2.6,-7Z" fill="#FFF6E3" stroke="'+OUT+'" stroke-width="1"/>';
- /* nose + eye */
- s+='<circle cx="-27" cy="4" r="3" fill="#3A2A08"/>';
- if(feats.gloweyes)s+='<circle cx="-7" cy="-7" r="6" fill="rgba(255,91,73,.4)"/><circle cx="-7" cy="-7" r="2.8" fill="#FF5B49"/><circle cx="-8" cy="-8" r="1" fill="#FFE9A8"/>';
- else s+='<circle cx="-7" cy="-7" r="2.6" fill="#16203A"/><circle cx="-8" cy="-8" r=".9" fill="#fff"/>';
- /* brow */
- s+='<path d="M-13,-12 C-9,-14 -4,-14 -1,-12" fill="none" stroke="'+OUT+'" stroke-width="2" stroke-linecap="round"/>';
- /* helmet & crown */
- if(feats.helmet)s+='<path d="M-20,-7 A20.5,20.5 0 0 1 20,-7 L20,-3 L-20,-3 Z" fill="#D99A0F" stroke="#8C5E07" stroke-width="2"/>'+
-  '<path d="M0,-27 L0,-20" stroke="#8C5E07" stroke-width="3" stroke-linecap="round"/>'+
-  '<rect x="-24" y="-7" width="5" height="18" rx="2" fill="#D99A0F" stroke="#8C5E07" stroke-width="1.4"/>';
- if(feats.crown)s+='<path d="M-11,'+(feats.helmet?-30:-24)+' l0,-8 5,4 6,-9 6,9 5,-4 0,8 Z" fill="#F5B62C" stroke="#8C5E07" stroke-width="1.6" transform="translate(0,'+(feats.helmet?0:2)+')"/>'+
-  '<circle cx="0" cy="'+(feats.helmet?-40:-34)+'" r="1.8" fill="#FF5B49"/>';
- s+='</g>'; /* head */
- /* fire breath from the mouth */
- if(feats.firebreath)s+='<g class="breath" style="transform-box:fill-box;transform-origin:right center;opacity:.85">'+
-  '<path d="M40,98 C28,92 14,92 4,98 C12,100 12,102 6,105 C16,110 30,108 40,104 Z" fill="url(#flameg-'+u+')" stroke="#FF5B49" stroke-width="1"/></g>';
- /* great-lion flair */
- if(great)s+='<g fill="#FFE9A8"><path d="M46,40 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2Z"/><path d="M198,34 l1.6,4 4,1.6 -4,1.6 -1.6,4 -1.6,-4 -4,-1.6 4,-1.6Z"/><path d="M212,140 l1.4,3.6 3.6,1.4 -3.6,1.4 -1.4,3.6 -1.4,-3.6 -3.6,-1.4 3.6,-1.4Z"/></g>';
- s+='</g>'; /* rig scale */
+ /* ---------- far legs (shadow side) ---------- */
+ s+='<g fill="'+FAR+'">'+
+  '<path d="M110,116 C106,134 103,152 104,164 L105,177 L93,177 L94,158 C94,142 98,126 102,114 Z"/>'+
+  '<path d="M158,126 C168,136 175,148 178,158 L181,171 L186,177 L173,177 L171,163 C166,151 158,140 154,132 Z"/>'+
+  '<ellipse cx="97" cy="178.5" rx="'+(8.6*pawK).toFixed(1)+'" ry="4.6" fill="'+FAR+'"/>'+
+  '<ellipse cx="179" cy="178.5" rx="'+(8.2*pawK).toFixed(1)+'" ry="4.6" fill="'+FAR+'"/></g>';
+ /* ---------- torso (fur-edged, volumetric) ---------- */
+ var TORSO=cubby
+  ?'M84,90 C92,80 104,77 112,81 C126,75 146,80 156,88 C166,94 174,102 177,112 C180,122 177,132 169,138 C159,145 147,146 138,142 C126,148 110,148 100,143 C90,138 82,128 79,116 C76,104 79,97 84,90 Z'
+  :'M78,80 C88,72 100,70 108,74 C124,68 146,74 158,82 C168,86 178,92 182,102 C186,111 186,121 182,129 C178,138 169,142 161,139 C153,144 143,143 137,139 C124,147 106,149 96,144 C85,139 76,128 71,116 C67,104 70,88 78,80 Z';
+ s+='<g filter="url(#fur-'+u+')">';
+ s+='<path d="'+TORSO+'" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.3"/>';
+ s+='</g>';
+ /* volumetric shading clipped to torso */
+ s+='<clipPath id="tc-'+u+'"><path d="'+TORSO+'"/></clipPath>';
+ s+='<g clip-path="url(#tc-'+u+')">'+
+  '<g filter="url(#soft-'+u+')">'+
+   '<path d="M74,82 C102,64 152,66 188,96 L188,72 L70,68 Z" fill="#F6D896" opacity=".5"/>'+
+   '<path d="M70,144 C108,158 156,154 190,130 L190,164 L70,164 Z" fill="#5F3D12" opacity=".5"/>'+
+   '<ellipse cx="106" cy="138" rx="10" ry="15" fill="#6B4413" opacity=".38"/>'+
+   '<ellipse cx="164" cy="112" rx="15" ry="17" fill="#F2CE85" opacity=".3"/>'+
+   '<ellipse cx="100" cy="106" rx="'+(13*muscle).toFixed(1)+'" ry="'+(17*muscle).toFixed(1)+'" fill="#F2CE85" opacity=".3"/>'+
+  '</g>'+
+  '<path d="M97,94 C89,106 88,122 96,136" stroke="#8F6224" stroke-width="1.5" opacity=".45" fill="none"/>'+
+  '<path d="M152,104 C160,112 162,126 156,138" stroke="#8F6224" stroke-width="1.4" opacity=".4" fill="none"/>'+
+  '<g>'+
+  '</g>';
+ /* cub spots + soft belly */
+ if(cubby)s+='<g fill="#8A5A22" opacity=".42"><circle cx="128" cy="104" r="2.8"/><circle cx="142" cy="112" r="2.4"/><circle cx="134" cy="126" r="2.7"/><circle cx="152" cy="100" r="2.2"/><circle cx="120" cy="118" r="2.3"/><circle cx="150" cy="124" r="2.5"/><circle cx="162" cy="110" r="2.2"/><circle cx="112" cy="104" r="2"/><circle cx="158" cy="132" r="2.1"/></g>'+
+  '<path d="M96,144 C118,152 148,152 170,142 L170,156 L96,156 Z" fill="url(#bellyg-'+u+')" opacity=".5" filter="url(#soft-'+u+')"/>';
+ if(feats.scars)s+='<g stroke-linecap="round" fill="none">'+
+  '<path d="M152,102 l11,15 M159,100 l-3,18" stroke="#6B4413" stroke-width="2.6"/>'+
+  '<path d="M151,101 l11,15 M158,99 l-3,18" stroke="#E9D9B8" stroke-width="1.2"/>'+
+  '<path d="M124,120 l9,10" stroke="#6B4413" stroke-width="2.4"/><path d="M123,119 l9,10" stroke="#E9D9B8" stroke-width="1.1"/></g>';
+ s+='</g>'; /* end torso clip */
+ /* chain mail over the torso */
+ if(feats.chainmail)s+='<g clip-path="url(#tc-'+u+')"><path d="M100,102 C130,92 166,96 186,110 L186,152 C160,154 120,154 100,148 Z" fill="url(#chainp-'+u+')" opacity=".92"/>'+
+  '<path d="M100,103 C130,93 166,97 186,111" stroke="#2E3A5C" stroke-width="1.6" fill="none"/>'+
+  '<path d="M104,107 C130,98 160,101 180,112" stroke="rgba(255,255,255,.3)" stroke-width="1.8" fill="none"/></g>';
+ /* ---------- near hind leg ---------- */
+ s+='<g filter="url(#fur-'+u+')">'+
+  '<path d="M148,112 C164,106 177,114 181,128 C185,140 181,151 173,155 C165,159 156,156 150,149 C143,140 143,120 148,112 Z" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.2"/>'+
+  '<path d="M170,148 C179,154 185,162 186,169 L186,177 L173,177 L173,168 C169,162 164,156 161,151 Z" fill="'+LEGDK+'" stroke="'+OUT+'" stroke-width="1"/>'+
+ '</g>';
+ s+='<ellipse cx="163" cy="128" rx="9" ry="12" fill="#F2CE85" opacity=".3" filter="url(#soft-'+u+')"/>';
+ /* ---------- near front leg ---------- */
+ s+='<g filter="url(#fur-'+u+')">'+
+  '<path d="M102,112 C97,128 94,146 95,160 L96,177 L80,177 L81,155 C81,139 85,123 90,110 Z" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.2"/>'+
+ '</g>';
+ /* ---------- paws (big on cubs) ---------- */
+ function pawSVG(cx,cy,w){
+  return '<g><path d="M'+(cx-w)+','+cy+' C'+(cx-w)+','+(cy-6.5)+' '+(cx+w)+','+(cy-6.5)+' '+(cx+w)+','+cy+
+   ' L'+(cx+w)+','+(cy+2.5)+' C'+(cx+w*.55)+','+(cy+4.6)+' '+(cx-w*.55)+','+(cy+4.6)+' '+(cx-w)+','+(cy+2.5)+' Z" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.1"/>'+
+   '<path d="M'+(cx-w*.34)+','+(cy-3)+' L'+(cx-w*.3)+','+(cy+3)+' M'+(cx+w*.34)+','+(cy-3)+' L'+(cx+w*.3)+','+(cy+3)+'" stroke="#6B4413" stroke-width="1" opacity=".6" fill="none"/></g>';
+ }
+ s+=pawSVG(87,178,10*pawK)+pawSVG(179.5,178,9.5*pawK);
+ /* ---------- armor: boots / bracers ---------- */
+ if(feats.boots)s+='<g stroke="#3A1D0C" stroke-width="1.1">'+
+  '<path d="M79,162 L96,162 L96,176 C96,180 92,182.5 87,182.5 C82,182.5 78,180 78,176 Z" fill="url(#leathg-'+u+')"/>'+
+  '<path d="M172,162 L188,162 L188,176 C188,180 184,182.5 180,182.5 C175,182.5 171,180 171,176 Z" fill="url(#leathg-'+u+')"/>'+
+  '<path d="M79,166 h17 M172,166 h16" stroke="#D99A0F" stroke-width="2.2"/>'+
+  '<path d="M81,163 C84,161.5 91,161.5 94,163 M174,163 C177,161.5 183,161.5 186,163" stroke="rgba(255,240,200,.5)" stroke-width="1.2" fill="none"/></g>';
+ if(feats.bracers)s+='<g stroke="#2E3A5C" stroke-width="1">'+
+  '<path d="M80,140 L95,138 L96,150 L80,152 Z" fill="url(#steelg-'+u+')"/>'+
+  '<path d="M92,152 L104,150 L105,161 L93,163 Z" fill="url(#steelg-'+u+')" opacity=".92"/>'+
+  '<path d="M82,142 L93,140.5" stroke="rgba(255,255,255,.65)" stroke-width="1.4"/>'+
+  '<circle cx="84" cy="147" r="1.1" fill="#2E3A5C"/><circle cx="91" cy="146" r="1.1" fill="#2E3A5C"/></g>';
+ /* ---------- chest plate ---------- */
+ if(feats.chestplate)s+='<g><path d="M79,103 C71,119 73,139 87,152 C99,148 107,131 105,113 C99,101 87,99 79,103 Z" fill="url(#goldm-'+u+')" stroke="#6B4A08" stroke-width="1.8"/>'+
+  '<path d="M81,110 C79,124 82,138 90,147" stroke="rgba(255,255,255,.6)" stroke-width="2" fill="none"/>'+
+  '<g fill="#6B4A08"><circle cx="88" cy="112" r="1.5"/><circle cx="94" cy="124" r="1.5"/><circle cx="91" cy="138" r="1.5"/></g></g>';
+ /* ---------- pauldron on the shoulder ---------- */
+ if(feats.pauldrons)s+='<g stroke="#2E3A5C" stroke-width="1.2">'+
+  '<path d="M86,110 A18,18 0 0 1 122,110 L122,114 L86,114 Z" fill="url(#steelg-'+u+')"/>'+
+  '<path d="M91,110 A13,13 0 0 1 117,110 L117,113 L91,113 Z" fill="url(#goldm-'+u+')" stroke="#6B4A08"/>'+
+  '<path d="M97,110 A7,7 0 0 1 111,110 Z" fill="url(#steelg-'+u+')"/>'+
+  '<path d="M90,104 C96,97 112,97 118,104" stroke="rgba(255,255,255,.6)" stroke-width="1.6" fill="none"/></g>';
+ /* ember smoke drifting off the mane */
+ if(feats.ember)s+='<g><circle class="emberp" cx="56" cy="52" r="2.6" fill="#FF5B49"/>'+
+  '<circle class="emberp" style="animation-delay:.7s" cx="72" cy="42" r="2.2" fill="#F5B62C"/>'+
+  '<circle class="emberp" style="animation-delay:1.3s" cx="88" cy="50" r="1.8" fill="#FF5B49"/>'+
+  '<circle class="emberp" style="animation-delay:1.9s" cx="64" cy="38" r="1.6" fill="#F5B62C"/></g>';
+ /* ================= HEAD ================= */
+ s+='<g transform="translate(70,82) scale('+headScl.toFixed(3)+')">';
+ /* under-mane (deepest, behind the skull) */
+ if(maneStage>=2){
+  var uArc=maneStage===3?[-269,89]:[-250,-10];
+  s+='<circle cx="3" cy="0" r="'+(maneR*.8).toFixed(1)+'" fill="url(#manebase-'+u+')"/>';
+  s+='<path d="'+maneLocks(3,0,15,maneR+6,maneStage===3?17:12,uArc[0],uArc[1],rr)+'" fill="'+MANE_DK+'" filter="url(#mane-'+u+')"/>';
+ }
+ /* ear (oversized on cubs, tucked under mane later) */
+ s+='<g><circle cx="-1" cy="-20" r="'+(5.4*earK).toFixed(1)+'" fill="'+COAT[2]+'"/>'+
+  '<circle cx="10" cy="-18" r="'+(7*earK).toFixed(1)+'" fill="'+COAT[1]+'" stroke="'+OUT+'" stroke-width="1.3"/>'+
+  '<circle cx="9.4" cy="-17.2" r="'+(4.2*earK).toFixed(1)+'" fill="#E9C9A0"/>'+
+  '<circle cx="9.2" cy="-16.8" r="'+(2.1*earK).toFixed(1)+'" fill="#7A4A1E" opacity=".55"/></g>';
+ /* skull + cheek */
+ s+='<g filter="url(#fur-'+u+')"><path d="M-10,-15 C-4,-21.5 7,-22.5 13,-18 C18,-14 20,-8 19,-2 C18,5 14,11 7,14 C1,16.5 -5,14.5 -7,10 L-9.5,-2 Z" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.2"/></g>';
+ /* crown highlight + cheek shading */
+ s+='<ellipse cx="3" cy="-13" rx="10" ry="4.6" fill="#F6D896" opacity=".45" filter="url(#soft-'+u+')"/>'+
+    '<ellipse cx="10" cy="6" rx="6" ry="7" fill="#8F6224" opacity=".28" filter="url(#soft-'+u+')"/>';
+ /* cheek fluff */
+ s+='<g fill="#B9812F" filter="url(#mane-'+u+')"><path d="M14,3 q6.5,3 4.5,9.5 q-3,-1.5 -6.5,-2.5 Z"/><path d="M11,9 q5.5,4 2.5,9.5 q-3,-2 -6,-3.5 Z"/></g>';
+ /* ---- muzzle group (shortens for cubs) ---- */
+ s+='<g transform="scale('+(1-0.20*cub).toFixed(3)+',1)">';
+ /* upper muzzle + nose bridge */
+ s+='<path d="M-9,-15.5 C-16,-14 -22.5,-10.5 -26.5,-5.5 C-28.5,-2.5 -28.5,.5 -26,2 L-13,6.5 C-7.5,4.5 -4,-.5 -4.5,-7 Z" fill="url(#coatg-'+u+')" stroke="'+OUT+'" stroke-width="1.1"/>';
+ s+='<path d="M-10,-14 C-17,-12 -22,-9 -25.5,-5" stroke="#B9812F" stroke-width="2.6" opacity=".5" fill="none" filter="url(#soft-'+u+')"/>';
+ /* pale muzzle around the mouth */
+ s+='<path d="M-26,-.5 C-27,3.5 -24,7 -19,8 C-13.5,8.8 -8.5,7 -6.5,4 C-8.5,.5 -12.5,-1.8 -17,-1.8 C-21,-1.8 -25,-2 -26,-.5 Z" fill="url(#bellyg-'+u+')"/>';
+ /* nose leather */
+ s+='<path d="M-29,-5.5 C-27,-8.5 -22.5,-8.2 -21.8,-5 C-21.4,-2.4 -23.8,.2 -26,-.2 C-28.2,-.7 -29.7,-3.2 -29,-5.5 Z" fill="#3A2117"/>'+
+    '<path d="M-27.6,-3.4 q1.6,1 .2,2.2" stroke="#1C0E08" stroke-width=".9" fill="none"/>'+
+    '<circle cx="-27.6" cy="-6" r=".75" fill="#8A6A50" opacity=".85"/>';
+ /* mouth line */
+ s+='<path d="M-24.5,2.5 C-20.5,5.5 -15.5,6.3 -11.5,5.5" stroke="#4A2410" stroke-width="1.1" fill="none" stroke-linecap="round"/>';
+ /* lower jaw — roars open */
+ s+='<g class="jaw" style="transform-box:fill-box;transform-origin:88% 20%;">'+
+  '<path d="M-24,7 C-23,13 -17,17 -9,16.5 C-4,16 -1,13.5 0,10.5 L-3,7.5 C-8,11 -17,10.5 -24,7 Z" fill="'+COAT[1]+'" stroke="'+OUT+'" stroke-width="1"/>'+
+  '<path d="M-22,8.5 C-17,11 -11,11 -7,9.5" stroke="#7A1E14" stroke-width="1.3" opacity=".85" fill="none" stroke-linecap="round"/>'+
+  '<path d="M-22.5,10.5 C-20,13.5 -16,15 -12,15" stroke="#E9C9A0" stroke-width="1.2" opacity=".6" fill="none"/></g>';
+ /* saber fangs */
+ if(feats.fangs)s+='<path d="M-21,5 C-22.6,10 -22.2,15 -20,18.5 C-19,14 -18.5,9 -18,5 Z" fill="#FFF6E0" stroke="rgba(90,50,10,.45)" stroke-width=".7"/>'+
+  '<path d="M-14.5,6.5 C-15.6,10 -15.2,13.5 -13.5,16 C-12.8,12.5 -12.5,9 -12.2,6.5 Z" fill="#FFF6E0" stroke="rgba(90,50,10,.45)" stroke-width=".7"/>';
+ /* whisker pad + whiskers */
+ s+='<g fill="#6B4413"><circle cx="-22" cy="1.5" r=".6"/><circle cx="-20" cy="3.5" r=".6"/><circle cx="-18" cy="5" r=".6"/><circle cx="-21" cy="5.5" r=".6"/><circle cx="-19" cy="1" r=".6"/></g>'+
+  '<g stroke="#F5E9CF" stroke-width=".7" opacity=".5" fill="none"><path d="M-22,2 q-8,-1.5 -13,-4"/><path d="M-21,4 q-9,.5 -14,3"/><path d="M-22,6 q-8,2 -12,5"/></g>';
+ s+='</g>'; /* end muzzle group */
+ /* amber eye with catchlights */
+ if(feats.gloweyes){
+  s+='<circle cx="-6" cy="-7.5" r="6" fill="rgba(255,110,40,.35)"/>'+
+   '<path d="M-11.5,-7 C-9,-10.5 -3.5,-10.5 -1,-8 C-3.5,-4.8 -9.5,-4.8 -11.5,-7 Z" fill="#FF8A3D" stroke="#5A1E0C" stroke-width=".8"/>'+
+   '<circle cx="-5.8" cy="-7.4" r="1.5" fill="#2E0F04"/><circle cx="-6.6" cy="-8.2" r=".7" fill="#fff"/>';
+ }else{
+  s+='<path d="M-11.5,-7 C-9,-10.5 -3.5,-10.5 -1,-8 C-3.5,-4.8 -9.5,-4.8 -11.5,-7 Z" fill="url(#eyeg-'+u+')" stroke="#2E1B04" stroke-width=".8"/>'+
+   '<circle cx="-5.8" cy="-7.4" r="'+(1.6+0.25*cub)+'" fill="#1A0E04"/>'+
+   '<circle cx="-6.6" cy="-8.2" r=".7" fill="#fff"/><circle cx="-4.9" cy="-6.7" r=".35" fill="#FFE9A8" opacity=".9"/>';
+ }
+ /* tear line + brow */
+ s+='<path d="M-10.5,-4.8 C-11.5,-2.5 -12.5,-.5 -13.5,1" stroke="#6B4413" stroke-width=".9" opacity=".55" fill="none"/>'+
+    '<path d="M-11,-11.5 C-7,-13.5 -1,-13.5 3,-11.5" stroke="#6B4413" stroke-width="1.5" opacity=".75" fill="none" stroke-linecap="round"/>';
+ /* mid + highlight mane over the skull edge (face stays clear) */
+ if(maneStage===1){
+  s+='<path d="'+maneLocks(3,-6,10,24,7,-150,-35,rr)+'" fill="'+MANE_MD+'" filter="url(#mane-'+u+')"/>'+
+     '<path d="'+maneLocks(3,-7,9,17,5,-140,-50,rr)+'" fill="'+MANE_HI+'" filter="url(#mane-'+u+')" opacity=".95"/>';
+ }else if(maneStage>=2){
+  var mArc=maneStage===3?[-142,132]:[-185,48];
+  var mCls=feats.flamemane?' class="flick"':'';
+  s+='<g'+mCls+'>'+
+   '<path d="'+maneLocks(3,0,17,maneR-2,maneStage===3?15:11,mArc[0],mArc[1],rr)+'" fill="'+MANE_MD+'" filter="url(#mane-'+u+')"/>'+
+   '<path d="'+maneLocks(3,0,16,maneR-10,maneStage===3?12:9,mArc[0]+10,mArc[1]-10,rr)+'" fill="'+MANE_HI+'" filter="url(#mane-'+u+')" opacity=".9"/>';
+  if(maneStage===3)s+='<path d="'+maneLocks(4,8,14,maneR+10,5,48,118,rr)+'" fill="'+MANE_DK+'" filter="url(#mane-'+u+')" opacity=".95"/>';
+  s+='</g>';
+ }
+ /* war helmet + crown, over the mane */
+ if(feats.helmet)s+='<g stroke="#2E3A5C" stroke-width="1">'+
+  '<path d="M-14,-11 C-10,-22 6,-26.5 14,-16.5 C17,-12.5 18,-8.5 17,-5.5 L11.5,-6.5 C11,-13 3,-17.5 -5,-15.5 C-9,-14.5 -12,-13 -14,-11 Z" fill="url(#goldm-'+u+')" stroke="#6B4A08" stroke-width="1.3"/>'+
+  '<path d="M-9,-13.5 L-23,-6" stroke="url(#steelg-'+u+')" stroke-width="2.6" stroke-linecap="round"/>'+
+  '<path d="M-8,-17 C-2,-20.5 6,-20.5 11,-17" stroke="rgba(255,255,255,.55)" stroke-width="1.5" fill="none"/>'+
+  '<path d="M1,-23 L1,-30" stroke="#6B4A08" stroke-width="3" stroke-linecap="round"/>'+flame(1,-29,4,8,'flick','#FF5B49')+'</g>';
+ if(feats.crown){
+  var ck=feats.helmet?-31:-22;
+  s+='<g><path d="M-8,'+ck+' l0,-7 3.5,3.8 5.5,-7.5 5.5,7.5 3.5,-3.8 0,7 Z" fill="url(#goldm-'+u+')" stroke="#6B4A08" stroke-width="1.1"/>'+
+   '<circle cx="-4.5" cy="'+(ck-2)+'" r="1" fill="#FF5B49"/><circle cx="1" cy="'+(ck-2.4)+'" r="1" fill="#35C56A"/><circle cx="6.5" cy="'+(ck-2)+'" r="1" fill="#4E6FDB"/>'+
+   '<circle cx="1" cy="'+(ck-11)+'" r="1.5" fill="#FF5B49"/></g>';
+ }
+ s+='</g>'; /* end head */
+ /* fire breath from the open mouth */
+ if(feats.firebreath)s+='<g class="breath" style="transform-box:fill-box;transform-origin:right center;opacity:.92">'+
+  '<path d="M43,91 C31,82 16,79 4,85 C10,89 10,91 2,94 C8,101 25,103 35,100 C39,97.5 42,94 43,91 Z" fill="url(#flameg-'+u+')"/>'+
+  '<path d="M40,91 C32,86 22,84.5 14,87.5 C18,90 18,91.5 13,93.5 C18,97 28,97.5 33,95.5 C36,94 39,92.5 40,91 Z" fill="#FFE9A8" opacity=".85"/></g>';
+ /* legendary sparkles + rim light */
+ if(great)s+='<path d="M92,80 C116,70 148,72 168,84" stroke="#FFE9A8" stroke-width="1.6" opacity=".8" fill="none"/>'+
+  '<g fill="#FFE9A8"><path d="M48,44 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2Z"/><path d="M200,36 l1.6,4 4,1.6 -4,1.6 -1.6,4 -1.6,-4 -4,-1.6 4,-1.6Z"/><path d="M212,140 l1.4,3.6 3.6,1.4 -3.6,1.4 -1.4,3.6 -1.4,-3.6 -3.6,-1.4 3.6,-1.4Z"/></g>';
+ s+='</g>'; /* end rig scale */
  return '<svg class="rig" viewBox="0 0 240 200" role="img" aria-label="'+esc(playerById(pid).name)+'’s bravery lion, growing with roar-points">'+s+'</svg>';
+}
+
+/* =============== GAME BRAIN — segmented, number-free glow =============== */
+var BRAIN_THR=[1,3,5,8,11,15,19,24,29,35,41,48,56,64,73,82];
+function courageTot(c){var q=(c&&c.courage)||{};return (q.attempts||0)+(q.weakFoot||0)+(q.bounceBacks||0)+(q.medals||0);}
+function brainSegs(gb){var n=0;for(var i=0;i<BRAIN_THR.length;i++)if(gb>=BRAIN_THR[i])n++;return n;}
+function brainSVG(pid){
+ var c=S.card[pid],lit=brainSegs(c.gameBrain||0),N=BRAIN_THR.length,frac=lit/N;
+ var cx=50,cy=56,R=40,a0=205,a1=-25,u='b'+pid,i;
+ var segs='',glow='';
+ for(i=0;i<N;i++){
+  var t0=(a0+(a1-a0)*(i/N))*Math.PI/180,t1=(a0+(a1-a0)*((i+.8)/N))*Math.PI/180;
+  var x1=(cx+Math.cos(t0)*R).toFixed(1),y1=(cy-Math.sin(t0)*R).toFixed(1);
+  var x2=(cx+Math.cos(t1)*R).toFixed(1),y2=(cy-Math.sin(t1)*R).toFixed(1);
+  var d='M'+x1+','+y1+' A'+R+','+R+' 0 0 1 '+x2+','+y2;
+  if(i<lit){
+   glow+='<path d="'+d+'" stroke="rgba(127,212,255,.3)" stroke-width="10.5" fill="none" stroke-linecap="round"/>';
+   segs+='<path d="'+d+'" stroke="url(#bg-'+u+')" stroke-width="6.5" fill="none" stroke-linecap="round"/>';
+  }else{
+   segs+='<path d="'+d+'" stroke="rgba(159,176,204,.28)" stroke-width="6.5" fill="none" stroke-linecap="round"/>';
+  }
+ }
+ var op=(.16+.55*frac).toFixed(2),op2=(.3+.65*frac).toFixed(2);
+ return '<svg viewBox="0 0 100 82" role="img" aria-label="'+esc(playerById(pid).name)+'’s Game Brain — a glow that lights up segment by segment from smarts and soccer events. No numbers, only ever brighter.">'+
+  '<defs><linearGradient id="bg-'+u+'" x1="0" y1="1" x2="1" y2="0">'+
+   '<stop offset="0" stop-color="#4E6FDB"/><stop offset="1" stop-color="#7FD4FF"/></linearGradient></defs>'+
+  glow+segs+
+  '<g transform="translate(50,60)">'+
+   '<path d="M-14,4 C-18,-2 -16,-10 -9,-13 C-7,-18 1,-19 5,-15 C12,-16 17,-10 15,-4 C18,1 15,7 9,8 C6,12 -2,13 -6,10 C-11,11 -14,8 -14,4 Z" fill="rgba(78,111,219,'+op+')" stroke="#7FB8E8" stroke-width="1.4"/>'+
+   '<path d="M-8,-8 C-4,-11 0,-10 2,-7 M-10,0 C-6,-3 -1,-2 2,1 M0,-13 C2,-9 1,-5 -2,-3 M6,-10 C9,-7 9,-2 6,1 M-4,5 C0,3 5,4 8,6" stroke="#9CC3FF" stroke-width="1.2" fill="none" opacity="'+op2+'" stroke-linecap="round"/>'+
+  '</g></svg>';
 }
 
 /* =============== drill animation sketches (reused library) =============== */
@@ -1054,6 +1292,7 @@ function cardHTML(pid,neutral){
  h+='<div class="card-top">';
  h+='<div class="card-slot"><div class="lionbox" data-lion="'+pid+'"><span class="roarburst" aria-hidden="true">ROAR!</span>'+lionSVG(pid)+'</div>';
  if(!neutral)h+='<div class="lion-tier">'+esc(TIER_INFO[feat]||'')+'</div>';
+ h+='<div class="brainbox">'+brainSVG(pid)+'<div class="brain-lbl">Game Brain</div></div>';
  h+='<span class="week-badge">'+crestSVG(li.week,'')+' Week '+li.week+' · '+esc(wk.academy)+'</span></div>';
  h+='<div class="card-id">';
  h+='<button class="photo-btn" data-action="photo" data-p="'+pid+'" aria-label="'+(p.photo?'Change':'Add')+' photo for '+esc(p.name)+'">'+photoOrPlaceholder(p)+'</button>';
@@ -1065,7 +1304,7 @@ function cardHTML(pid,neutral){
  h+='<div class="chips">'+
   '<span class="chip super">⚡ Superpower · '+SPOKE_NAME[sh.superpower]+'</span>'+
   '<span class="chip quest">🧭 Next quest · '+SPOKE_NAME[sh.quest]+'</span></div>';
- h+='<div class="pawrow"><span class="pawlbl">Brave tries</span>'+pawPips(c.braveTotal)+'</div>';
+ h+='<div class="pawrow"><span class="pawlbl">Courage</span>'+pawPips(courageTot(c))+'</div>';
  h+='</article>';
  return h;
 }
@@ -1097,12 +1336,26 @@ function renderGridHead(){
 function tickCell(g,p,d,s,ro){
  var on=!!(g.attendance[p]&&g.attendance[p][d]&&g.attendance[p][d][s]);
  if(ro)return '<span class="dotrow '+(on?'dot-on':'dot-off')+'">'+(on?'●':'○')+'</span>';
- var arr=g.attendance[p][d],all=arr[0]&&arr[1]&&arr[2];
+ var arr=g.attendance[p][d]||(g.attendance[p][d]=[0,0,0]),all=arr[0]&&arr[1]&&arr[2];
  return '<button class="tick'+(all?' done3':'')+'" data-action="tick" data-p="'+p+'" data-d="'+d+'" data-s="'+s+'" aria-pressed="'+!!on+'" aria-label="'+p+' '+d+' session '+(s+1)+(on?' done':' not yet')+'">'+(on?'✓':'')+'</button>';
 }
+var EV_TYPES=[['watch','📺 Watched a match'],['fifa','🎮 Played FIFA/FC'],['club','🏃 Club practice'],['game','🏟 Played a game']];
 function renderWeekRow(){
  var g=activeGrid(),li=liveInfo();
- var h='<div class="weekrow-outer"><div class="weekrow">';
+ var h='<div class="eventbar" aria-label="Soccer events — bonus only, per player">';
+ S.players.forEach(function(p){
+  var gp=(g.gamesPlayed&&g.gamesPlayed[p.id])||0;
+  h+='<div class="ev-row"><span class="ev-name">'+esc(p.name)+'</span>'+
+   '<span class="ev-gp">🏟 Games played · <b>'+gp+'</b></span>'+
+   '<button class="ev-add" data-action="evmenu" data-p="'+p.id+'" aria-expanded="'+(UI.evMenu===p.id)+'">+ Soccer Event</button></div>';
+  if(UI.evMenu===p.id){
+   h+='<div class="ev-menu" role="group" aria-label="What did '+esc(p.name)+' do?">';
+   EV_TYPES.forEach(function(t){h+='<button class="ev-type" data-action="evlog" data-p="'+p.id+'" data-type="'+t[0]+'">'+t[1]+'</button>';});
+   h+='</div>';
+  }
+ });
+ h+='<p class="ev-note">Events are <b>bonus fuel</b>: they light Game Brain segments and feed the lion a snack — they never tick a session box and never move the hexagon or PRs.</p></div>';
+ h+='<div class="weekrow-outer"><div class="weekrow">';
  DAYS.forEach(function(day){
   if(day.week!==UI.week)return;
   var intn=INTENSITY[day.dow];
@@ -1136,9 +1389,12 @@ function blockHTML(day,blk,name,mins,animKey,editing){
   '<div class="block-name">'+name+'</div>';
  if(editing)h+='<textarea data-edit="'+day.id+':'+blk+'" aria-label="Edit '+name+' drill text ('+esc(day.family)+' family)">'+esc(rawDrill(day,blk))+'</textarea>';
  else h+='<p class="block-txt">'+drillText(day,blk)+'</p>';
- h+='</div>';
- if(animKey&&ANIMS[animKey])h+=ANIMS[animKey];
- h+='</div>';
+ if(animKey&&ANIMS[animKey]&&!editing){
+  var k=day.id+':'+blk,open=!!UI.openAnims[k];
+  h+='<button class="animtoggle" data-action="anim" data-k="'+k+'" aria-expanded="'+open+'" aria-label="'+(open?'Hide':'See')+' the '+name.replace(/^[①②③④⑤]\s*/,'')+' drill diagram">'+(open?'▾ Hide the drill':'▶ See the drill')+'</button>';
+  if(open)h+='<div class="animwrap">'+ANIMS[animKey]+'</div>';
+ }
+ h+='</div></div>';
  return h;
 }
 function measureHTML(day,mkey){
@@ -1178,27 +1434,40 @@ function renderDayPanel(){
   '<button class="restorebtn" data-action="restoredrills" data-d="'+day.id+'">Restore originals</button></div>';
  h+='<div class="blocks">'+
   blockHTML(day,'warm','① Warm-up',15,day.aWarm,editing)+
-  blockHTML(day,'ind','② Individual — the day’s focus',20,day.aInd,editing)+
-  blockHTML(day,'grp','③ Group — the game',20,day.aGrp,editing)+
-  blockHTML(day,'hud','④ Huddle',5,null,editing);
- h+='</div>';
- /* PR TIME */
+  blockHTML(day,'ind','② Individual — the day’s focus',15,day.aInd,editing)+
+  blockHTML(day,'grp','③ Group — the game',15,day.aGrp,editing);
+ /* ④ PR TIME — its own 10-minute block (15 + 15 + 15 + 10 + 5 = 60) */
+ h+='<div class="block"><div class="block-time"><b>10</b><span>MIN</span></div><div class="block-main">'+
+  '<div class="block-name">④ PR Time — beat your own best</div>';
  h+='<div class="prtime"><div class="prtime-head"><span class="pt-title">⏱ PR Time</span><div class="prtabs" role="group" aria-label="Log marks for which player">';
  S.players.forEach(function(pl){h+='<button data-action="prtab" data-p="'+pl.id+'" aria-pressed="'+(UI.prPlayer===pl.id)+'">'+esc(pl.name)+'</button>';});
  h+='</div></div><div class="prtime-body">';
  day.measures.forEach(function(mk){h+=measureHTML(day,mk);});
- /* brave tries */
- var todays=(g.brave[p]&&g.brave[p][day.id])||0,c=S.card[p];
- h+='<div class="brave-box"><div class="brave-head"><span class="m-name">🔥 Brave Tries'+(day.braveBig?' — today’s headline':'')+'</span>'+
-  '<span class="m-unit">'+(day.braveLbl||'moves attempted — a miss still counts')+'</span></div>'+
-  '<div class="brave-entry"><span class="brave-count">'+esc(playerById(p).name)+' tried <b>'+todays+'</b> brave moves today · <b>'+c.braveTotal+'</b> this year</span>'+
-  '<button class="bravebtn" data-action="brave" data-d="'+day.id+'">+1 brave try 🦁</button></div></div>';
- /* session done */
+ /* Courage Counts — three observable behaviors + one Coach's Medal a day */
+ var cg=(g.courage&&g.courage[p]&&g.courage[p][day.id])||{a:0,w:0,b:0,m:0},c=S.card[p];
+ var name=esc(playerById(p).name);
+ function cgRow(kind,label,def,n,isMedal){
+  return '<div class="cg-row"><div class="cg-main"><div class="cg-name">'+label+'</div><div class="cg-def">'+def+'</div></div>'+
+   '<span class="cg-count"><b>'+n+'</b> today</span>'+
+   '<button class="cg-btn'+(isMedal?' medal':'')+'" data-action="courage" data-kind="'+kind+'" data-d="'+day.id+'"'+(isMedal&&n>=1?' disabled':'')+
+   ' aria-label="'+(isMedal?(n>=1?'Coach’s Medal already given today':'Give '+name+' today’s Coach’s Medal'):'Count one '+label+' for '+name)+'">'+(isMedal?'🏅':'+')+'</button></div>';
+ }
+ h+='<div class="brave-box"><div class="brave-head"><span class="m-name">🔥 Courage Counts'+(day.braveBig?' — today’s headline':'')+'</span>'+
+  '<span class="m-unit">counted in the group game — call the target before it starts</span></div>'+
+  cgRow('attempts','Move Attempts',day.braveLbl||'Today’s featured move tried against a real defender — hit or miss, the try counts.',cg.a,false)+
+  cgRow('weakFoot','Weak-Foot Ventures','A pass, shot or take-on with the weaker foot, on purpose, in the game.',cg.w,false)+
+  cgRow('bounceBacks','Bounce-Backs','Lost it or missed? Back in the play inside five seconds — that’s the count.',cg.b,false)+
+  cgRow('medals','Coach’s Medal','One a day, coach’s call — courage the counters didn’t catch.',cg.m,true)+
+  '<div class="brave-entry"><span class="brave-count">'+name+' · today <b>'+(cg.a+cg.w+cg.b+cg.m)+'</b> · this year <b>'+courageTot(c)+'</b> — every one feeds the lion 🦁</span></div></div>';
+ h+='</div></div></div></div>'; /* close prtime-body, prtime, block-main, block */
+ h+=blockHTML(day,'hud','⑤ Huddle',5,null,editing);
+ h+='</div>'; /* close blocks */
+ /* session done — end of the day view */
  var att=g.attendance[p][day.id],done=(att[0]?1:0)+(att[1]?1:0)+(att[2]?1:0);
- h+='<div class="sess-done"><button class="donebtn" data-action="sessdone" data-d="'+day.id+'"'+(done>=3?' disabled':'')+'>'+
+ h+='<div class="sess-done-wrap"><div class="sess-done"><button class="donebtn" data-action="sessdone" data-d="'+day.id+'"'+(done>=3?' disabled':'')+'>'+
   (done>=3?'All 3 sessions done — day complete! 🦁':'Session done — ROAR! 🦁')+'</button>'+
-  '<span class="sess-count">'+esc(playerById(p).name)+': '+done+' of 3 sessions ticked'+(done===2?' — one more grows the lion!':'')+'</span></div>';
- h+='</div></div></section>';
+  '<span class="sess-count">'+esc(playerById(p).name)+': '+done+' of 3 sessions ticked'+(done===2?' — one more grows the lion!':'')+'</span></div></div>';
+ h+='</section>';
  box.innerHTML=h;
 }
 function fmtDate(iso){
@@ -1213,7 +1482,8 @@ function renderHistory(){
   var open=!!UI.openHist[g.id];
   var sums=S.players.map(function(p){
    var n=0;for(var d in g.attendance[p.id]){var a=g.attendance[p.id][d];n+=(a[0]?1:0)+(a[1]?1:0)+(a[2]?1:0);}
-   return esc(p.name)+' '+n+'/45';
+   var gp=(g.gamesPlayed&&g.gamesPlayed[p.id])||0;
+   return esc(p.name)+' '+n+'/45'+(gp?' · 🏟'+gp:'');
   }).join(' · ');
   var end=new Date(g.createdAt+'T00:00:00');end.setDate(end.getDate()+18);
   h+='<div class="hist-item"><button class="hist-btn" data-action="hist" data-g="'+g.id+'" aria-expanded="'+open+'">'+
@@ -1221,7 +1491,7 @@ function renderHistory(){
    '<span class="h-dates">'+fmtDate(g.createdAt)+' – '+end.toLocaleDateString(undefined,{month:'short',day:'numeric'})+'</span>'+
    '<span class="h-sum">'+sums+'</span></button>';
   if(open){
-   h+='<div class="hist-body"><div class="hist-tbl-wrap"><table class="hist-tbl"><thead><tr><th>Day</th><th>Jack — 3 sessions</th><th>Blue — 3 sessions</th><th>Brave</th></tr></thead><tbody>';
+   h+='<div class="hist-body"><div class="hist-tbl-wrap"><table class="hist-tbl"><thead><tr><th>Day</th><th>Jack — 3 sessions</th><th>Blue — 3 sessions</th><th>Courage</th></tr></thead><tbody>';
    ['A','B','C'].forEach(function(w){
     h+='<tr class="hist-wk-lbl"><td colspan="4">Week '+w+' · '+esc(WEEKS[w].academy)+'</td></tr>';
     DAYS.forEach(function(day){
@@ -1230,7 +1500,11 @@ function renderHistory(){
      S.players.forEach(function(p){
       h+='<td>';for(var s=0;s<3;s++)h+=tickCell(g,p.id,day.id,s,true);h+='</td>';
      });
-     var b=[];S.players.forEach(function(p){var n=(g.brave[p.id]&&g.brave[p.id][day.id])||0;if(n)b.push(esc(p.name)+' 🔥'+n);});
+     var b=[];S.players.forEach(function(p){
+      var n=0,q=g.courage&&g.courage[p.id]&&g.courage[p.id][day.id];
+      if(q)n=(q.a||0)+(q.w||0)+(q.b||0)+(q.m||0);
+      else n=(g.brave&&g.brave[p.id]&&g.brave[p.id][day.id])||0;
+      if(n)b.push(esc(p.name)+' 🔥'+n);});
      h+='<td>'+(b.join(' · ')||'—')+'</td></tr>';
     });
    });
@@ -1248,7 +1522,6 @@ function render(){
 }
 
 /* =============== actions =============== */
-function ensureBraveMap(g,p){g.brave[p]=g.brave[p]||{};}
 function ensureAwards(g,p,d){g.awards=g.awards||{};g.awards[p]=g.awards[p]||{};g.awards[p][d]=g.awards[p][d]||{};return g.awards[p][d];}
 
 function doTick(p,d,s,fromDone){
@@ -1274,6 +1547,7 @@ function doLog(p,d,mkey){
  if(v==null)v=(c.prs[mkey]!=null?c.prs[mkey]:m.start);
  v=+(+v).toFixed(m.dp||0);
  var prev=c.prs[mkey],isPR=prev==null||(m.dir>0?v>prev:v<prev);
+ if(m.smarts){c.gameBrain=(c.gameBrain||0)+(isPR?3:1);toast('🧠 Smarts on the board — '+playerById(p).name+'’s Game Brain glows a little brighter.');}
  if(isPR){
   c.prs[mkey]=v;c.prBeats++;
   if(m.smarts){c.smarts=c.smarts||{};c.smarts[mkey]=v;}
@@ -1286,13 +1560,36 @@ function doLog(p,d,mkey){
  }
  save();render();
 }
-function doBrave(p,d){
- var g=activeGrid(),c=S.card[p];
- ensureBraveMap(g,p);
- g.brave[p][d]=(g.brave[p][d]||0)+1;
- c.braveTotal++;
- addRoarPts(p,.2,'brave');
- if(c.braveTotal%5===0)toast('🔥 '+playerById(p).name+' has tried '+c.braveTotal+' brave moves this year!','verm');
+var CG_KEY={attempts:'a',weakFoot:'w',bounceBacks:'b',medals:'m'};
+function doCourage(p,d,kind){
+ if(!CG_KEY[kind])return;
+ var g=activeGrid(); if(g.frozen)return;
+ g.courage=g.courage||{}; g.courage[p]=g.courage[p]||{};
+ var cg=g.courage[p][d]=g.courage[p][d]||{a:0,w:0,b:0,m:0};
+ if(kind==='medals'&&cg.m>=1){toast('🏅 The Coach’s Medal is one per day — make it count.');return;}
+ cg[CG_KEY[kind]]++;
+ var c=S.card[p];
+ c.courage=c.courage||{attempts:0,weakFoot:0,bounceBacks:0,medals:0};
+ c.courage[kind]=(c.courage[kind]||0)+1;
+ addRoarPts(p,.2,'courage');
+ var msgs={attempts:'tried the move on a real defender',weakFoot:'went weak-foot on purpose',bounceBacks:'bounced straight back into the play',medals:'earned today’s Coach’s Medal 🏅'};
+ toast('🔥 '+playerById(p).name+' '+msgs[kind]+' — the lion feeds!','verm');
+ var ct=courageTot(c);
+ if(ct%10===0)toast('🦁 '+playerById(p).name+' is at '+ct+' courage counts this year!','verm');
+ save();render();
+}
+function logEvent(p,type){
+ var g=activeGrid(); if(g.frozen)return;
+ var li=liveInfo();
+ g.events=g.events||[];
+ g.events.push({playerId:p,day:li.dayId||null,type:type});
+ var c=S.card[p],pts={watch:2,fifa:1,club:2,game:3};
+ c.gameBrain=(c.gameBrain||0)+(pts[type]||1);
+ addRoarPts(p,.2,'event');
+ if(type==='game'){g.gamesPlayed=g.gamesPlayed||{};g.gamesPlayed[p]=(g.gamesPlayed[p]||0)+1;}
+ UI.evMenu=null;
+ var lbl={watch:'watched a match',fifa:'played FIFA/FC',club:'went to club practice',game:'played a real game'};
+ toast('🧠 '+playerById(p).name+' '+(lbl[type]||'logged an event')+' — Game Brain glows, the lion gets a snack. Sessions still count separately!');
  save();render();
 }
 function doDuplicate(){
@@ -1305,14 +1602,14 @@ function doDuplicate(){
  var att={},brv={},awd={};
  S.players.forEach(function(p){att[p.id]={};brv[p.id]={};awd[p.id]={};
   for(var i=1;i<=15;i++){att[p.id]['D'+i]=[0,0,0];awd[p.id]['D'+i]={};}});
- var ng={id:'g'+Date.now(),cycle:maxC+1,label:'Cycle '+(maxC+1),createdAt:iso,frozen:false,attendance:att,brave:brv,awards:awd};
+ var ng={id:'g'+Date.now(),cycle:maxC+1,label:'Cycle '+(maxC+1),createdAt:iso,frozen:false,attendance:att,brave:brv,courage:{},events:[],gamesPlayed:{},awards:awd};
  S.grids.push(ng);S.activeGridId=ng.id;
  UI.openDay=null;UI.week=liveInfo().week;
  toast('Sheet archived below ⤵ — fresh '+ng.label+' on top. Card, PRs & lion carried over.');
  save();render();
 }
 function doReset(){
- if(!window.confirm('Reset all demo data? Attendance, PRs, lions and photos go back to the seeded demo.'))return;
+ if(!window.confirm('Reset all demo data? Attendance, PRs, lions, Game Brain and photos go back to the seeded demo.'))return;
  try{localStorage.removeItem(LS_KEY);}catch(e){}
  S=seedState();UI.week=liveInfo().week;UI.openDay=null;UI.staged={};UI.openHist={};UI.editDay=null;
  save();render();
@@ -1340,7 +1637,7 @@ document.addEventListener('click',function(ev){
  else if(a==='compare'){S.settings.compare=!S.settings.compare;save();render();}
  else if(a==='photo'){UI.pendingPhoto=b.getAttribute('data-p');$('#photoIn').click();}
  else if(a==='week'){UI.week=b.getAttribute('data-w');UI.openDay=null;UI.editDay=null;render();}
- else if(a==='day'){var d=b.getAttribute('data-d');UI.openDay=(UI.openDay===d?null:d);UI.editDay=null;UI.staged={};render();
+ else if(a==='day'){var d=b.getAttribute('data-d');UI.openDay=(UI.openDay===d?null:d);UI.editDay=null;UI.staged={};UI.openAnims={};render();
   if(UI.openDay){var el=$('#daypanel');if(el&&el.scrollIntoView&&!RM)setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}}
  else if(a==='tick'){doTick(b.getAttribute('data-p'),b.getAttribute('data-d'),+b.getAttribute('data-s'),false);}
  else if(a==='prtab'){UI.prPlayer=b.getAttribute('data-p');if(!S.settings.compare){S.settings.solo=UI.prPlayer;}UI.staged={};save();render();}
@@ -1353,7 +1650,10 @@ document.addEventListener('click',function(ev){
   var row=b.closest('.measure');if(row){var val=row.querySelector('.m-val');if(val)val.firstChild.nodeValue=fmt(cur,m);}
  }
  else if(a==='log'){doLog(UI.prPlayer,b.getAttribute('data-d'),b.getAttribute('data-m'));}
- else if(a==='brave'){doBrave(UI.prPlayer,b.getAttribute('data-d'));}
+ else if(a==='courage'){doCourage(UI.prPlayer,b.getAttribute('data-d'),b.getAttribute('data-kind'));}
+ else if(a==='evmenu'){var ep=b.getAttribute('data-p');UI.evMenu=(UI.evMenu===ep?null:ep);render();}
+ else if(a==='evlog'){logEvent(b.getAttribute('data-p'),b.getAttribute('data-type'));}
+ else if(a==='anim'){var ak=b.getAttribute('data-k');UI.openAnims[ak]=!UI.openAnims[ak];render();}
  else if(a==='sessdone'){
   var day=b.getAttribute('data-d'),g=activeGrid(),arr=g.attendance[UI.prPlayer][day];
   var slot=-1;for(var s=0;s<3;s++)if(!arr[s]){slot=s;break;}
@@ -1396,6 +1696,7 @@ $('#photoIn').addEventListener('change',function(ev){
 });
 
 /* =============== boot =============== */
+migrate();
 S=load()||seedState();
 applyTheme();
 UI.week=liveInfo().week;
