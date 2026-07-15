@@ -87,4 +87,4 @@ discovery for decision-making and creativity.
 
 *Provenance: named models (Chelladurai's multidimensional model, Mosston's
 teaching-style spectrum, and the added coach–athlete 3+1 Cs) are cited by origin in
-[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology--coaching-frameworks-index05-10).*
+[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology-and-coaching-frameworks-index-05-10).*

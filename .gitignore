@@ -29,6 +29,10 @@ venv/
 .ruff_cache/
 .mypy_cache/
 
+# --- MkDocs ----------------------------------------------------------------
+# Built site output (published to the gh-pages branch by CI, never committed).
+/site/
+
 # --- Editors / OS ----------------------------------------------------------
 .DS_Store
 Thumbs.db

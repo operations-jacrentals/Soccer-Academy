@@ -9,6 +9,12 @@ heading when you cut a release for production.
 
 ## [Unreleased]
 
+### Added
+- GitHub Pages publishing for the curriculum via **MkDocs** (`mkdocs.yml`,
+  Material theme): staging validates the site build; production builds and
+  publishes to the `gh-pages` branch through `mkdocs gh-deploy`, behind the
+  existing production approval gate.
+
 ## [0.1.0] - 2026-07-15
 
 ### Added

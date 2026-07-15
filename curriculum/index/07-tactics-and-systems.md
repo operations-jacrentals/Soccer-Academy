@@ -105,4 +105,4 @@ Each is a starting shape and a set of trade-offs; teams morph between shapes in 
 
 *Provenance: named tactical concepts (positional play / 5-lane grid / half-spaces,
 Zone 14, la pausa) are cited by origin in
-[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology-and-development-frameworks-index-03-07-11).*

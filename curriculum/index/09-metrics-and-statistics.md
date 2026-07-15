@@ -160,6 +160,6 @@ These are **named, published metrics and frameworks** — cited by origin per th
 [Documentation Standard](../DOC_STANDARD.md) (Rule 1: never invent a metric or
 formula). Definitions and citations for the analytics, load, injury-surveillance,
 and testing metrics above are collected in
-[`references/sources.md` → Metrics & analytics](../references/sources.md#metrics--analytics-index09).
+[`references/sources.md` → Metrics & analytics](../references/sources.md#metrics-and-analytics-index-09).
 Per this environment's egress policy, primary pages are cited as **surfaced and
 corroborated via search**, not opened directly (see the sources file's methodology note).
