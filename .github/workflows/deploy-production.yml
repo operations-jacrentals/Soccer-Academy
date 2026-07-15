@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write   # publish the built site to the gh-pages branch
 
 jobs:
   deploy:
@@ -61,17 +61,23 @@ jobs:
       - name: Validate feature flags
         run: python scripts/validate-flags.py
 
-      # ---------------------------------------------------------------------
-      # TODO: build the app, then deploy to production.
-      # Add your target's credentials as *Environment secrets* on `production`.
-      #
-      #   Vercel:  vercel deploy --prod --token=$VERCEL_TOKEN
-      #   Netlify: netlify deploy --prod --site $NETLIFY_SITE_ID
-      #   rsync:   rsync -az ./dist/ $SSH_USER@$SSH_HOST:/var/www/production/
-      # ---------------------------------------------------------------------
-      - name: Deploy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material
+
+      # Build the curriculum site and force-push it to the gh-pages branch using
+      # the workflow's GITHUB_TOKEN (needs `contents: write` above). The
+      # `production` environment gate above still requires manual approval before
+      # this runs. One-time setup: Settings → Pages → Source:
+      # "Deploy from a branch" → gh-pages.
+      - name: Build & publish curriculum site to GitHub Pages
         env:
           DEPLOY_REF: ${{ steps.ref.outputs.value }}
         run: |
-          echo "Deploying ref '$DEPLOY_REF' to PRODUCTION (APP_ENV=$APP_ENV)"
-          echo "TODO: add the real deploy command — see docs/WORKFLOW.md"
+          echo "Publishing ref '$DEPLOY_REF' to GitHub Pages (APP_ENV=$APP_ENV)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdocs gh-deploy --force --no-history

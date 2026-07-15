@@ -109,4 +109,4 @@ Concise, reusable drill *types*. Expand into full session plans at curriculum ti
 
 *Provenance: named methods (Play–Practice–Play, Seirul·lo structured training,
 tactical periodization / morphocycle) are cited by origin in
-[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology-and-development-frameworks-index-03-07-11).*

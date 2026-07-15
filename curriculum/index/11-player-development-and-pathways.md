@@ -98,4 +98,4 @@ for developing the *whole person* — the explicit pairing of "soccer + smarts."
 *Provenance: LTAD ([Ford et al. 2011](../references/sources.md)), and the added
 frameworks (FTEM, DMSP, the contested "windows of trainability") are cited by
 origin in
-[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology-and-development-frameworks-index-03-07-11).*

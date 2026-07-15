@@ -81,4 +81,4 @@ to an academy whose mission pairs soccer with "smarts" and character.
 
 *Provenance: named frameworks (SDT, Dweck's mindsets, Yerkes-Dodson, IZOF, and the
 added TARGET climate model and 4Cs mental toughness) are cited by origin in
-[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology--coaching-frameworks-index05-10).*
+[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology-and-coaching-frameworks-index-05-10).*

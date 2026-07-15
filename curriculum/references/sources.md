@@ -47,7 +47,7 @@ field/goal ranges are ⚠️ (from a search summary of the PDF I could not open)
   the 4v4/ball-3 (U8) to 7v7/ball-4 (U9) transition. Confirm each child's group by
   birth year.
 
-## US Soccer — Concussion Initiative / heading guidelines (2016)
+## US Soccer heading guidelines (2016)
 
 Player-safety standard; adopt the **more protective** figure per Rule 2.
 
@@ -96,7 +96,7 @@ Player-safety standard; adopt the **more protective** figure per Rule 2.
   → [Inside World Football (24 Oct 2025)](https://www.insideworldfootball.com/2025/10/24/benfica-tops-ranking-academy-football-factories-barca-river-plate-make-top-three)
   · [CIES Golden factories](https://football-observatory.com/Golden-factories-top-academies-worldwide-3019)
 
-## Metrics & analytics (index/09)
+## Metrics and analytics (index 09)
 
 Named, published football metrics and sports-science methods used in
 [`index/09`](../index/09-metrics-and-statistics.md). Cited **by origin** per Rule 1
@@ -155,7 +155,7 @@ Named, published football metrics and sports-science methods used in
 - ✅ **Event data** (Opta / Stats Perform, StatsBomb / Hudl, Wyscout) vs **tracking data** (SkillCorner, Second Spectrum, Hawk-Eye); aggregated free by **FBref**.
   → [Opta Analyst — Football Stats Definitions](https://theanalyst.com/articles/opta-football-stats-definitions)
 
-## Tactics, methodology & development frameworks (index/03, 07, 11)
+## Tactics, methodology and development frameworks (index 03 07 11)
 
 Named, published frameworks and concepts. Cited **by origin** per Rule 1;
 **surfaced and corroborated via search**, not opened directly (egress note above).
@@ -188,7 +188,7 @@ Named, published frameworks and concepts. Cited **by origin** per Rule 1;
 - ⚠️ **Windows of trainability / sensitive periods (LTAD, Balyi)** — **empirically contested**: the sensitive-period claim lacks strong longitudinal evidence and is criticized in the literature. Presented in `index/11` with that caveat, not as a standard.
   → [Sensitive Periods to Train General Motor Abilities — a Critical Appraisal, *S&C Journal* 2020](https://journals.lww.com/nsca-scj/fulltext/2020/12000/sensitive_periods_to_train_general_motor_abilities.3.aspx)
 
-## Psychology & coaching frameworks (index/05, 10)
+## Psychology and coaching frameworks (index 05 10)
 
 Named, published frameworks. Cited **by origin** per Rule 1; **surfaced and
 corroborated via search**, not opened directly.
@@ -207,10 +207,10 @@ corroborated via search**, not opened directly.
 
 Named, published — cite when used:
 - **ACWR** — acute:chronic workload ratio (training-load monitoring).
-- **xG / xT / PPDA · xGOT / SGA · SCA / GCA · sequences framework** — published football-analytics metrics (model-based). → [Metrics & analytics](#metrics--analytics-index09) · [index/09](../index/09-metrics-and-statistics.md)
-- **session-RPE, training monotony & strain (Foster) · TRIMP (Banister)** — training-load methods. → [Metrics & analytics](#metrics--analytics-index09)
-- **Injury incidence / burden & consensus definitions (Fuller et al. 2006; IOC 2020)** — injury-surveillance standards. → [Metrics & analytics](#metrics--analytics-index09)
-- **30-15 IFT / MAS (Buchheit) · Nordic hamstring · FMS** — fitness & movement testing. → [Metrics & analytics](#metrics--analytics-index09)
+- **xG / xT / PPDA · xGOT / SGA · SCA / GCA · sequences framework** — published football-analytics metrics (model-based). → [Metrics & analytics](#metrics-and-analytics-index-09) · [index/09](../index/09-metrics-and-statistics.md)
+- **session-RPE, training monotony & strain (Foster) · TRIMP (Banister)** — training-load methods. → [Metrics & analytics](#metrics-and-analytics-index-09)
+- **Injury incidence / burden & consensus definitions (Fuller et al. 2006; IOC 2020)** — injury-surveillance standards. → [Metrics & analytics](#metrics-and-analytics-index-09)
+- **30-15 IFT / MAS (Buchheit) · Nordic hamstring · FMS** — fitness & movement testing. → [Metrics & analytics](#metrics-and-analytics-index-09)
 - **PHV / maturity offset** — Mirwald et al. equation (biological maturity estimate).
 - **FIFA 11+** — injury-prevention warm-up program.
 - **Yerkes–Dodson law** — arousal↔performance relationship. → [index/05](../index/05-psychology-and-mental.md)

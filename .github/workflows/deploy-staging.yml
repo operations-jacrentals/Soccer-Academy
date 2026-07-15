@@ -30,15 +30,15 @@ jobs:
         run: |
           python scripts/validate-flags.py
 
-      # ---------------------------------------------------------------------
-      # TODO: build the app, then deploy to staging.
-      # Add your target's credentials as *Environment secrets* on `staging`.
-      #
-      #   Vercel:  vercel deploy --token=$VERCEL_TOKEN            (preview/staging)
-      #   Netlify: netlify deploy --site $NETLIFY_SITE_ID
-      #   rsync:   rsync -az ./dist/ $SSH_USER@$SSH_HOST:/var/www/staging/
-      # ---------------------------------------------------------------------
-      - name: Deploy
-        run: |
-          echo "Deploying commit ${GITHUB_SHA} to STAGING (APP_ENV=$APP_ENV)"
-          echo "TODO: add the real deploy command — see docs/WORKFLOW.md"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material
+
+      # GitHub Pages serves one site per repo, so staging validates that the
+      # curriculum site builds cleanly — catching breakage before a production
+      # release can promote it — rather than publishing a separate site.
+      - name: Build curriculum site (staging validation)
+        run: mkdocs build --site-dir site

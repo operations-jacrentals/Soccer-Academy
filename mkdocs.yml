@@ -1,0 +1,43 @@
+site_name: Soccer-Academy Curriculum
+site_description: Soccer + Smarts homeschooling — curriculum, knowledge index, and academy models.
+
+# The curriculum Markdown IS the site. (The repo's top-level docs/ holds
+# workflow docs and is intentionally not published.)
+docs_dir: curriculum
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.top
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+
+plugins:
+  - search
