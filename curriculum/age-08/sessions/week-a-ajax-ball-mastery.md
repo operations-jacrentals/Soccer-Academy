@@ -11,7 +11,7 @@ Coerver pyramid blocks: **Ball Mastery + 1v1** (+ intro receiving).
 > researched. The **specific activities, counts, and the re-sequenced day order**
 > are ✏️ **coaching judgment**, drawing on the
 > [drill catalog](../../index/03-training-methodology-and-drills.md). Every day-plan
-> uses the [Warm-up 15 → Individual 20 → Group 20 → Huddle 5 shape](../02-session-template.md)
+> uses the [Warm-up 15 → Individual 15 → Group 15 → PR Time 10 → Huddle 5 shape](../02-session-template.md)
 > (the **day's focus is the Individual block**) and is **run ×3 that day** (3
 > attendance ticks); a **ball each**, ~60 min ✏️, **no standings** (KNVB ✅).
 >

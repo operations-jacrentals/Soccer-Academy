@@ -11,7 +11,7 @@
 > the academy identity is ✅ researched; specific activities and the ✏️ re-sequenced
 > day order are coaching judgment on the
 > [drill catalog](../../index/03-training-methodology-and-drills.md).
-> Warm-up 15 → Individual 20 → Group 20 → Huddle 5 (the warm-up is a **rondo** most
+> Warm-up 15 → Individual 15 → Group 15 → PR Time 10 → Huddle 5 (the warm-up is a **rondo** most
 > days this week), **run ×3 that day** (3 ticks); ball each / one per pair, no
 > standings. **Rotate drills inside each theme and level up loop over loop**
 > (two-touch → one-touch, bigger → smaller grid). **PR Time** closes each session —

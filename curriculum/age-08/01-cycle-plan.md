@@ -108,8 +108,8 @@ coaching judgment.)*
   gentler forms of the same day — the cycle keeps everyone in the same rhythm
   while difficulty individualizes via each child's **IDP** →
   [assessment](03-assessment.md).
-- **Session structure:** every session uses the **Warm-up 15 → Individual 20 →
-  Group 20 → Huddle 5** shape (warm-up = a rondo by default; the **day's focus is
+- **Session structure:** every session uses the **Warm-up 15 → Individual 15 →
+  Group 15 → PR Time 10 → Huddle 5** shape (warm-up = a rondo by default; the **day's focus is
   the Individual block**) → [session template](02-session-template.md).
 - **Measures:** each day carries **three self-referential measures** at PR Time —
   the day's best per measure is kept as a **single PR that only climbs** →

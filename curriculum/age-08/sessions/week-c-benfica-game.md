@@ -11,7 +11,7 @@ Environment: **futsal-style small-sided** ✅.
 > ([references](../../references/sources.md)); the academy identity is ✅ researched;
 > specific activities and the ✏️ re-sequenced day order are coaching judgment on the
 > [drill catalog](../../index/03-training-methodology-and-drills.md).
-> Warm-up 15 → Individual 20 → Group 20 → Huddle 5, **run ×3 that day** (3 ticks),
+> Warm-up 15 → Individual 15 → Group 15 → PR Time 10 → Huddle 5, **run ×3 that day** (3 ticks),
 > **no standings**. Tactics stay minimal — "creators, not tacticians." **Rotate
 > drills inside each theme and level up loop over loop.** **PR Time** closes each
 > session — a single day-PR per measure, only climbs →
