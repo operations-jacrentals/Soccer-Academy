@@ -100,8 +100,9 @@ One card per child. **Solo by default** (the focused, one-at-a-time view); a **C
 
 **The card contains — and shows ZERO numbers:**
 - The child's **real photo** (Jack / Blue), name, and the **live academy/week badge**.
-- The **hexagon** — six spokes **PAC · SHO · PAS · DRI · DEF · PHY**, drawn as spoke *lengths/fill only*. No per-spoke numbers, no overall rating.
+- The **hexagon** — six spokes labeled with their **full names — Pace · Shooting · Passing · Dribbling · Defending · Physical** (never abbreviated in the UI; short keys live only in the data model), drawn as spoke *lengths/fill only*. No per-spoke numbers, no overall rating.
 - The **LION** (§6) in the slot where an overall rating would be — bravery made visible.
+- The **GAME BRAIN** (§6b) beside the lion — intelligence made visible: a segmented, number-free glow fed by the smarts measures and Soccer Events. The card reads **body (hexagon) · heart (lion) · brain (Game Brain)**.
 - **Superpower** = the spoke with the highest *within-child* z-score (their relative strength). **Next Quest** = the lowest *technical* spoke (PAC/PHY guarded out — they grow on biology's clock). Both are labels, self-referential, encouraging.
 - A **Bronze / Silver / Gold** *journey* frame — a self-referential milestone of the child's own progress, **never** co-displayed across children as a rank.
 
@@ -119,8 +120,14 @@ State is per **player** (the card, global & cumulative) and per **grid** (attend
   - **Beating a personal best** on any of the day's three measures gives a **bigger jump** (the PR).
   - So the hexagon *moves every session* but a PR is still the event. Spokes never fall.
 - **PR record:** the day's **best** mark across that day's 3 sessions is kept per measure; a correction is a new entry; the stored best only climbs.
-- **Lion growth (§6):** advances **on the 3rd session of a day** (a *completed* day) — **not** per session — plus **brave-try bonuses** at any time. Gating growth on the complete day is what motivates *making up* a skipped session.
+- **Lion growth (§6):** advances **on the 3rd session of a day** (a *completed* day) — **not** per session — plus **Courage Count bonuses** at any time. Gating growth on the complete day is what motivates *making up* a skipped session.
 - **Roar feedback:** the lion **roars — animation + audible roar — on *every* "session done" click** (all three), for the dopamine hit; only the third click actually *grows* it.
+- **Courage Counts (replaces the free-floating "brave try" button — the coach flagged it as too subjective).** Courage is not *rated*; it is **operationalized into three observable, binary behaviors**, counted only during the **group-game window**, target announced before the game starts:
+  1. **Move Attempts** — the day's featured move *attempted against a live defender*; the motion happened or it didn't, success irrelevant (a failed attempt counts).
+  2. **Weak-Foot Ventures** — a deliberate weak-foot pass/shot/take-on in game play.
+  3. **Bounce-Backs** — after a lost ball or miss, re-engages within ~5 s ("next play," made countable).
+  Plus at most **one Coach's Medal per day** for genuine courage outside the categories. The lion feeds on the sum. ✏️ Definitions follow behavioral-observation practice (count operationally-defined events in a fixed window) rather than in-the-moment judgment.
+- **Soccer Events (bonus-only — never a substitute for a session).** The coach can log real-world soccer exposure — **Watched a match · Played FIFA/FC · Club practice · Played a game** — on any day. An event **never fills a session tick-box** and never touches hexagon spokes or PRs (exposure isn't measured training); it adds **Game Brain** segments (§6b), **lion bonus fuel** (like Courage Counts), and — when the event is *Played a game* — increments the week's **Games Played** counter shown in the week row.
 
 *(✏️ All nudges/jumps/curves are product design, tuned at build so a full, brave year reaches a mature lion — see §6.)*
 
@@ -139,6 +146,20 @@ Replaces the overall rating. A **single-year growth story** the kids can watch h
 
 **Audio:** an embedded/synthesized roar (Web Audio, CSP-safe, works offline in the artifact — no external files). Muted-by-default toggle for classroom sanity, with a visible speaker control.
 
+**Art direction (v1.1): realistic, not cartoon.** The v1 flat-cartoon rig read as childish. The rig is redrawn as a **premium wildlife-illustration**: correct lion anatomy and proportions, volumetric shading (layered gradients), textured fur edges (SVG turbulence/displacement), layered mane locks with highlight/shadow passes, amber eyes with catchlights, metallic specular armor. Ceiling note: true *photograph* realism is not achievable in hand-authored vector; if the coach supplies a photo/AI-image set for the anchor phases, the build swaps them in as the base layer with SVG armor/fire overlays on top.
+
+---
+
+## 6b · The GAME BRAIN — intelligence made visible
+
+The card's third element (body · heart · **brain**), sitting beside the lion. A **segmented, number-free glow** (a stylized brain/halo that lights up segment by segment — same visual grammar as the lion: growth you can *see*, no digits, no cross-child comparison).
+
+**Fed by (and only by):**
+- **Smarts PRs** — the scheduled smarts measures (D9 Scan Score, D15 Rules Five, passing-arithmetic where used): logging adds a little; beating the smarts PR adds more.
+- **Soccer Events** (§5) — watching a match, FIFA/FC, club practice, playing a game: each logged event lights Game Brain segments. ✏️ Watching/playing exposure builds game understanding (scanning/decision literature); it is exposure, not measured skill — hence it feeds the *brain*, never the hexagon.
+
+Monotone like everything else — segments only ever light up. ✏️ Segment count & per-source weights tuned at build.
+
 ---
 
 ## 7 · Layout & interaction
@@ -147,8 +168,8 @@ Replaces the overall rating. A **single-year growth story** the kids can watch h
 
 1. **Cards zone (top).** Solo card by default; **Compare** toggle. Photo, name, academy badge, number-free hexagon, lion (+roar/speaker), Superpower / Next Quest.
 2. **Active grid (middle).** Header: the **live academy week** (Ajax/La Masia/Benfica), an **A/B/C week switcher** (opens on "this week"), the cycle label, and the **Duplicate** button.
-   - **Week row:** five **day-tiles** (Mon–Fri), collapsed. Each tile: day title, intensity dot, and **attendance = 3 session ticks per player** (Jack · Blue).
-   - **Expand a day:** clicking a tile **expands it below into ONE session** (no triplicate). Shows that session's **blocks in order — Warm-up 15 → Individual 20 → Group 20 → Huddle 5** — with drill text + animation. The **final block is PR Time**: the day's **three measures** (each showing the current PR to beat), the **brave-try** counter, and any **smarts** measure. A **"session done"** control ticks attendance and fires the roar.
+   - **Week row:** five **day-tiles** (Mon–Fri), collapsed. Each tile: day title, intensity dot, and **attendance = 3 session ticks per player** (Jack · Blue). The week row also carries the week's **Games Played** counter per player and the **+ Soccer Event** control (log: Watched a match · FIFA/FC · Club practice · Played a game).
+   - **Expand a day:** clicking a tile **expands it below into ONE session** (no triplicate). Shows that session's **blocks in order — Warm-up 15 → Individual 20 → Group 20 → Huddle 5** — with drill text; each block's **animation sits behind a click-wall** (a compact "▶ See the drill" toggle, collapsed by default, so diagrams never push the page tall). The **final block is PR Time**: the day's **three measures** (each showing the current PR to beat), the **Courage Counts** trio (+ Coach's Medal), and any **smarts** measure. A **"session done"** control ticks attendance and fires the roar.
 3. **History stack (below).** On **Duplicate**, the active grid **slides down** into a frozen, collapsed stack (its attendance preserved as the season scrapbook); a **fresh grid** appears on top — **same D1–D15, attendance wiped, card/PRs/lion carried over**.
 
 **Drill animations:** reuse the skin-agnostic SVG/CSS drill animations from the prior work (`animations.html`, 47 sketches, `:root` CSS-var theming) — "animate the jargon, not the plain English."
@@ -164,13 +185,18 @@ The prior `tracker-core.js` was a rough draft; we **rebuild the engine clean**, 
   players: [{ id, name, photoDataUri }],            // Jack, Blue
   card: {                                            // GLOBAL per player, cumulative, only climbs
     [playerId]: {
-      spokes: { PAC, SHO, PAS, DRI, DEF, PHY },      // internal values; displayed as lengths only
+      spokes: { PAC, SHO, PAS, DRI, DEF, PHY },      // internal keys; UI always shows full names
       prs:    { [metricId]: bestValue },             // day's-best records, monotone
-      lionRoars: int, braveTotal: int, smarts: {...} // lion + bravery + academic bridge
+      lionRoars: int,                                 // lion fuel: completed days + courage bonuses
+      courage: { attempts, weakFoot, bounceBacks, medals },  // operationalized Courage Counts
+      gameBrain: int, smarts: {...}                  // brain segments + academic-bridge marks
     }
   },
   grids: [                                           // stack; each = one 3-week sheet
-    { id, label, createdAt, attendance: { [playerId]: { D1:[b,b,b], ... D15:[b,b,b] } } }
+    { id, label, createdAt,
+      attendance: { [playerId]: { D1:[b,b,b], ... D15:[b,b,b] } },
+      events: [{ playerId, day, type }],             // soccer events (bonus-only; type: watch|fifa|club|game)
+      gamesPlayed: { [playerId]: int } }             // per-week counter (type === 'game')
   ],
   activeGridId,
   settings: { soundOn }
