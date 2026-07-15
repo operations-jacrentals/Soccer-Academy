@@ -144,6 +144,39 @@ Named, published football metrics and sports-science methods used in
 - ✅ **Event data** (Opta / Stats Perform, StatsBomb / Hudl, Wyscout) vs **tracking data** (SkillCorner, Second Spectrum, Hawk-Eye); aggregated free by **FBref**.
   → [Opta Analyst — Football Stats Definitions](https://theanalyst.com/articles/opta-football-stats-definitions)
 
+## Tactics, methodology & development frameworks (index/03, 07, 11)
+
+Named, published frameworks and concepts. Cited **by origin** per Rule 1;
+**surfaced and corroborated via search**, not opened directly (egress note above).
+
+### Positional play & tactical concepts (index/07)
+
+- ✅ **Juego de posición · 5-lane grid · half-spaces** — Cruyff–Guardiola positional-play framework (five vertical lanes; occupancy/spacing guidelines).
+  → [Coaches' Voice — Positional play explained](https://learning.coachesvoice.com/cv/positional-play-football-tactics-explained-guardiola-cruyff-manchester-city/)
+  · [The Football Analyst — Half-Spaces explained](https://the-footballanalyst.com/half-spaces-football-tactics-explained/)
+- ✅ **Zone 14** — central pocket outside the box flagged in match analysis as a high goal-assist-value area (research origin: Taylor/Horn et al., Liverpool John Moores). *Exact "4× / 81.3%" figures ⚠️ (secondary) and deliberately not stated as fact.*
+  → [The Football Analyst — Zone 14: The Most Dangerous Area in Football?](https://the-footballanalyst.com/zone-14-the-most-dangerous-area-in-football/)
+- ⚠️ **La pausa** — a widely-used tactical term (deliberate pause on the ball); no single authoritative primary source — presented as a coaching concept, not a standard.
+
+### Training methodology (index/03)
+
+- ✅ **Play–Practice–Play (PPP)** — US Soccer grassroots session model (player-centered play → practice → play). *(Same US Soccer source backbone as above.)*
+  → [US Soccer — Five Things to Know About Play-Practice-Play](https://www.ussoccer.com/stories/2018/02/five-things-to-know-about-playpracticeplay)
+- ✅ **Structured training · preferential simulation situations (Paco Seirul·lo, FC Barcelona)** — complex-systems team-sport training method.
+  → [Barça Innovation Hub — Seirul·lo's proposal: structured training](https://barcainnovationhub.fcbarcelona.com/blog/paco-seirul%C2%B7los-proposal-for-team-sports-training-structured-training-game-spaces-and-preferential-simulation-situations/)
+- ✅ **Tactical periodization · morphocycle (Vítor Frade)** — game-model-led weekly planning; specificity as supra-principle. *Exact weekly day-pattern ⚠️ (varies by source).*
+  → [Barça Innovation Hub — Training periodization models in football](https://barcainnovationhub.fcbarcelona.com/blog/training-periodization-models-football/)
+
+### Player development (index/11)
+
+- ✅ **FTEM (Foundations · Talent · Elite · Mastery)** — Gulbin et al. 2013; IOC-endorsed for youth athlete development (2015). Maturity-agnostic, stage-based.
+  → [Gulbin et al. 2013, *J. Sports Sciences* — integrated framework](https://www.tandfonline.com/doi/full/10.1080/02640414.2013.781661)
+  · [Australian Sports Commission — FTEM Pathways](https://www.ais.gov.au/ftem)
+- ✅ **DMSP (Developmental Model of Sport Participation, Côté)** — sampling (~6–12) / specializing (~13–15) / investment (~16+); deliberate play vs. deliberate practice.
+  → [Côté & Vierimaa 2014 — DMSP, 15 years on (ScienceDirect)](https://www.sciencedirect.com/science/article/abs/pii/S0765159714002718)
+- ⚠️ **Windows of trainability / sensitive periods (LTAD, Balyi)** — **empirically contested**: the sensitive-period claim lacks strong longitudinal evidence and is criticized in the literature. Presented in `index/11` with that caveat, not as a standard.
+  → [Sensitive Periods to Train General Motor Abilities — a Critical Appraisal, *S&C Journal* 2020](https://journals.lww.com/nsca-scj/fulltext/2020/12000/sensitive_periods_to_train_general_motor_abilities.3.aspx)
+
 ---
 
 ## Real formulas & frameworks referenced (never invented)

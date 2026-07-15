@@ -55,18 +55,22 @@ Each is a starting shape and a set of trade-offs; teams morph between shapes in 
 
 - **Building from the back (playing out)** — beating the first line of press with the GK + defenders.
 - **Positional play (juego de posición)** — occupy zones/half-spaces to create superiorities: **numerical** (more players), **positional** (better location), **qualitative** (better match-up). Zones, lines, and the half-spaces are the map.
+  - **The 5-lane grid** — the pitch split into **five vertical lanes** (two wings · two **half-spaces** · one central) crossed by horizontal lines. Coaching guidelines: keep players out of the *same* lane, hold ~10–15 m spacing to form triangles/diamonds, and don't stack a lane. Popularized by Cruyff/Guardiola.
+  - **Half-space (Halbraum)** — the lane between wing and center: close enough to goal to shoot/thread a pass, wide enough to escape the crowded middle. Prime zone for inverted wingers, mezzalas, and overlapping runs.
 - **Possession play** — controlling the game by keeping the ball, moving the opponent.
 - **Direct play** — fast forward progression, bypassing midfield when it's on.
 - **Counter-attack** — exploiting a disorganized defense immediately after winning the ball.
 - **Overloads** — creating 2v1 / 3v2 in an area to break through, then exploiting the free man elsewhere ("overload to isolate").
 - **Third-man runs & combinations** — A→B→C, where C arrives unmarked.
 - **Give-and-go (1-2) / wall pass** — the basic combination to beat a defender.
+- **La pausa** — the deliberate *pause* on the ball to let a better option develop (draw a defender, wait for the late run) instead of rushing the pass. Composure as a weapon.
 - **Overlap & underlap** — supporting runs outside/inside the ball-carrier.
 - **Switching play** — moving the ball to the underloaded far side.
 - **Width & depth** — stretching the defense horizontally and vertically to open gaps.
 - **Rotations & movement patterns** — coordinated position swaps to disorganize markers.
 - **Isolation (1v1 iso)** — deliberately matching your best dribbler against a lone defender.
 - **Cut-backs & attacking the box** — pulling the ball back to arriving runners; near/far-post and penalty-spot runs.
+- **Zone 14** — the central pocket just outside the penalty area (the "golden square" between the half-spaces); match-analysis research flags it as one of the highest goal-assist-value areas to receive and create from.
 - **Rest attack / staying connected** — keeping enough support so you can sustain pressure.
 
 ## Defending concepts
@@ -96,3 +100,9 @@ Each is a starting shape and a set of trade-offs; teams morph between shapes in 
 > sided games** (a 4v4 already contains width, depth, support, and pressing) long
 > before formations. Systems and role detail come in `T2T`+; principles and
 > game-sense come much earlier through guided questions ("where's the space?").
+
+---
+
+*Provenance: named tactical concepts (positional play / 5-lane grid / half-spaces,
+Zone 14, la pausa) are cited by origin in
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*

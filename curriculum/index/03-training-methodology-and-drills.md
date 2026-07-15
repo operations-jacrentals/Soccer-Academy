@@ -19,6 +19,8 @@ skill taught two ways produces very different learners.
 - **Pattern play / shadow play** — rehearsing movement patterns, often unopposed, to build automatisms.
 - **Wave / transition games** — repeated attack-vs-defense waves; trains the moment of turnover.
 - **Game-based approach (TGfU — Teaching Games for Understanding)** — learn through modified games that pose tactical problems; technique serves the game.
+- **Play–Practice–Play (US Soccer grassroots model)** — a *player-centered* session shape: open with player-led small-sided **play**, move to a targeted **practice** activity (SSG/rondo/drill), then return to free **play**. Game-first and fun-first; the flow the "Session structure" below follows.
+- **Structured training (Paco Seirul·lo, FC Barcelona)** — a complex-/dynamic-systems method: develop the whole player through **preferential simulation situations** — global, game-like tasks that load the systems the game actually demands — rather than isolated exercises. Kin to the constraints-led idea below.
 - **Constraints-Led Approach (CLA) / ecological dynamics** — manipulate task/environment/individual constraints so solutions *emerge* (guided by the STEP model below). Less telling, more designing.
 - **Differential learning** — deliberately varied, "noisy" reps (never the same twice) to build adaptable movement.
 - **Deliberate practice vs. deliberate play** — focused, effortful, feedback-rich work vs. free, playful, child-led games. Youth need **both**.
@@ -41,7 +43,7 @@ skill taught two ways produces very different learners.
 
 ## Periodization & load
 
-- **Tactical periodization** — plan the week (the "morphocycle") around a game model, rotating physical/tactical emphasis between matches.
+- **Tactical periodization (Vítor Frade)** — plan the week (the **morphocycle**) around the **game model**, treating technical/tactical/physical/psychological as one inseparable whole (*specificity* is the supra-principle). Acquisition days rotate an emphasis — **tension** (strength) · **duration** (endurance) · **velocity** (speed) — each paired with the matching tactical principles/sub-principles, bracketed by recovery and activation days.
 - **Block periodization** — concentrated blocks targeting one quality.
 - **Undulating / non-linear** — varying intensity day to day.
 - **Load management** — training load (see [09](09-metrics-and-statistics.md): RPE, ACWR), recovery, and — for youth — respecting growth/maturation.
@@ -102,3 +104,9 @@ Concise, reusable drill *types*. Expand into full session plans at curriculum ti
 > **Curriculum note:** For the golden age, bias toward **games** and **volume of
 > touches** over queues and lines. A child in a 4v4 gets ~5× the ball contacts of
 > one in an 11v11 drill. Keep everyone active, everyone with a ball where possible.
+
+---
+
+*Provenance: named methods (Play–Practice–Play, Seirul·lo structured training,
+tactical periodization / morphocycle) are cited by origin in
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*

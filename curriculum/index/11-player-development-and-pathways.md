@@ -23,6 +23,8 @@ A staged model matching training to biological, not just chronological, age.
 **Golden age (~9–12):** coordination, neural plasticity, and confidence align —
 prioritize *technique and skill moves* now; this window doesn't fully return.
 
+- **⚠️ "Windows of trainability" / sensitive periods** — LTAD proposes accelerated-adaptation periods for the five *S*'s (suppleness, speed, skill, stamina, strength) tied to maturation. **Treat as contested:** the *sensitive-period* claim lacks strong longitudinal evidence and is criticized in the literature — use it as a soft emphasis guide, **not** a rule that a quality is lost if "missed." (The broader LTAD point — train the whole athlete long-term, avoid early over-specialization — stands.)
+
 ## Skill acquisition science
 
 - **Stages of learning (Fitts & Posner)** — **cognitive** (figuring it out, clumsy) → **associative** (refining, fewer errors) → **autonomous** (automatic, under pressure). Coaching cues differ by stage.
@@ -43,6 +45,7 @@ prioritize *technique and skill moves* now; this window doesn't fully return.
 - **Relative Age Effect (RAE)** — kids born early in the selection year are over-selected (bigger/older); a systematic bias to counter.
 - **Maturation & PHV** — early vs. late developers look very different at the same age; **bio-banding** (grouping by maturity) gives fairer assessment and development.
 - **Early engagement vs. early specialization** — early *diverse* engagement and multi-sport play beat early single-sport specialization for most; specialization comes late.
+- **DMSP (Developmental Model of Sport Participation, Côté)** — a research-based pathway of **sampling (~6–12, multi-sport + deliberate *play*) → specializing (~13–15) → investment (~16+)**; the alternative recreational track keeps players in the game for life. Grounds the "diversify early" case above.
 - **The late-developer problem** — many elite players were "too small/slow" young; patience and long-term tracking prevent losing them.
 
 ## Physical literacy & foundations
@@ -55,6 +58,7 @@ prioritize *technique and skill moves* now; this window doesn't fully return.
 - **US Soccer Player Development** — small-sided game standards by age, playing philosophy.
 - **The FA / England DNA** — four-corner development identity.
 - **UEFA / KNVB (Dutch) / Belgian models** — age-appropriate formats and curricula.
+- **FTEM (Foundations · Talent · Elite · Mastery)** — a whole-of-sport pathway (4 macro / 10 micro stages) organized by an athlete's *stage of development, not chronological age*; a maturity-agnostic complement to LTAD (Gulbin et al.; IOC-endorsed for youth development).
 - **Age-appropriate game formats** — 4v4 → 7v7 → 9v9 → 11v11 as players grow (see [12](12-laws-and-formats.md)).
 
 ## Development philosophy & structures (elite-academy patterns)
@@ -88,3 +92,10 @@ for developing the *whole person* — the explicit pairing of "soccer + smarts."
 > (T2T) → position & performance (T2C)**. Group by **maturity where possible**,
 > keep multi-sport/varied movement early, and protect enjoyment as the engine of
 > the whole thing.
+
+---
+
+*Provenance: LTAD ([Ford et al. 2011](../references/sources.md)), and the added
+frameworks (FTEM, DMSP, the contested "windows of trainability") are cited by
+origin in
+[`references/sources.md` → Tactics, methodology & development frameworks](../references/sources.md#tactics-methodology--development-frameworks-index03-07-11).*
