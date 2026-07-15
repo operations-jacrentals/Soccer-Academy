@@ -85,9 +85,11 @@ The daily load lives on DRI/PAS/SHO/DEF/HEART, where the curriculum actually is.
 ## 2 · The report metrics — curated set
 
 All metrics are self-referential, age-8 legal, one-coach with cones/balls/stopwatch,
-recorded at the **day** level: **S1 = Morning Mark → S2–S3 chase the Evening Best** (updated
-only if beaten). Metric *forms* are ✅ sourced ([sources.md](../references/sources.md)
-§Drills); **every window length, set size, rep target and cap is ✏️ coaching judgment.**
+recorded at the **day** level as a **single PR (personal record)**: the coach runs the
+test **every session** and logs the child's best — the number **only ever climbs** (a
+weaker session never lowers it). Metric *forms* are ✅ sourced
+([sources.md](../references/sources.md) §Drills); **every window length, set size, rep
+target and cap is ✏️ coaching judgment.**
 
 - **DRI:** Touch Count 30s (both feet); longest tik-tok streak (log strong- & weak-foot);
   Gate Run 60s (R1 free + R2 weak-foot-only); Cushion Count 60s; Move Collection (a stamp
@@ -115,11 +117,18 @@ timed slalom (fastest-time pressures speed over touch); xG / xT / PPDA / ACWR as
 ratings; and any **elimination outcome** (King-of-the-Ring survival, 1v1 win/loss) —
 never scored, because they rank kids.
 
-**Coach-load truth:** the mandatory live write is **one anchor metric per child, twice
-(AM→PM)**. Some day-types are legitimately 2 numbers (Gate Run R1+R2; tik-tok strong+weak;
-Finish Ten L+R; Balance L+R). All in-game decision tallies (free-player finds, win-backs,
-brave saves, HEART micros) are **optional end-of-huddle recalls**, never live per-child
-judgments made while refereeing.
+**Coach-load truth:** the mandatory live write is **one anchor metric per child — a single
+PR per day**, entered whenever it's beaten (not once per session). Some day-types are
+legitimately 2 numbers (Gate Run R1+R2; tik-tok strong+weak; Finish Ten L+R; Balance L+R).
+All in-game decision tallies (free-player finds, win-backs, brave saves, HEART micros) are
+**optional end-of-huddle recalls**, never live per-child judgments made while refereeing.
+
+**Customising a day (family-locked).** Coaches refine drills on the fly as they learn their
+own best practice. The rule: **change the drill, keep the family.** Each day's metric is
+locked to its **spoke family** (a Dribbling day measures dribbling), so any swap is fine as
+long as it still trains that family — don't drop a passing drill onto a dribbling day. This
+keeps every logged PR comparable over time without re-mapping the metric. The interactive
+doc enforces this with a per-day inline editor that names the day's family in the header.
 
 ---
 
@@ -179,9 +188,8 @@ always better.
 > **`L_s` is a rendering input, never a printed score.** A printed "58" is indistinguishable
 > from a FIFA rating and invites "my DRI vs your DRI," so it is never shown — only the
 > self-referential spoke *length* + glow/▲ that "upgrades." A report beating own PR raises
-> the level (🏅 Circuit PB, spoke glows and grows); beating this morning's mark = ⭐ Evening
-> Beat; a mark **below** own history does **not** shrink the level (monotone) — a dip is
-> data, never a penalty.
+> the level (🏅 Circuit PB, spoke glows and grows); a mark **below** own history does **not**
+> shrink the level (monotone — the PR only climbs) — a dip is data, never a penalty.
 
 **Layer 1b — Form flame / momentum / HEART monotonicity:** form flame `F = mean(z)` over
 last `W` (🔥 up / ❄️ resting); momentum ▲▬▼ from an OLS slope. **The visible HEART medallion
@@ -258,7 +266,7 @@ no cross-child sheet** — a leaderboard cannot be built from this schema.
 anthropometry collected).
 
 **Rollup** (bound Apps Script on submit + nightly, or a Drive-MCP client) materialises per
-day-type `Morning Mark · Evening Best · Day Gain · Circuit PB?`, then per spoke `L_s
+day-type `PR · Prev PR · Gain · Circuit PB?`, then per spoke `L_s
 (internal), form, arrow, Z_s, lit?`, and the card object. `shape.signature` auto-drafts the
 [IDP](03-assessment.md) Strengths; `shape.next_quest` + `foot_A` draft Next steps; the
 Profile is derived, so changing the math re-runs over the same immutable log — nothing to
