@@ -33,6 +33,15 @@ expected to start** → **where we project them before they turn 9.**
 
 - Attention is **one task at a time**; high need for **adult approval/encouragement**; players **enjoy a partner** but struggle in big groups; **matches are a means to development, not the aim.** → [sources](../references/sources.md)
 
+## How the year runs ✏️
+
+One **repeating 3-week cycle** — Week A **AJAX** (*"Me & the Ball"*) · Week B
+**LA MASIA** (*"Me, the Ball & a Friend"*) · Week C **BENFICA** (*"Playing the
+Game"*) — looped **~13 times across ~40 training weeks**. The same fifteen
+day-plans come back around and **level up each loop** (passive → active defender,
+two-touch → one-touch), with coaching emphasis shifting A→C across the year.
+→ [cycle plan](01-cycle-plan.md) · [tracker spec](interactive/DESIGN-SPEC.md)
+
 > **Reading the tables:** *Coming in* = a reasonable start-of-year floor for a
 > typical 8-year-old with prior play; *Before 9* = our projected year-end target.
 > Both columns are **✏️ coaching judgment aligned to the sourced priorities above**
@@ -123,5 +132,8 @@ expected to start** → **where we project them before they turn 9.**
 
 ## What's next
 
-Term plan → weekly session template (PPP) → assessment sheet — each built on
-sourced standards, then repeat for age 9.
+[Cycle plan](01-cycle-plan.md) → [session template](02-session-template.md) →
+[assessment & IDP](03-assessment.md) → [reports & MY CARD](04-reports-and-player-profile.md)
+→ the week libraries ([A](sessions/week-a-ajax-ball-mastery.md) ·
+[B](sessions/week-b-la-masia-passing.md) · [C](sessions/week-c-benfica-game.md)) —
+each built on sourced standards, then repeat for age 9.

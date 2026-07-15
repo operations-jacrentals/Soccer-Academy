@@ -84,6 +84,94 @@ Player-safety standard; adopt the **more protective** figure per Rule 2.
   → peer-reviewed: [Ford et al. (2011), *J. Sports Sciences* — the LTAD model](https://www.tandfonline.com/doi/full/10.1080/02640414.2010.536849)
 - Note: age 8 = **FUNdamentals**, on the cusp of **Learn to Train** (the "golden age").
 
+## Youth method foundations (elite talent systems)
+
+The method spine behind the [age-8 cycle plan](../age-08/01-cycle-plan.md); the
+academy models themselves are in [`research/`](../research/README.md).
+
+- ✅ **Futsal foundation** — confined space → more touches / faster decisions;
+  institutionalized in Portugal, Spain, Brazil. → [FIFA Training Centre — Brazil & Spain pathways](https://www.fifatrainingcentre.com/en/environment/research-brief/high-performance/talent-pathways/talent-pathways-in-brazil-and-spain.php) · [Portugal futsal success](https://www.cjffutsal.com/the-future-of-us-futsal-learning-from-portugals-success-story)
+- ✅ **Coerver Coaching (Wiel Coerver, Dutch)** — ball-mastery **pyramid** (Ball
+  Mastery → Receiving/Passing → 1v1 → Speed → Finishing → Group Play); **"5 S's"**
+  = Skills, Smarts, Speed, Strength, Spirit. → [Coerver Coaching](https://voor.sport/en/mag/the-coerver-method-more-than-just-ball-mastery)
+- ✅ **KNVB (Dutch)** — street-football roots, child-centred; small-sided **2v2
+  (4–5), 4v4 (U7), 6v6 (U8/U9)**. → [KNVB Dutch Youth Football](https://knvb.h5mag.com/dutch_youth_football/the_decision)
+- ✅ **La Masia (Spain)** — rondo + positional play from youngest ages. → [Barça Innovation Hub](https://barcainnovationhub.fcbarcelona.com/blog/the-models-of-youth-teams-in-football/) · [research/barcelona-la-masia-model.md](../research/barcelona-la-masia-model.md)
+
+### National federations — native-language primary sources (translated)
+
+- ✅ **🇪🇸 Spain (RFEF):** youngest competitive band **Benjamín = ages 8–9**, played
+  as **Fútbol-7 / Fútbol-8** (reduced field, advanced offside line) for more
+  touches. Guiding rule (translated): *"no adelantar contenidos — técnica
+  individual primero, conceptos colectivos después"* → **"don't rush content —
+  individual technique first, collective concepts later."** Spanish academies use
+  the **Método Integrado** (ball in every task, several components trained at once).
+  → [RFFM competition bases, Fútbol-7/5 (PDF, ES)](https://rffm-cms.s3.eu-west-1.amazonaws.com/Bases_y_Normas_de_competicion_F7_y_F5_Temporada_2024_2025_7c060e99b1.pdf) · [La Masía: un modelo de formación (ES)](http://www.futbolofensivo.com/2018/06/la-masia-un-modelo-de-formacion-en-el-futbol-base/)
+- ✅ **🇳🇱 Netherlands (KNVB):** **Onder 8–Onder 10 play 6v6** on a quarter field
+  **42.5 × 30 m**; the referee is a **spelbegeleider ("game leader")** who lets
+  players discover the game; formats follow **"deliberate play"** — informal,
+  street-like, child-centred; **no results/standings published** at these ages.
+  → [KNVB — het nieuwe pupillenvoetbal, O8–O10 (NL)](https://knvb.h5mag.com/pupillenvoetbal/onder_8_t-m_onder_10) · [KNVB research: wedstrijdvormen pupillen 2016 (PDF, NL)](http://assets.knvb.nl/sites/knvb.nl/files/Onderzoeksrapport%20wedstrijdvormen%20pupillen%20KNVB.pdf)
+- ✅ **🇵🇹 Portugal (FPF / Benfica):** FPF publishes **"Etapas de Desenvolvimento do
+  Jogador"** (player-development stages) for football and futsal; Benfica states its
+  mission as developing elite players through a **"metodologia interdisciplinar"**
+  (interdisciplinary methodology).
+  → [FPF — Etapas de Desenvolvimento do Jogador (PDF, PT)](https://www.fpf.pt/Portals/0/Etapas%20de%20Desenvolvimento%20do%20Jogador%20no%20Futebol%20ETNF-%20S15-20%20Junho%202018.pdf) · [SL Benfica — Futebol Formação (PT/EN)](https://www.slbenfica.pt/en-us/futebol-formacao/formacao)
+
+_Native-language sources are translated inline; per the [egress limitation](#methodology--limitation-read-this) the PDFs could not be opened directly, so figures are as surfaced/translated via search and corroborated._
+
+## Training regimen — session & week (top-3 clubs)
+
+Backs the [age-8 session template](../age-08/02-session-template.md).
+
+- ✅ **La Masia session:** rondo warm-up → positional game → training game. → [A session at FC Barcelona](https://juegodeposicion.wordpress.com/2020/11/24/a-session-in-fc-barcelona/) · [9campnou](https://9campnou.com/all-you-need-to-know-about-fc-barcelona-training-sessions-2021-guide/)
+- ✅ **Ajax session:** 15–20 min progressive rondo; **thirds** (body control / individual / group); 60+ rondo variations. → [Ajax youth development](https://www.ajaxuniverse.com/youth-development)
+- ✅ **Tactical Periodization** (Vítor Frade, Portuguese school): physical/technical/tactical/psychological as an inseparable whole; weekly **morphocycle**. → [Barça Innovation Hub](https://barcainnovationhub.fcbarcelona.com/blog/tactical-periodization-football-load-planning/) · [What is Tactical Periodization?](https://jobsinfootball.com/blog/what-is-tactical-periodization/) · [Vítor Frade](https://www.tacticalperiodisation.com/pt/vitor-frade/)
+- ✅ **Small-sided games are the session's highest-load block** — SSGs elicit **~80–90% of maximal heart rate**, comparable to match play, and higher intermittent-intensity than isolated drills. This is why the **Group phase is the session's intensity peak** in our load model. → seminal review: **Hill-Haas et al. (2011), *Sports Medicine* — "Physiology of small-sided games training in football."** · [SSG internal/external loads — systematic review (PMC)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9331334/) · [SSG in youth — systematic review & meta-analysis, 2026 (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC13095612/)
+  - **Our within-session load curve** (Warm-up → Individual → **Group peak** → Huddle cool-down), and the way it **scales with the day's morphocycle load**, is ✏️ **coaching judgment** on top of these ✅ facts (SSG-as-peak, warm-up ramp, Tactical-Periodization daily variation). The exact per-phase percentages are illustrative, not measured.
+
+## Drills — by family (coaching sources)
+
+The **drill forms** used in the [age-8 week libraries](../age-08/sessions/) and the
+[interactive tracker](../age-08/interactive/DESIGN-SPEC.md). Day numbers below refer
+to the **re-sequenced D1–D15 cycle** (✏️ — see the [cycle plan](../age-08/01-cycle-plan.md)).
+**Hierarchy note:** these sit *below* the governing standards (IFAB/federations) and
+the elite-federation *method* (Coerver/RFEF/KNVB/FPF) — they supply age-appropriate
+**drill shapes**, not standards or philosophy.
+
+**Calibration:** the drills themselves are **non-proprietary, widely-taught youth
+games** — each **✅ corroborated across multiple independent coaching sources** (so
+the *form* is well-established), while any single write-up is **secondary coaching
+content**, not a governing standard. Per the [egress limitation](#methodology--limitation-read-this)
+the pages were surfaced via search, not opened directly. Representative citations:
+
+### Ball mastery (D1 · D2 · D4 · D5 — sole rolls · toe taps · foundations · turns)
+- ✅ **Ball-mastery matrix / "Coerver" touches** — sole rolls, toe taps, foundations, both feet, count touches.
+  → [Willamette United FC — Ball Mastery Matrix (PDF)](https://willametteunitedfc.com/wp-content/uploads/2020/04/WUFC-Ball-Mastery-Matrix.pdf) · [Coerver 6 steps to ball mastery](http://www.playgreatsoccer.com/6-steps-ball-mastery.php) · [SportSessionPlanner — Ball Mastery (Coerver)](https://www.sportsessionplanner.com/s/2RMU/Ball-Mastery-Coerver-Training-Session---Welty.html)
+
+### Dribbling & 1v1 (D2 · D3 · D5 — gates · sharks & minnows · king of the ring · feints)
+- ✅ **Sharks & Minnows** (shielding/turning, U6–U8). → [SoccerXpert — Sharks and Minnows](https://soccerxpert.com/drills/details/id1228)
+- ✅ **Dribble through the gates** / gate races (most gates in 60s, weaker-foot rounds). → [SoccerXpert — Dribbling Through Gates](https://soccerxpert.com/drills/details/dribbling-through-gates-race) · [SoccerDrive — Gatekeepers (U10)](https://www.soccerdrive.com/soccer-drills/gatekeepers-soccer-dribbling-activity)
+- ✅ **King of the Ring** (close control + protect your ball). → [Soccer Coach Weekly — King of the Ring](https://www.soccercoachweekly.net/drills-and-games/small-sided-games/king-of-the-ring) · [footy4kids — King of the Ring](https://www.footy4kids.co.uk/soccer-drills/defending/king-of-the-ring/)
+- ✅ **1v1 to gates/goals** & body-feint / step-over moves. → [SoccerXpert — 1v1 Reaction Gate](https://soccerxpert.com/drills/details/1v1-gate-challenge) · [AthletesUntapped — youth dribbling drills](https://athletesuntapped.com/blog/soccer-dribbling-drills-for-youth-players/)
+
+### Rondos (D8 · D10 · Week B/C warm-ups — 3v1 · 4v1 · 4v2 keep-ball)
+- ✅ **Rondo (keep-away, uneven numbers)** — 3v1/4v1/4v2/5v2; one/two-touch under pressure. → [Coaching American Soccer — Rondo Drills](https://coachingamericansoccer.com/soccer-drills/soccer-rondo-drills/) · [360Player — 7 rondo variations](https://www.360player.com/blog/7-fun-competitive-rondo-variations)
+
+### Passing & receiving (D6 · D7 · D9 — inside-foot · give-and-go · half-turn · scan)
+- ✅ **Inside-foot (push) pass & receive** — the base pass, both feet, count completions. → [Coaching American Soccer — Push Pass & Receive](https://coachingamericansoccer.com/youth-soccer-instructional-coaching-manual/instruction-and-drills/soccer-push-pass-and-receive/) · [SportSessionPlanner — Passing & Receiving U8](https://www.sportsessionplanner.com/s/SAHIh/Basic-Passing-and-Receiving-Concepts---U8.html)
+- ✅ **Give-and-go / wall pass** — pass then move. → [Coaching American Soccer — The Give-and-Go](https://coachingamericansoccer.com/intermediate-soccer-skills/soccer-give-and-go/) · [SoccerDrive — Wall Passing drills](https://www.soccerdrive.com/soccer-drills/category/wall-passing) · [Jersey Watch — youth passing drills](https://www.jerseywatch.com/blog/simple-youth-soccer-passing-drills) · [footy4kids — Passing](https://www.footy4kids.co.uk/soccer-drills/passing/)
+
+### Defending (D13 — jockey & poke, "don't dive in")
+- ✅ **Jockey → poke, stay on your feet, goal-side.** → [AthletesUntapped — Jockey technique](https://athletesuntapped.com/blog/soccer-jockey-technique-defenders/) · [Soccer Coach Weekly — jockeying drill](https://www.soccercoachweekly.net/drills-and-games/drills/soccer-drill-to-improve-jockeying-skills) · [Lexington United — Teaching 1v1 Defending](https://lexingtonunited.org/teaching-1-vs-1-defending/)
+
+### Goalkeeping taster (D14 — ready position · circle catch · "W" hands)
+- ✅ **Circle Catch / soft "W" hands, ready position** — everyone tries. → [FreeYouthSoccerDrills — Soccer goalie drills](http://www.freeyouthsoccerdrills.com/soccer-goalie.html) · [Rise FC — youth goalkeeper drills](https://www.risefcsoccer.com/youth-soccer-goalkeeper-drills/)
+
+### Small-sided games & futsal (every Group phase · D15 festival — max-touch environment)
+- ✅ **Futsal / small-sided = ~6× the touches** — the max-touch environment behind every Group phase. → [Senda Athletics — barefoot futsal](https://sendaathletics.com/blogs/news/senda-spotlight-barefoot-futsal) · [Rise FC — beginner futsal drills](https://www.risefcsoccer.com/futsal-training-drills-for-beginner/)
+- SSG formats (4v4 → 7v7) & ball sizes are set by **US Soccer / KNVB** above, not by these coaching pages.
+
 ## Academy production statistics (⚠️ secondary — unverified)
 
 - ⚠️ CIES Football Observatory player-production counts used in `research/`
