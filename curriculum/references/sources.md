@@ -47,6 +47,17 @@ field/goal ranges are ⚠️ (from a search summary of the PDF I could not open)
   the 4v4/ball-3 (U8) to 7v7/ball-4 (U9) transition. Confirm each child's group by
   birth year.
 
+## US Soccer — Concussion Initiative / heading guidelines (2016)
+
+Player-safety standard; adopt the **more protective** figure per Rule 2.
+
+- ✅ **No deliberate heading, U11 and younger** — in practices *and* games.
+- ✅ **U12–U13 limited heading** — max **30 min/week** of heading training, ~**15–20 headers per player per week**; no in-game restriction.
+- ✅ **Playing up** — a player in an older age group follows that group's rule (a 10-year-old rostered at U12 does not head).
+- Effective **January 2016** as part of the U.S. Soccer Concussion Initiative.
+  → [US Club Soccer — Head Injuries / heading guidelines](https://usclubsoccer.org/headinjuries/)
+  · [U.S. Soccer Concussion Initiative — Heading Guidelines (implementation PDF)](https://nmrapids.org/wp-content/uploads/2018/08/U.S.-Soccer-Concussion-Initiatives_Heading-Guidelines_080418.pdf)
+
 ## US Youth Soccer — U7/U8 characteristics & method
 
 - ✅ Attention **limited to one task at a time**; high need for **adult approval**;
@@ -176,6 +187,19 @@ Named, published frameworks and concepts. Cited **by origin** per Rule 1;
   → [Côté & Vierimaa 2014 — DMSP, 15 years on (ScienceDirect)](https://www.sciencedirect.com/science/article/abs/pii/S0765159714002718)
 - ⚠️ **Windows of trainability / sensitive periods (LTAD, Balyi)** — **empirically contested**: the sensitive-period claim lacks strong longitudinal evidence and is criticized in the literature. Presented in `index/11` with that caveat, not as a standard.
   → [Sensitive Periods to Train General Motor Abilities — a Critical Appraisal, *S&C Journal* 2020](https://journals.lww.com/nsca-scj/fulltext/2020/12000/sensitive_periods_to_train_general_motor_abilities.3.aspx)
+
+## Psychology & coaching frameworks (index/05, 10)
+
+Named, published frameworks. Cited **by origin** per Rule 1; **surfaced and
+corroborated via search**, not opened directly.
+
+- ✅ **TARGET model / motivational climate (Ames 1992; Epstein 1989)** — six climate structures (Task, Authority, Recognition, Grouping, Evaluation, Time) for building a mastery climate; grounded in Achievement Goal Theory.
+  → [Implementing the TARGET Model in PE (PMC, 2017)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5591853/)
+- ✅ **Mental toughness — 4Cs (Clough et al. 2002)** — Control · Commitment · Challenge · Confidence; framed as a trainable construct.
+  → [Mental toughness: the concept and its measurement (Clough et al.)](https://www.researchgate.net/publication/313119986_Mental_toughness_The_concept_and_its_measurement)
+- ✅ **Coach–athlete relationship — 3+1 Cs (Jowett)** — Closeness · Commitment · Complementarity + Co-orientation; validated in academy-soccer research.
+  → [25 years of relationship research: the 3+1Cs model (ScienceDirect, 2025)](https://www.sciencedirect.com/science/article/abs/pii/S1469029225001086)
+  · [Coach–athlete relationship & mastery goals in FA PL academy soccer (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5435821/)
 
 ---
 

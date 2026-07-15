@@ -55,7 +55,7 @@ Smaller formats = more touches, more decisions, more involvement, faster learnin
 **Other youth modifications**
 - **Equal playing time** and **position rotation** — everyone plays, everywhere.
 - **Retreat lines / build-out lines** — encourage playing out from the back, discourage "boot it long."
-- **Heading guidance** — limiting or removing deliberate heading for young ages (safety).
+- **Heading guidance (US Soccer, 2016)** ✅ — **no deliberate heading at U11 and younger** (practices *or* games); **U12–U13 limited** to ≤30 min/week of heading training (~15–20 headers/player/week), no in-game restriction. A player *playing up* follows the **older** group's rule (a 10-year-old in a U12 group doesn't head). Adopt the protective standard ([Doc Standard](../DOC_STANDARD.md) Rule 2). → [US Soccer heading guidelines](../references/sources.md#us-soccer--concussion-initiative--heading-guidelines-2016)
 - **Development over results** — de-emphasized league tables at young ages; some bodies don't publish standings for the youngest.
 - **Bio-banding events** — grouping by maturity for fairer, richer competition (see [11](11-player-development-and-pathways.md)).
 

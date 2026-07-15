@@ -55,6 +55,7 @@ discovery for decision-making and creativity.
   building relationships and trust · creating a **safe-to-fail** culture (mistakes = learning) ·
   managing behavior and standards · setting a team culture and values ·
   managing the **parent–player–coach** relationship.
+- **Coach–athlete relationship — 3+1 Cs (Jowett)** — a research-backed target for the "relationships" work above: **Closeness** (mutual trust, respect, care) · **Commitment** (intent to keep working together) · **Complementarity** (cooperative, well-matched behaviors) · plus **Co-orientation** (shared understanding — coach and athlete see the relationship the same way).
 
 ## Notable coaching & development philosophies
 
@@ -81,3 +82,9 @@ discovery for decision-making and creativity.
 > decision-makers, which serves both the football and the "smarts" mission. Use
 > direct instruction where it's efficient (new techniques, safety), then hand the
 > thinking back to the players.
+
+---
+
+*Provenance: named models (Chelladurai's multidimensional model, Mosston's
+teaching-style spectrum, and the added coach–athlete 3+1 Cs) are cited by origin in
+[`references/sources.md` → Psychology & coaching frameworks](../references/sources.md#psychology--coaching-frameworks-index05-10).*
