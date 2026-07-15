@@ -1,0 +1,321 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Age-8 drill animations — library</title>
+<style>
+  :root{
+    --pitch:#1B8F52; --pitch-deep:#0F6B3C; --pitch-tint:rgba(27,143,82,.10);
+    --ball:#C56B0E; --c-ps:#4E60DB; --c-s:#D64F84;
+    --ink:#13211A; --ink-soft:#51655A; --ink-faint:#7C8D82;
+    --surface:#FFFFFF; --ground:#F4F6F1; --line:#D8E1D6;
+    --font-mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root{
+    --pitch:#3ECB7C; --pitch-deep:#2AA463; --pitch-tint:rgba(62,203,124,.14);
+    --ball:#F6B04A; --c-ps:#8A97FF; --c-s:#F27AA9;
+    --ink:#E9F1EA; --ink-soft:#A0B3A7; --ink-faint:#748A7C;
+    --surface:#111E17; --ground:#0B1510; --line:#213328;
+  } }
+  *{box-sizing:border-box;} body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font-body);padding:28px;}
+  h1{font-size:1.3rem;margin:0 0 4px;} .lead{color:var(--ink-soft);font-size:.9rem;margin:0 0 22px;max-width:70ch;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+  .ill-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:9px;}
+  .anim{width:100%;height:auto;display:block;border-radius:8px;background:var(--pitch-tint);}
+  .ill-h{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:flex;gap:6px;}
+  .ill-h .num{color:var(--pitch);}
+  .ill-cap{font-size:.8rem;color:var(--ink-soft);margin:0;line-height:1.45;}
+
+/* svg palette hooks — custom props inherit through <use> shadow; inline style resolves them */
+  .anim{--ballfill:#F7F7F4; --ballstroke:#243328; --spot:#243328; --footfill:var(--pitch-deep);}
+  :root[data-theme="dark"] .anim{--ballfill:#EFF1EC; --ballstroke:#0C1712; --spot:#0C1712;}
+  @media(prefers-color-scheme:dark){ .anim{--ballfill:#EFF1EC; --ballstroke:#0C1712; --spot:#0C1712;} }
+  .anim .f-player{fill:var(--pitch);} .anim .f-player2{fill:var(--ball);} .anim .f-player3{fill:var(--c-ps);}
+  .anim .st-field{stroke:var(--pitch); fill:none; opacity:.55;} .anim .f-field{fill:var(--pitch-tint);}
+  .anim .st-track{stroke:var(--ink-faint); fill:none; opacity:.5;}
+  .anim .svg-t{fill:var(--ink-faint); font-family:var(--font-mono); font-size:8px; letter-spacing:.04em;}
+
+  /* keyframes — subtle coaching-diagram motion */
+  @keyframes tt-tapA{0%,100%{transform:translateY(0)}22%{transform:translateY(24px)}40%{transform:translateY(0)}}
+  @keyframes tk-slide{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(52px) rotate(120deg)}}
+  @keyframes tk-nudge{0%,100%{transform:translateX(0)}9%{transform:translateX(4px)}18%{transform:translateX(0)}}
+  @keyframes sr-slide{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}
+  @keyframes sr-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+  @keyframes kr-out{0%,42%{transform:translate(0,0);opacity:1}70%{transform:translate(42px,-32px);opacity:1}80%{transform:translate(48px,-36px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes kr-i1{0%,100%{transform:translate(0,0)}50%{transform:translate(-6px,5px)}}
+  @keyframes kr-i2{0%,100%{transform:translate(0,0)}50%{transform:translate(7px,-4px)}}
+  @keyframes kr-i3{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,6px)}}
+  .anim .spin{transform-box:fill-box; transform-origin:center;}
+  .tt-lf{animation:tt-tapA 1.1s infinite ease-in-out;} .tt-rf{animation:tt-tapA 1.1s infinite ease-in-out; animation-delay:.55s;}
+  .tk-ball{transform-box:fill-box; transform-origin:center; animation:tk-slide 1.5s infinite ease-in-out;}
+  .tk-lf{animation:tk-nudge 1.5s infinite ease-in-out;} .tk-rf{animation:tk-nudge 1.5s infinite ease-in-out; animation-delay:.75s;}
+  .sr-unit{animation:sr-slide 2s infinite ease-in-out;} .sr-ball{transform-box:fill-box; transform-origin:center; animation:sr-spin 2s infinite linear;}
+  .kr-out{transform-box:fill-box; transform-origin:center; animation:kr-out 4.5s infinite ease-in;}
+  .kr-p1{animation:kr-i1 3s infinite ease-in-out;} .kr-p2{animation:kr-i2 3.4s infinite ease-in-out;} .kr-p3{animation:kr-i3 2.8s infinite ease-in-out;}
+  /* the four touch calls — inside / outside / sole / stop */
+  @keyframes wu-kickL{0%,20%{transform:translate(0,0)}32%{transform:translate(-8px,3px)}46%,100%{transform:translate(0,0)}}
+  @keyframes wu-ballL{0%,30%{transform:translateX(0);opacity:1}62%{transform:translateX(-26px);opacity:1}80%{transform:translateX(-34px);opacity:0}100%{transform:translateX(0);opacity:0}}
+  @keyframes wu-kickR{0%,20%{transform:translate(0,0)}32%{transform:translate(8px,3px)}46%,100%{transform:translate(0,0)}}
+  @keyframes wu-ballR{0%,30%{transform:translateX(0);opacity:1}62%{transform:translateX(26px);opacity:1}80%{transform:translateX(34px);opacity:0}100%{transform:translateX(0);opacity:0}}
+  @keyframes wu-roll{0%,100%{transform:translateX(-9px)}50%{transform:translateX(9px)}}
+  @keyframes wu-stomp{0%,18%{transform:translateY(-11px)}42%,100%{transform:translateY(0)}}
+  @keyframes wu-dead{0%,42%{opacity:0;transform:scale(.5)}56%{opacity:.85;transform:scale(.85)}100%{opacity:0;transform:scale(1.45)}}
+  .wu-kickin{animation:wu-kickL 2.4s infinite ease-in-out;}
+  .wu-ballin{animation:wu-ballL 2.4s infinite ease-in-out;}
+  .wu-kickout{animation:wu-kickR 2.4s infinite ease-in-out;}
+  .wu-ballout{animation:wu-ballR 2.4s infinite ease-in-out;}
+  .wu-solel{animation:wu-roll 2s infinite ease-in-out;}
+  .wu-stompf{animation:wu-stomp 1.9s infinite ease-in-out;}
+  .wu-deadr{transform-box:fill-box; transform-origin:center; animation:wu-dead 1.9s infinite ease-out;}
+  /* ---- reusable drill-animation library (D2–D15) ---- */
+  .anim .f-def{fill:var(--c-s);} .anim .f-team{fill:var(--ball);} .anim .f-gk{fill:var(--c-ps);}
+  .anim .st-arrow{stroke:var(--ball); fill:none;} .anim .f-arrow{fill:var(--ball);}
+  .anim .st-goal{stroke:var(--pitch); fill:none; opacity:.8;} .anim .st-zone{stroke:var(--pitch); fill:var(--pitch-tint); opacity:.7;}
+  @keyframes lib-drag{0%,100%{transform:translateY(0)}50%{transform:translateY(24px)}}
+  @keyframes lib-dragfoot{0%,100%{transform:translateY(0)}50%{transform:translateY(13px)}}
+  @keyframes lib-stepfoot{0%,12%{transform:rotate(0)}46%{transform:rotate(210deg)}86%{transform:rotate(210deg)}100%{transform:rotate(360deg)}}
+  @keyframes lib-stepball{0%,48%{transform:translate(0,0);opacity:1}68%{transform:translate(-24px,5px);opacity:1}80%{transform:translate(-32px,6px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-scisfoot{0%,12%{transform:rotate(0)}46%{transform:rotate(-210deg)}86%{transform:rotate(-210deg)}100%{transform:rotate(-360deg)}}
+  @keyframes lib-scisball{0%,48%{transform:translate(0,0);opacity:1}68%{transform:translate(24px,5px);opacity:1}80%{transform:translate(32px,6px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-cruyffball{0%,10%{transform:translate(0,0);opacity:1}36%{transform:translate(0,-16px);opacity:1}48%{transform:translate(-2px,-16px);opacity:1}74%{transform:translate(-18px,16px);opacity:1}88%{transform:translate(-24px,22px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-cruyfffoot{0%,26%{transform:translate(0,0) rotate(0)}44%{transform:translate(-6px,-16px) rotate(-22deg)}64%{transform:translate(0,6px) rotate(4deg)}82%,100%{transform:translate(0,0) rotate(0)}}
+  @keyframes lib-feint{0%,14%{transform:translate(0,0);opacity:1}34%{transform:translate(-9px,2px);opacity:1}48%{transform:translate(-5px,0);opacity:1}68%{transform:translate(13px,-15px);opacity:1}84%{transform:translate(22px,-24px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-rondo{0%{transform:translate(0,0)}25%{transform:translate(80px,0)}50%{transform:translate(88px,44px)}75%{transform:translate(-6px,44px)}100%{transform:translate(0,0)}}
+  @keyframes lib-rondo3{0%{transform:translate(0,0)}33%{transform:translate(80px,0)}66%{transform:translate(88px,44px)}100%{transform:translate(0,0)}}
+  @keyframes lib-up{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-42px)}}
+  @keyframes lib-passr{0%,100%{transform:translateX(0)}44%,56%{transform:translateX(46px)}}
+  @keyframes lib-passgate{0%,16%{transform:translate(0,0);opacity:1}60%{transform:translate(68px,-28px);opacity:1}78%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-ssg{0%{transform:translate(0,0)}30%{transform:translate(32px,-16px)}58%{transform:translate(62px,8px)}80%{transform:translate(94px,-14px)}100%{transform:translate(0,0)}}
+  @keyframes lib-adv{0%,14%{transform:translate(0,0);opacity:1}46%{transform:translate(-13px,-28px);opacity:1}72%{transform:translate(0,-56px);opacity:1}84%{transform:translate(2px,-62px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-gagball{0%,10%{transform:translate(0,0);opacity:1}34%{transform:translate(84px,-40px);opacity:1}52%{transform:translate(84px,-40px);opacity:1}72%{transform:translate(68px,-20px);opacity:1}86%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-gagrun{0%,16%{transform:translate(0,0);opacity:1}52%{transform:translate(36px,-38px);opacity:1}74%{transform:translate(68px,-28px);opacity:1}88%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-ftin{0%{transform:translate(38px,-4px);opacity:0}14%{opacity:1}44%{transform:translate(0,0);opacity:1}56%{transform:translate(0,0);opacity:1}76%{transform:translate(16px,-13px);opacity:1}90%{opacity:0}100%{transform:translate(38px,-4px);opacity:0}}
+  @keyframes lib-look{0%,100%{transform:rotate(-34deg)}50%{transform:rotate(34deg)}}
+  @keyframes lib-rtin{0%{transform:translate(38px,-5px);opacity:0}12%{opacity:1}44%{transform:translate(9px,-3px);opacity:1}50%{opacity:0}100%{transform:translate(38px,-5px);opacity:0}}
+  @keyframes lib-rtball2{0%,46%{opacity:0}54%,100%{opacity:1}}
+  @keyframes lib-rtturn{0%,52%{transform:rotate(0)}78%{transform:rotate(-140deg)}90%{transform:rotate(-140deg)}100%{transform:rotate(0)}}
+  @keyframes lib-jock{0%,100%{transform:translateX(0)}25%{transform:translateX(-16px)}75%{transform:translateX(16px)}}
+  @keyframes lib-strike{0%,20%{transform:translate(0,0);opacity:1}58%{transform:translate(0,-62px);opacity:1}74%{transform:translate(0,-70px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+  @keyframes lib-gkin{0%{transform:translate(0,44px);opacity:0}26%{opacity:1}72%,100%{transform:translate(0,0)}}
+  @keyframes lib-throw{0%,18%{transform:translate(0,0);opacity:1}50%{transform:translate(26px,-20px);opacity:1}72%{transform:translate(50px,-6px);opacity:1}84%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+  .a-drag{animation:lib-drag 2s infinite ease-in-out;}
+  .a-dragfoot{animation:lib-dragfoot 2s infinite ease-in-out;}
+  .a-stepfoot{animation:lib-stepfoot 3.2s infinite ease-in-out;}
+  .a-stepball{animation:lib-stepball 3.2s infinite ease-in-out;}
+  .a-scisfoot{animation:lib-scisfoot 3.2s infinite ease-in-out;}
+  .a-scisball{animation:lib-scisball 3.2s infinite ease-in-out;}
+  .a-cruyffball{animation:lib-cruyffball 3.4s infinite ease-in-out;}
+  .a-cruyfffoot{animation:lib-cruyfffoot 3.4s infinite ease-in-out;}
+  .a-feint{animation:lib-feint 3s infinite ease-in-out;}
+  .a-rondo{animation:lib-rondo 4.2s infinite ease-in-out;}
+  .a-rondo3{animation:lib-rondo3 3.4s infinite ease-in-out;}
+  .a-up{animation:lib-up 2.3s infinite ease-in-out;}
+  .a-passr{animation:lib-passr 2s infinite ease-in-out;}
+  .a-passgate{animation:lib-passgate 2.8s infinite ease-in-out;}
+  .a-ssg{animation:lib-ssg 4.6s infinite ease-in-out;}
+  .a-adv{animation:lib-adv 3s infinite ease-in;}
+  .a-gagball{animation:lib-gagball 3.6s infinite ease-in-out;}
+  .a-gagrun{animation:lib-gagrun 3.6s infinite ease-in-out;}
+  .a-ftin{animation:lib-ftin 3.1s infinite ease-in-out;}
+  .a-look{transform-box:fill-box;transform-origin:bottom center;animation:lib-look 2.2s infinite ease-in-out;}
+  .a-rtin{animation:lib-rtin 3.4s infinite ease-in-out;}
+  .a-rtball2{animation:lib-rtball2 3.4s infinite ease-in-out;}
+  .a-rtturn{animation:lib-rtturn 3.4s infinite ease-in-out;}
+  .a-jock{animation:lib-jock 2.4s infinite ease-in-out;} .a-jock2{animation:lib-jock 2.4s infinite ease-in-out; animation-delay:.06s;}
+  .a-strike{animation:lib-strike 2.7s infinite ease-in;}
+  .a-gkin{animation:lib-gkin 2.9s infinite ease-in;}
+  .a-throw{animation:lib-throw 3.2s infinite ease-in-out;}
+  @media(prefers-reduced-motion:reduce){ .anim *{animation:none !important;} }
+</style></head><body>
+<h1>Age-8 drill animations — reusable library</h1>
+<p class="lead">Self-contained, skin-agnostic SVG+CSS coaching animations for the age-8 drills. Colours come from CSS custom properties on <code>:root</code> (swap them for any UI theme). The shared ball/foot symbols are defined once and referenced by every sketch via <code>&lt;use href="#ball"&gt;</code>. The framework: <b>animate the jargon, not the plain English</b> — only soccer lingo/moves get a sketch. Motion respects <code>prefers-reduced-motion</code>. 47 sketches.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+                <g id="ball">
+                  <circle r="11" style="fill:var(--ballfill);stroke:var(--ballstroke)" stroke-width="1.1"/>
+                  <polygon style="fill:var(--spot)" points="0,-5 4.8,-1.5 3,4 -3,4 -4.8,-1.5"/>
+                  <path style="fill:none;stroke:var(--ballstroke)" stroke-width=".9" d="M0,-11 L0,-5 M4.8,-1.5 L10.4,-3.3 M3,4 L6.4,9 M-3,4 L-6.4,9 M-4.8,-1.5 L-10.4,-3.3"/>
+                </g>
+                <g id="foot"><path style="fill:var(--footfill);stroke:var(--surface)" stroke-width="1" d="M0,-14 C5,-14 7,-7 6.5,0 C6,8 4,13 0,13 C-4,13 -6,8 -6.5,0 C-7,-7 -5,-14 0,-14 Z"/></g>
+              </defs></svg>
+<div class="grid">
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">1</span> Inside</span>
+                    <svg class="anim" viewBox="0 0 150 108" role="img" aria-label="Inside of the foot: the inside edge pushes the ball across the body">
+                      <g transform="translate(88,50)"><g class="wu-kickin"><use href="#foot" transform="scale(.92)"/></g></g>
+                      <path style="fill:none;stroke:var(--ball)" stroke-width="3.2" stroke-linecap="round" d="M81,42 C79.5,46 79.5,54 81,58"/>
+                      <g transform="translate(72,56)"><g class="wu-ballin"><use href="#ball" transform="scale(.72)"/></g></g>
+                      <path style="fill:var(--ball)" opacity=".85" d="M30,56 l8,-4.5 v9 z"/>
+                    </svg>
+                    <p class="ill-cap">Push with the <b>inside</b> edge — sends the ball <b>across</b> your body.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">2</span> Outside</span>
+                    <svg class="anim" viewBox="0 0 150 108" role="img" aria-label="Outside of the foot: the outside edge pushes the ball away from the body">
+                      <g transform="translate(62,50)"><g class="wu-kickout"><use href="#foot" transform="scale(.92)"/></g></g>
+                      <path style="fill:none;stroke:var(--ball)" stroke-width="3.2" stroke-linecap="round" d="M69,42 C70.5,46 70.5,54 69,58"/>
+                      <g transform="translate(78,56)"><g class="wu-ballout"><use href="#ball" transform="scale(.72)"/></g></g>
+                      <path style="fill:var(--ball)" opacity=".85" d="M120,56 l-8,-4.5 v9 z"/>
+                    </svg>
+                    <p class="ill-cap">Push with the <b>outside</b> edge — sends the ball <b>away</b> from your body.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">3</span> Sole</span>
+                    <svg class="anim" viewBox="0 0 150 108" role="img" aria-label="Sole of the foot: roll and control the ball with the bottom of the foot">
+                      <line class="st-track" x1="55" y1="62" x2="95" y2="62" stroke-width="2" stroke-dasharray="3 4"/>
+                      <g class="wu-solel">
+                        <g class="sr-ball"><use href="#ball" transform="translate(75,60) scale(.74)"/></g>
+                        <use href="#foot" transform="translate(75,55) scale(.72,.88)" opacity=".88"/>
+                        <circle cx="75" cy="60" r="2.4" style="fill:var(--ball)"/>
+                      </g>
+                    </svg>
+                    <p class="ill-cap">Use the <b>sole</b> (bottom of the foot) to roll and control it.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">4</span> Stop</span>
+                    <svg class="anim" viewBox="0 0 150 108" role="img" aria-label="Stop: trap the ball dead under the sole of the foot">
+                      <circle cx="75" cy="63" r="12" style="fill:none;stroke:var(--ball)" stroke-width="2.4" class="wu-deadr"/>
+                      <use href="#ball" transform="translate(75,63) scale(.74)"/>
+                      <g class="wu-stompf"><use href="#foot" transform="translate(75,55) scale(.74,.9)"/></g>
+                    </svg>
+                    <p class="ill-cap">Trap it <b>dead</b> under the sole — the ball stops still.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">1</span> Toe taps</span>
+                    <svg class="anim" viewBox="0 0 170 120" role="img" aria-label="Toe taps: the sole of each foot taps the top of the ball, alternating">
+                      <use href="#ball" transform="translate(85,86)"/>
+                      <g transform="translate(67,50)"><g class="tt-lf"><use href="#foot" transform="scale(.88)"/></g></g>
+                      <g transform="translate(103,50)"><g class="tt-rf"><use href="#foot" transform="scale(.88)"/></g></g>
+                    </svg>
+                    <p class="ill-cap">Tap the top of the ball with the <b>sole</b>, alternating feet — quick, light, on your toes.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">2</span> Tick-tocks</span>
+                    <svg class="anim" viewBox="0 0 170 120" role="img" aria-label="Tick-tocks or foundations: the ball is pushed side to side between the insides of both feet">
+                      <g transform="translate(46,74)"><g class="tk-lf"><use href="#foot"/></g></g>
+                      <g transform="translate(124,74) scale(-1,1)"><g class="tk-rf"><use href="#foot"/></g></g>
+                      <g transform="translate(60,74)"><g class="tk-ball"><use href="#ball"/></g></g>
+                    </svg>
+                    <p class="ill-cap">Push the ball side to side between the <b>insides</b> of both feet — the “foundation.”</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">3</span> Sole rolls</span>
+                    <svg class="anim" viewBox="0 0 170 120" role="img" aria-label="Sole rolls: one foot rolls the ball across the body, travelling with it">
+                      <line class="st-track" x1="52" y1="86" x2="118" y2="86" stroke-width="2" stroke-dasharray="3 4"/>
+                      <g transform="translate(85,80)"><g class="sr-unit">
+                        <g class="sr-ball"><use href="#ball"/></g>
+                        <use href="#foot" transform="translate(0,-4) scale(.78,.92)" opacity=".88"/>
+                      </g></g>
+                    </svg>
+                    <p class="ill-cap">Roll the ball across your body with the <b>sole</b>; the foot travels along with it.</p>
+                  </div>
+<div class="ill-card">
+                    <span class="ill-h"><span class="num">▸</span> King of the Ring</span>
+                    <svg class="anim" viewBox="0 0 180 140" role="img" aria-label="King of the Ring: several players each dribble a ball inside a circle; one ball is knocked out">
+                      <circle cx="90" cy="66" r="52" class="f-field st-field" stroke-width="1.6" stroke-dasharray="5 5"/>
+                      <g transform="translate(66,50)"><g class="kr-p1"><circle r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.5)"/></g></g>
+                      <g transform="translate(112,72)"><g class="kr-p2"><circle r="5.5" class="f-player2"/><use href="#ball" transform="translate(11,4) scale(.5)"/></g></g>
+                      <g transform="translate(84,94)"><g class="kr-p3"><circle r="5.5" class="f-player3"/><use href="#ball" transform="translate(-3,-12) scale(.5)"/></g></g>
+                      <g transform="translate(96,62)"><g class="kr-out"><use href="#ball" transform="scale(.5)"/></g></g>
+                    </svg>
+                    <p class="ill-cap">In a circle, everyone dribbles and <b>shields</b> their own ball while knocking others' out. Last ball in wins.</p>
+                  </div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Cruyff turn</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Cruyff turn: fake the kick, chop the ball behind the standing foot and go back the other way">
+                      <path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M84,64 v-16"/>
+                      <path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M82,52 q-16,18 -20,28"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M60,88 l9,-2 l-4,8 z"/>
+                      <g transform="translate(92,80)"><g class="a-cruyfffoot"><use href="#foot" transform="scale(.95)"/></g></g>
+                      <g transform="translate(84,64)"><g class="a-cruyffball"><use href="#ball" transform="scale(.82)"/></g></g>
+                    </svg><p class="ill-cap">Fake to go, drag the ball behind your standing foot, and turn away.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Drag-back</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Drag-back: the sole pulls the ball backwards to escape">
+                      <path class="st-track" stroke-width="2" stroke-dasharray="3 4" d="M84,52 v40"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M84,98 l-4.5,-8 h9 z"/>
+                      <g transform="translate(84,60)"><g class="a-drag"><use href="#ball" transform="scale(.82)"/></g></g>
+                      <g transform="translate(84,46)"><g class="a-dragfoot"><use href="#foot" transform="scale(.7,.85)" opacity=".88"/></g></g>
+                    </svg><p class="ill-cap">Sole on top; pull the ball back to escape and change direction.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Through the gates</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Through the gates"><path class="f-team" d="M70,44 l3,5.4 h-6 z"/><path class="f-team" d="M96,44 l3,5.4 h-6 z"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M84,92 V52"/><g transform="translate(84,86)"><g class="a-up"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.55)"/></g></g></svg><p class="ill-cap">Dribble through each cone gate — close control, both feet.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Sharks &amp; Minnows</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Sharks &amp; Minnows"><rect x="18" y="14" width="148" height="100" rx="9" class="st-zone" style="stroke-width:1.4"/><circle cx="60" cy="60" r="5.5" class="f-def"/><circle cx="104" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="74" y="18">sharks</text><g transform="translate(40,104)"><g class="a-up"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.52)"/></g></g><g transform="translate(90,104)"><g class="a-up" style="animation-delay:.5s"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.52)"/></g></g><g transform="translate(140,104)"><g class="a-up" style="animation-delay:.9s"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.52)"/></g></g></svg><p class="ill-cap">Minnows dribble across; the ball-less “sharks” try to knock balls away.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Body feint</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Body feint: lean one way, then take the ball the other way">
+                      <path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M76,82 l-14,4"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M90,72 l16,-18"/>
+                      <text class="svg-t" x="104" y="48">go</text>
+                      <g transform="translate(84,84)"><g class="a-feint"><circle r="7" class="f-player"/><use href="#ball" transform="translate(4,-15) scale(.8)"/></g></g>
+                    </svg><p class="ill-cap">Drop a shoulder and lean one way — then push the ball the other way.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Step-over</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Step-over: the foot swings around the ball, then take it away the other side">
+                      <path class="st-track" stroke-width="1.4" stroke-dasharray="3 3" d="M84,70 m-17,0 a17,17 0 1 1 34,0"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M44,76 l8,-4.5 v9 z"/>
+                      <g transform="translate(84,70)"><g class="a-stepball"><use href="#ball" transform="scale(.85)"/></g></g>
+                      <g transform="translate(84,70)"><g class="a-stepfoot"><use href="#foot" transform="translate(0,-20) scale(.8)"/></g></g>
+                    </svg><p class="ill-cap">Swing the foot over the top of the ball, then take it the other way.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Scissors</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Scissors: the foot swings around the ball the other way, then accelerate away">
+                      <path class="st-track" stroke-width="1.4" stroke-dasharray="3 3" d="M84,70 m17,0 a17,17 0 1 0 -34,0"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M124,76 l-8,-4.5 v9 z"/>
+                      <g transform="translate(84,70)"><g class="a-scisball"><use href="#ball" transform="scale(.85)"/></g></g>
+                      <g transform="translate(84,70)"><g class="a-scisfoot"><use href="#foot" transform="translate(0,-20) scale(.8)"/></g></g>
+                    </svg><p class="ill-cap">Swing the foot around the outside of the ball, then accelerate away.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 1v1 to four goals</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="1v1 to four goals"><path class="f-team" d="M44,20 l3,5.4 h-6 z"/><path class="f-team" d="M124,20 l3,5.4 h-6 z"/><path class="f-team" d="M44,96 l3,5.4 h-6 z"/><path class="f-team" d="M124,96 l3,5.4 h-6 z"/><circle cx="92" cy="74" r="5.5" class="f-def"/><g transform="translate(92,104)"><g class="a-adv"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.55)"/></g></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,100 q-16,-30 0,-58"/></svg><p class="ill-cap">Beat your defender and dribble through any of the four gates.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> First touch into space</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="First touch into space"><circle cx="112" cy="60" r="5.5" class="f-team"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M112,60 L74,64"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M74,64 l16,-13"/><g transform="translate(74,64)"><g class="a-ftin"><use href="#ball" transform="scale(.72)"/></g></g></svg><p class="ill-cap">Cushion the ball and push your first touch into space, not at your feet.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Check your shoulders</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Check your shoulders"><circle cx="84" cy="74" r="8" class="f-player"/><g transform="translate(84,66)"><g class="a-look"><path class="st-arrow" style="stroke-width:1.6" d="M0,0 V-22"/><path class="f-arrow" d="M0,-24 l4,7 h-8 z"/></g></g></svg><p class="ill-cap">Look over each shoulder before the ball arrives — know what's around you.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 2v2 to small goals</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="2v2 to small goals"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">2v2</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">A tiny game — reward a clean first touch that sets up the next play.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Rondo (3v1)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo (3v1)"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">3v1</text><g transform="translate(52,42)"><g class="a-rondo3"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Three keep the ball, one defends in the middle — pass and support.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Inside-foot pass</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Inside-foot pass"><g transform="translate(48,66) rotate(0)"><use href="#foot" transform="scale(0.9)"/></g><g transform="translate(120,66) rotate(180)"><use href="#foot" transform="scale(0.9)"/></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M58,66 H110"/><g transform="translate(58,66)"><g class="a-passr"><use href="#ball" transform="scale(0.72)"/></g></g></svg><p class="ill-cap">Pass with the inside of the foot; go two-touch, then one-touch.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Passing gates</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Passing gates"><path class="f-team" d="M74,54 l3,5.4 h-6 z"/><path class="f-team" d="M100,54 l3,5.4 h-6 z"/><circle cx="46" cy="80" r="5.5" class="f-player"/><circle cx="126" cy="42" r="5.5" class="f-team"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M52,76 L120,48"/><g transform="translate(52,76)"><g class="a-passgate"><use href="#ball" transform="scale(0.62)"/></g></g></svg><p class="ill-cap">Score a point for each pass played through a gate to a teammate.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Rondo (4v1)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo (4v1)"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v1</text><g transform="translate(52,42)"><g class="a-rondo"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Four keep the ball, one defends — quick, supported passing.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Give-and-go (1‑2)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Give-and-go: pass to the wall player, run around the defender, receive it back">
+                      <circle cx="132" cy="52" r="5.5" class="f-team"/>
+                      <circle cx="96" cy="70" r="5.5" class="f-def"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M40,88 L124,50"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M124,50 L110,66"/>
+                      <text class="svg-t" x="138" y="42">1‑2</text>
+                      <g transform="translate(40,88)"><g class="a-gagball"><use href="#ball" transform="scale(.55)"/></g></g>
+                      <g transform="translate(40,96)"><g class="a-gagrun"><circle r="5.5" class="f-player"/></g></g>
+                    </svg><p class="ill-cap">Pass to a teammate and run past the defender to get it straight back.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 2v2 to a target</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="2v2 to a target"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">2v2</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Small game — reward a give-and-go that beats a defender.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Step-over</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Step-over: the foot swings around the ball, then take it away the other side">
+                      <path class="st-track" stroke-width="1.4" stroke-dasharray="3 3" d="M84,70 m-17,0 a17,17 0 1 1 34,0"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M44,76 l8,-4.5 v9 z"/>
+                      <g transform="translate(84,70)"><g class="a-stepball"><use href="#ball" transform="scale(.85)"/></g></g>
+                      <g transform="translate(84,70)"><g class="a-stepfoot"><use href="#foot" transform="translate(0,-20) scale(.8)"/></g></g>
+                    </svg><p class="ill-cap">Swing the foot over the ball, then take it the other way.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Drag-back</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Drag-back: the sole pulls the ball backwards to escape">
+                      <path class="st-track" stroke-width="2" stroke-dasharray="3 4" d="M84,52 v40"/>
+                      <path style="fill:var(--ball)" opacity=".85" d="M84,98 l-4.5,-8 h9 z"/>
+                      <g transform="translate(84,60)"><g class="a-drag"><use href="#ball" transform="scale(.82)"/></g></g>
+                      <g transform="translate(84,46)"><g class="a-dragfoot"><use href="#foot" transform="scale(.7,.85)" opacity=".88"/></g></g>
+                    </svg><p class="ill-cap">Sole pulls the ball back to escape pressure; both feet.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 1v1 to goal</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="1v1 to goal"><path class="st-goal" style="stroke-width:2.4" d="M72,22 v-9 h40 v9"/><circle cx="92" cy="74" r="5.5" class="f-def"/><g transform="translate(92,104)"><g class="a-adv"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.55)"/></g></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,100 q-16,-30 0,-58"/></svg><p class="ill-cap">Pick a move, beat the defender, and finish at the goal.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Scan when you can</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Scan when you can"><circle cx="84" cy="74" r="8" class="f-player"/><g transform="translate(84,66)"><g class="a-look"><path class="st-arrow" style="stroke-width:1.6" d="M0,0 V-22"/><path class="f-arrow" d="M0,-24 l4,7 h-8 z"/></g></g></svg><p class="ill-cap">Look over your shoulders early — spot space before the ball comes.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Receive on the half-turn</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Receive on the half-turn: the pass arrives, the body opens and turns to face forward">
+                      <circle cx="120" cy="60" r="5.5" class="f-team"/>
+                      <path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M120,60 L88,63"/>
+                      <g transform="translate(80,66)"><g class="a-rtturn"><circle r="7" class="f-player"/><g class="a-rtball2"><use href="#ball" transform="translate(12,-4) scale(.55)"/></g></g></g>
+                      <g transform="translate(80,66)"><g class="a-rtin"><use href="#ball" transform="scale(.55)"/></g></g>
+                    </svg><p class="ill-cap">Open your body as it arrives so your first touch turns you to play forward.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Rondo (4v2)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo (4v2)"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v2</text><g transform="translate(52,42)"><g class="a-rondo"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Four keep the ball versus two — turn and find the free player.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Side-foot finish</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Side-foot finish"><path class="st-goal" style="stroke-width:2.4" d="M64,26 v-9 h56 v9"/><circle cx="92" cy="104" r="5.5" class="f-player"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,98 V44"/><g transform="translate(92,92)"><g class="a-strike"><use href="#ball" transform="scale(.62)"/></g></g></svg><p class="ill-cap">Place it with the inside of the foot — pick a corner, stay composed.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Give-and-go (1‑2)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Give-and-go: pass to the wall player, run around the defender, receive it back">
+                      <circle cx="132" cy="52" r="5.5" class="f-team"/>
+                      <circle cx="96" cy="70" r="5.5" class="f-def"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M40,88 L124,50"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M124,50 L110,66"/>
+                      <text class="svg-t" x="138" y="42">1‑2</text>
+                      <g transform="translate(40,88)"><g class="a-gagball"><use href="#ball" transform="scale(.55)"/></g></g>
+                      <g transform="translate(40,96)"><g class="a-gagrun"><circle r="5.5" class="f-player"/></g></g>
+                    </svg><p class="ill-cap">Combine — pass, move, get it back — before you shoot.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Small-sided game</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Small-sided game"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Look for a 1‑2 before the shot; celebrate composed finishes.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Positional rondo</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Positional rondo"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v1</text><g transform="translate(52,42)"><g class="a-rondo"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Keep your zone; pass and support to keep the ball.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Find the free player</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Find the free player"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v2</text><g transform="translate(52,42)"><g class="a-rondo"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Move to a passing angle and pick out the teammate the defenders left open.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 4v4 to two goals</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="4v4 to two goals"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Spread out and use the width — reward finding space, not clumping.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Rondo (4v1)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo (4v1)"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v1</text><g transform="translate(52,42)"><g class="a-rondo"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Keep-away — support angles, one-touch when you can.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Rondo (3v1)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo (3v1)"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">3v1</text><g transform="translate(52,42)"><g class="a-rondo3"><use href="#ball" transform="scale(0.6)"/></g></g></svg><p class="ill-cap">Rotate the middle; scan and play the free man.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> 4v4 keep-ball</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="4v4 keep-ball"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Four passes in a row = a point — heads up, both feet.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Jockey &amp; poke</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Jockey &amp; poke"><path class="st-goal" style="stroke-width:2.4" d="M78,22 v-9 h28 v9"/><g transform="translate(92,96)"><g class="a-jock"><circle cx="0" cy="0" r="5.5" class="f-player"/><use href="#ball" transform="translate(0,-12) scale(.55)"/></g></g><g transform="translate(92,62)"><g class="a-jock2"><circle cx="0" cy="0" r="5.5" class="f-def"/></g></g></svg><p class="ill-cap">Mirror the attacker, stay on your feet and goal-side; poke when it's safe.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Small-sided game</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Small-sided game"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Praise patient defending and winning the ball back.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Circle Catch</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Circle Catch"><path class="st-goal" style="stroke-width:2.4" d="M58,44 v-9 h68 v9"/><g transform="translate(92,50)"><g class="a-gk"><circle cx="0" cy="0" r="7" class="f-gk"/></g></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,110 V64"/><g transform="translate(92,66)"><g class="a-gkin"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Soft hands in a “W”; catch cleanly from a ready position.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Ready position &amp; scoop</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Ready position &amp; scoop"><path class="st-goal" style="stroke-width:2.4" d="M58,44 v-9 h68 v9"/><g transform="translate(92,50)"><g class="a-gk"><circle cx="0" cy="0" r="7" class="f-gk"/></g></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,110 V64"/><g transform="translate(92,66)"><g class="a-gkin"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Set, scoop the rolling ball, then roll or throw it out — everyone tries.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Game with a keeper</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Game with a keeper"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">A small game with a goalkeeper — rotate the GK often.</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Throw-in &amp; restarts</span><svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Throw-in: both hands, ball from behind the head, thrown in to a teammate">
+                      <path class="st-track" stroke-width="1.6" stroke-dasharray="2 3" d="M24,100 H144"/>
+                      <circle cx="60" cy="88" r="7" class="f-player"/>
+                      <path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M60,62 q26,-24 50,-4"/>
+                      <circle cx="118" cy="62" r="5.5" class="f-team"/>
+                      <g transform="translate(60,64)"><g class="a-throw"><use href="#ball" transform="scale(.66)"/></g></g>
+                    </svg><p class="ill-cap">Both hands, over the head — plus goal/corner restarts, no hands (except GK).</p></div>
+<div class="ill-card"><span class="ill-h"><span class="num">▸</span> Festival (game-leader)</span><svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Festival (game-leader)"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg"><use href="#ball" transform="scale(.6)"/></g></g></svg><p class="ill-cap">Just play; the coach referees as a guide — no standings.</p></div>
+</div></body></html>

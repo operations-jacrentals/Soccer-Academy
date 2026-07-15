@@ -1,0 +1,73 @@
+{
+  "_about": "Machine-readable index tying the age-8 drills to their tracked metrics and to the repeating 3-week cycle. Prose spec: ../04-reports-and-player-profile.md. Drill text: ../sessions/*.md. Animations: ./animations.html. Logic: ./tracker-core.js.",
+
+  "spokes": ["PAC", "SHO", "PAS", "DRI", "DEF", "PHY"],
+  "heart": "Replaces the overall rating. It only brightens with brave tries — never a number, never a rank.",
+  "no_ranking": "Every spoke grows only from the child's own past marks. There is no overall number and no cross-child field — a leaderboard is unrepresentable from this data.",
+
+  "family_lock": "A day's metric is locked to its spoke FAMILY. Coaches may rewrite or replace the drill on the fly, but must keep it in the same family — a Dribbling day stays Dribbling; don't drop a passing drill onto it. This keeps every logged PR comparable over time without re-mapping the metric.",
+
+  "cycle": {
+    "structure": "One repeating 3-week cycle (Week A / B / C) that loops ~13 times across the ~40 training weeks. There is no 13-week block — it is literally the 3 weeks on repeat. Each loop the drills level up in difficulty, and the year's emphasis shifts A->C (lean on Week A early, Week C late).",
+    "day_shape": "Every day is one 60-min plan run in all 3 of that day's sessions: Warm-up 15 (rondo/ball-manipulation) -> Individual 20 (the day's focus) -> Group 20 (a game) -> Huddle 5. Intensity builds then recovers across the week (Tactical Periodization).",
+    "weeks": {
+      "A": {"name": "Me & the Ball", "coerver": "Ball Mastery"},
+      "B": {"name": "Me, the Ball & a Friend", "coerver": "Passing + 1v1"},
+      "C": {"name": "Playing the Game", "coerver": "Group Play"}
+    },
+    "intensity_by_dow": {
+      "Mon": {"label": "ease-in", "peak": 45},
+      "Tue": {"label": "build", "peak": 65},
+      "Wed": {"label": "peak", "peak": 92},
+      "Thu": {"label": "recover", "peak": 35},
+      "Fri": {"label": "light", "peak": 50}
+    }
+  },
+
+  "metrics": {
+    "touch":       {"spoke": "DRI", "unit": "count/30s", "direction": 1,  "step": 3,   "how": "Touch Count 30s, both feet"},
+    "gate":        {"spoke": "DRI", "unit": "gates/60s", "direction": 1,  "step": 2,   "how": "Gate Run 60s: R1 free + R2 weak-foot-only (weak foot stored as r2)"},
+    "cushion":     {"spoke": "DRI", "unit": "clean/60s", "direction": 1,  "step": 2,   "how": "Cushion Count 60s (clean first touches)"},
+    "juggle":      {"spoke": "DRI", "unit": "count",     "direction": 1,  "step": 4,   "how": "Total Juggles (anytime personal best)"},
+    "pass":        {"spoke": "PAS", "unit": "count/60s", "direction": 1,  "step": 2,   "how": "Pass Count 60s (cooperative pair)"},
+    "onetwo":      {"spoke": "PAS", "unit": "count/60s", "direction": 1,  "step": 2,   "how": "One-Two Count 60s (pair)"},
+    "scan":        {"spoke": "PAS", "unit": "/10",       "direction": 1,  "step": 1.5, "how": "Scan Score: reads a flashed number before receiving"},
+    "teamstreak":  {"spoke": "PAS", "unit": "streak",    "direction": 1,  "step": 2,   "how": "Team keep-ball streak (group vs its own record)"},
+    "rondostreak": {"spoke": "PAS", "unit": "streak",    "direction": 1,  "step": 2,   "how": "Rondo streak (group)"},
+    "finish":      {"spoke": "SHO", "unit": "/10",       "direction": 1,  "step": 2,   "how": "Finish Ten: placement not power, both feet"},
+    "keeper":      {"spoke": "SHO", "unit": "/10",       "direction": 1,  "step": 2,   "how": "Keeper's Ten: clean W-shape catches (everyone rotates through GK)"},
+    "jockey":      {"spoke": "DEF", "unit": "seconds",   "direction": 1,  "step": 1.5, "how": "Jockey Clock: own patience PB, cap 10s, longer = better"},
+    "dash":        {"spoke": "PAC", "unit": "seconds",   "direction": -1, "step": 0.3, "how": "20-yd Dash playful PB (monthly, maturation-guarded; lower is better)"},
+    "balL":        {"spoke": "PHY", "unit": "seconds",   "direction": 1,  "step": 3,   "how": "Single-leg Balance, left (monthly)"},
+    "balR":        {"spoke": "PHY", "unit": "seconds",   "direction": 1,  "step": 3,   "how": "Single-leg Balance, right (monthly)"},
+    "ladder":      {"spoke": "PHY", "unit": "reps",      "direction": 1,  "step": 2,   "how": "SAQ-ladder clean reps (monthly)"},
+    "brave1":      {"spoke": "HEART", "unit": "count",   "direction": 1,  "step": null, "how": "Brave Tries: 1v1 moves ATTEMPTED (a failed move still counts; never a success rate)"},
+    "mymove":      {"spoke": "HEART", "unit": "count",   "direction": 1,  "step": null, "how": "My-Move shows in the game (attempts)"},
+    "brave2":      {"spoke": "HEART", "unit": "count",   "direction": 1,  "step": null, "how": "Brave Tries II (attempts)"},
+    "winbacks":    {"spoke": "HEART", "unit": "count",   "direction": 1,  "step": null, "how": "Patient win-backs (process, not outcome)"},
+    "rules":       {"spoke": "Game Ready", "unit": "/5", "direction": 1,  "step": null, "how": "Rules Five: restarts done correctly & unprompted in the festival"}
+  },
+
+  "days": [
+    {"id": "D1",  "week": "A", "dow": "Mon", "title": "Ball-mastery basics",              "objective": "Ball Mastery",             "metric": "touch",       "entry": "pr"},
+    {"id": "D2",  "week": "A", "dow": "Tue", "title": "Dribbling & change of direction",  "objective": "Ball Mastery · turns",     "metric": "gate",        "entry": "pr", "secondary": {"metric": "gate", "note": "weak-foot 2nd round stored as rep.r2; feeds the both-feet index"}},
+    {"id": "D3",  "week": "A", "dow": "Wed", "title": "1v1 & the body feint",             "objective": "1v1 Moves",                "metric": "brave1",      "entry": "heart"},
+    {"id": "D4",  "week": "A", "dow": "Thu", "title": "First touch",                      "objective": "Receiving",                "metric": "cushion",     "entry": "pr"},
+    {"id": "D5",  "week": "A", "dow": "Fri", "title": "Creativity, play & checkpoint",    "objective": "Ball Mastery · creativity","metric": "mymove",      "entry": "heart"},
+    {"id": "D6",  "week": "B", "dow": "Mon", "title": "Inside-foot passing",              "objective": "Receiving & Passing",      "metric": "pass",        "entry": "pr"},
+    {"id": "D7",  "week": "B", "dow": "Tue", "title": "Give-and-go (1-2)",                "objective": "Receiving & Passing",      "metric": "onetwo",      "entry": "pr"},
+    {"id": "D8",  "week": "B", "dow": "Wed", "title": "Step-over & drag-back",            "objective": "1v1 Moves",                "metric": "brave2",      "entry": "heart"},
+    {"id": "D9",  "week": "B", "dow": "Thu", "title": "Receive on the half-turn + scanning","objective": "Receiving",             "metric": "scan",        "entry": "pr"},
+    {"id": "D10", "week": "B", "dow": "Fri", "title": "Finishing & combine + checkpoint", "objective": "Finishing -> Group",       "metric": "finish",      "entry": "pr"},
+    {"id": "D11", "week": "C", "dow": "Mon", "title": "Small-sided & find space",         "objective": "Group Play",               "metric": "teamstreak",  "entry": "pr"},
+    {"id": "D12", "week": "C", "dow": "Tue", "title": "Rondo (keep the ball)",            "objective": "Passing · Group",          "metric": "rondostreak", "entry": "pr"},
+    {"id": "D13", "week": "C", "dow": "Wed", "title": "Jockey & poke (defending)",        "objective": "Defending 1v1",            "metric": "winbacks",    "entry": "heart", "secondary": {"metric": "jockey", "note": "Jockey Clock PB feeds the DEF spoke"}},
+    {"id": "D14", "week": "C", "dow": "Thu", "title": "Goalkeeping taster",               "objective": "Goalkeeping",              "metric": "keeper",      "entry": "pr"},
+    {"id": "D15", "week": "C", "dow": "Fri", "title": "Festival, rules & checkpoint",     "objective": "Group Play · rules",       "metric": "rules",       "entry": "rules"}
+  ],
+
+  "monthly_funpb": {
+    "_note": "Pace & Physical are trained through games (LTAD forbids formal fitness testing at 8). Logged only as a light, maturation-guarded monthly personal best, off the daily flow.",
+    "metrics": ["dash", "balL", "balR", "ladder", "juggle"]
+  }
+}
