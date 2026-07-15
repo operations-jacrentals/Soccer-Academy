@@ -1,0 +1,1406 @@
+<style>
+/* ============================================================
+   SOCCER + SMARTS — Age-8 tracker · "Heraldic Scoreboard"
+   Gold-on-royal-blue heraldic banner · number-free card ·
+   numbers live at PR Time · the LION is the hero.
+   ============================================================ */
+:root{
+  --gold:#F5B62C; --gold-deep:#D99A0F; --gold-dark:#8C5E07;
+  --gold-soft:rgba(245,182,44,.16); --gold-line:rgba(245,182,44,.45);
+  --vermilion:#FF5B49; --vermilion-soft:rgba(255,91,73,.14);
+  --green:#35C56A; --green-soft:rgba(53,197,106,.15);       /* PR / go-states ONLY */
+  --royal:#101B3B; --royal-2:#182550; --royal-3:#22315E;
+  --bg:#F6F8FF; --surface:#FFFFFF; --surface-2:#EDF1FC; --surface-3:#E2E8F8;
+  --ink:#16203A; --slate:#55618A; --mist:#AEB8D6; --line:#D9E0F2;
+  --ajax:#E4322B; --garnet:#A0123E; --masia-blue:#12428E; --benfica:#E63329;
+  --bronze:#B0713A; --silver:#9FB0CC; --shadow:0 10px 30px rgba(16,27,59,.10);
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0A1128; --surface:#101B3B; --surface-2:#182550; --surface-3:#22315E;
+    --ink:#EEF2FF; --slate:#A5B1DD; --mist:#5D6A9A; --line:#26356A;
+    --gold-soft:rgba(245,182,44,.14); --silver:#8FA2C6;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#F6F8FF; --surface:#FFFFFF; --surface-2:#EDF1FC; --surface-3:#E2E8F8;
+  --ink:#16203A; --slate:#55618A; --mist:#AEB8D6; --line:#D9E0F2;
+  --gold-soft:rgba(245,182,44,.16); --silver:#9FB0CC;
+  --shadow:0 10px 30px rgba(16,27,59,.10);
+}
+:root[data-theme="dark"]{
+  --bg:#0A1128; --surface:#101B3B; --surface-2:#182550; --surface-3:#22315E;
+  --ink:#EEF2FF; --slate:#A5B1DD; --mist:#5D6A9A; --line:#26356A;
+  --gold-soft:rgba(245,182,44,.14); --silver:#8FA2C6;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+.app{font-family:var(--font);color:var(--ink);background:var(--bg);min-height:100vh;
+  margin:0;padding:0 0 64px;overflow-x:hidden;font-variant-numeric:tabular-nums;}
+.app,.app *{-webkit-tap-highlight-color:rgba(245,182,44,.25);}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px;}
+h1,h2,h3,h4{text-wrap:balance;margin:0;}
+button{font-family:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--gold);outline-offset:2px;border-radius:6px;}
+.eyebrow{font-size:.66rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);}
+
+/* ---------- masthead: the heraldic banner ---------- */
+.masthead{background:linear-gradient(178deg,var(--royal) 60%,var(--royal-2));color:var(--gold);
+  border-bottom:3px solid var(--gold);box-shadow:var(--shadow);}
+.masthead .wrap{display:flex;align-items:center;gap:14px;padding:16px 14px;}
+.mast-crest{flex:0 0 auto;width:52px;height:58px;}
+.mast-title{flex:1 1 auto;min-width:0;}
+.mast-title .eyebrow{color:#C8CFE8;}
+.mast-title h1{font-size:clamp(1.35rem,5.4vw,1.9rem);font-weight:900;letter-spacing:.04em;color:var(--gold);line-height:1.05;}
+.mast-title h1 .plus{color:var(--vermilion);}
+.mast-ctl{display:flex;gap:8px;flex:0 0 auto;}
+.iconbtn{width:44px;height:44px;border-radius:12px;border:2px solid rgba(245,182,44,.5);
+  background:rgba(255,255,255,.05);color:var(--gold);font-size:1.15rem;display:grid;place-items:center;}
+.iconbtn[aria-pressed="true"]{background:var(--gold);color:var(--royal);}
+.iconbtn:active{transform:scale(.94);}
+
+/* ---------- cards zone ---------- */
+.zone{margin-top:20px;}
+.zone-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.zone-head h2{font-size:1.02rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;}
+.seg button{padding:9px 14px;border-radius:9px;font-weight:800;font-size:.82rem;letter-spacing:.06em;color:var(--slate);min-height:40px;}
+.seg button[aria-pressed="true"]{background:var(--royal);color:var(--gold);}
+.cards{display:grid;gap:14px;}
+.cards.compare{grid-template-columns:repeat(2,minmax(0,1fr));}
+.compare-note{font-size:.72rem;color:var(--slate);margin:8px 2px 0;line-height:1.5;}
+
+/* the card */
+.card{position:relative;border-radius:20px;background:
+    linear-gradient(165deg,var(--royal) 0%,var(--royal-2) 55%,var(--royal-3) 100%);
+  color:#EEF2FF;padding:16px 14px 18px;box-shadow:var(--shadow);border:3px solid var(--gold);}
+.card.frame-bronze{border-color:var(--bronze);}
+.card.frame-silver{border-color:var(--silver);}
+.card.frame-gold{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,182,44,.25),var(--shadow);}
+.card.frame-neutral{border-color:var(--slate);box-shadow:var(--shadow);}
+.card-top{display:flex;gap:10px;align-items:flex-start;}
+.card-slot{flex:0 0 118px;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;}
+.cards.compare .card-slot{flex-basis:88px;}
+.card-id{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.journey{position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  font-size:.62rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+  padding:4px 12px;border-radius:99px;background:var(--royal);border:2px solid currentColor;white-space:nowrap;}
+.journey.j-bronze{color:var(--bronze);} .journey.j-silver{color:var(--silver);} .journey.j-gold{color:var(--gold);}
+.photo-btn{width:96px;height:96px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);
+  background:var(--royal-3);display:block;position:relative;}
+.cards.compare .photo-btn{width:74px;height:74px;}
+.photo-btn img,.photo-btn svg{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-hint{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#C8CFE8;font-weight:700;}
+.card-name{font-size:1.5rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+  border-top:2px solid var(--gold-line);border-bottom:2px solid var(--gold-line);padding:2px 18px;}
+.cards.compare .card-name{font-size:1.1rem;padding:2px 10px;}
+.week-badge{display:inline-flex;align-items:center;gap:7px;font-size:.62rem;font-weight:900;
+  letter-spacing:.13em;text-transform:uppercase;color:#EEF2FF;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.18);padding:4px 10px 4px 5px;border-radius:99px;}
+.week-badge svg{width:16px;height:19px;flex:0 0 auto;}
+.lionbox{position:relative;width:118px;}
+.cards.compare .lionbox{width:88px;}
+.lionbox .rig{width:100%;display:block;}
+.lion-tier{font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-align:center;line-height:1.35;}
+.roarburst{position:absolute;top:-6px;right:-8px;font-size:.9rem;font-weight:900;color:var(--vermilion);
+  letter-spacing:.06em;opacity:0;pointer-events:none;transform:rotate(-8deg);}
+.lionbox.roar .roarburst{animation:burst .95s ease-out;}
+@keyframes burst{0%{opacity:0;transform:rotate(-8deg) scale(.4)}25%{opacity:1;transform:rotate(-8deg) scale(1.25)}70%{opacity:1}100%{opacity:0;transform:rotate(-8deg) scale(1)}}
+.lionbox.roar .rig{animation:lunge .95s cubic-bezier(.34,1.3,.5,1);}
+@keyframes lunge{0%{transform:none}20%{transform:translate(5%,1%) scale(.95)}52%{transform:translate(-8%,-3%) scale(1.09)}75%{transform:translate(-5%,-1.5%) scale(1.05)}100%{transform:none}}
+.lionbox.roar .jaw{animation:jawopen .95s ease-out;}
+@keyframes jawopen{0%{transform:none}25%{transform:rotate(18deg)}60%{transform:rotate(15deg)}100%{transform:none}}
+.lionbox.roar .breath{animation:breathflare .95s ease-out;}
+@keyframes breathflare{0%{opacity:.35;transform:scale(.6)}30%{opacity:1;transform:scale(1.35)}100%{opacity:.35;transform:scale(1)}}
+.lionbox.tierup .rig{animation:tierglow 1.6s ease-in-out;}
+@keyframes tierglow{0%{filter:none}30%{filter:drop-shadow(0 0 18px var(--gold)) brightness(1.5)}100%{filter:none}}
+.emberp{animation:emberup 2.6s ease-in infinite;}
+@keyframes emberup{0%{transform:translateY(0);opacity:0}18%{opacity:.9}100%{transform:translateY(-30px);opacity:0}}
+.flick{animation:flick 1.1s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center bottom;}
+@keyframes flick{from{transform:scaleY(.92) scaleX(1.02)}to{transform:scaleY(1.1) scaleX(.96)}}
+.aurap{animation:aurapulse 3.2s ease-in-out infinite alternate;}
+@keyframes aurapulse{from{opacity:.35}to{opacity:.7}}
+
+/* hexagon */
+.hexwrap{margin:6px auto 2px;width:min(230px,78%);}
+.cards.compare .hexwrap{width:min(180px,92%);}
+.hex-caption{text-align:center;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#C8CFE8;font-weight:700;margin-top:2px;}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.chip{font-size:.68rem;font-weight:800;letter-spacing:.05em;padding:7px 12px;border-radius:99px;line-height:1.2;}
+.chip.super{background:var(--gold);color:var(--royal);}
+.chip.quest{background:transparent;border:2px dashed var(--gold-line);color:var(--gold);}
+.pawrow{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:10px;}
+.pawrow .pawlbl{font-size:.6rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#C8CFE8;}
+.paw{width:18px;height:18px;opacity:.25;}
+.paw.lit{opacity:1;filter:drop-shadow(0 0 3px rgba(255,91,73,.7));}
+
+/* ---------- grid zone ---------- */
+.gridhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);
+  border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow);}
+.gridhead .crest{width:38px;height:44px;flex:0 0 auto;}
+.gridhead .gh-txt{flex:1 1 160px;min-width:0;}
+.gridhead .gh-week{font-size:1.05rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;}
+.gridhead .gh-sub{font-size:.72rem;color:var(--slate);font-weight:600;}
+.weekseg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;}
+.weekseg button{min-width:52px;min-height:42px;border-radius:9px;font-weight:900;font-size:.8rem;letter-spacing:.04em;color:var(--slate);position:relative;}
+.weekseg button[aria-pressed="true"]{color:#fff;}
+.weekseg button[data-w="A"][aria-pressed="true"]{background:var(--ajax);}
+.weekseg button[data-w="B"][aria-pressed="true"]{background:linear-gradient(100deg,var(--garnet) 50%,var(--masia-blue) 50%);}
+.weekseg button[data-w="C"][aria-pressed="true"]{background:var(--benfica);}
+.weekseg .live-dot{position:absolute;top:4px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);}
+.dupbtn{background:var(--royal);color:var(--gold);font-weight:900;font-size:.74rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:12px 16px;border-radius:12px;border:2px solid var(--gold);min-height:44px;}
+.dupbtn:active{transform:scale(.97);}
+
+/* week row of day tiles */
+.weekrow-outer{overflow-x:auto;margin-top:12px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+.weekrow{display:grid;grid-template-columns:repeat(5,minmax(148px,1fr));gap:9px;min-width:780px;}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:9px;
+  display:flex;flex-direction:column;gap:7px;box-shadow:var(--shadow);position:relative;}
+.tile.live{border:2px solid var(--gold);}
+.tile.open{border:2px solid var(--slate);}
+.tile.live::after{content:"TODAY";position:absolute;top:-9px;right:8px;background:var(--gold);color:var(--royal);
+  font-size:.55rem;font-weight:900;letter-spacing:.14em;padding:2px 7px;border-radius:99px;}
+.tile-btn{text-align:left;display:flex;flex-direction:column;gap:4px;border-radius:8px;}
+.tile-dow{display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);}
+.int-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;}
+.int-easein .int-dot{background:var(--mist);} .int-build .int-dot{background:var(--gold-deep);}
+.int-peak .int-dot{background:var(--vermilion);box-shadow:0 0 6px var(--vermilion);}
+.int-recover .int-dot{background:var(--slate);} .int-light .int-dot{background:var(--mist);}
+.int-lbl{font-size:.58rem;letter-spacing:.1em;color:var(--mist);font-weight:800;text-transform:uppercase;}
+.tile-title{font-size:.8rem;font-weight:800;line-height:1.25;min-height:2.4em;}
+.att{display:flex;flex-direction:column;gap:5px;border-top:1px dashed var(--line);padding-top:7px;}
+.att-row{display:flex;align-items:center;gap:5px;}
+.att-name{font-size:.62rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;width:38px;color:var(--slate);flex:0 0 auto;}
+.tick{width:30px;height:30px;border-radius:9px;border:2px solid var(--line);background:var(--surface-2);
+  display:grid;place-items:center;font-size:.85rem;font-weight:900;color:transparent;flex:0 0 auto;}
+.tick[aria-pressed="true"]{background:var(--gold);border-color:var(--gold-deep);color:var(--royal);}
+.tick.done3[aria-pressed="true"]{background:var(--vermilion);border-color:var(--vermilion);color:#fff;}
+.tick:active{transform:scale(.9);}
+.tick:disabled{opacity:.55;cursor:default;}
+
+/* expanded day = ONE session */
+.session{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);}
+.session-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:13px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);}
+.session-head h3{font-size:1rem;font-weight:900;flex:1 1 200px;}
+.fam-chip{font-size:.6rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--royal);color:var(--gold);padding:5px 10px;border-radius:99px;white-space:nowrap;}
+.editbtn{font-size:.68rem;font-weight:800;letter-spacing:.06em;color:var(--slate);border:1px solid var(--line);
+  border-radius:9px;padding:8px 11px;background:var(--surface);min-height:38px;}
+.session-note{margin:10px 14px 0;padding:9px 12px;border-radius:10px;background:var(--gold-soft);
+  border:1px dashed var(--gold-line);font-size:.74rem;font-weight:600;color:var(--ink);line-height:1.45;}
+.blocks{padding:12px 14px 4px;display:flex;flex-direction:column;gap:10px;}
+.block{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:11px;}
+.block-time{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;width:44px;}
+.block-time b{font-size:1.15rem;font-weight:900;line-height:1;}
+.block-time span{font-size:.55rem;letter-spacing:.1em;color:var(--mist);font-weight:800;}
+.block-main{flex:1 1 auto;min-width:0;}
+.block-name{font-size:.66rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--slate);margin-bottom:3px;}
+.block-txt{font-size:.86rem;line-height:1.5;margin:0;}
+.block-txt b{color:var(--gold-deep);}
+.block .anim{width:min(215px,42%);flex:0 0 auto;border-radius:9px;background:var(--surface-2);align-self:center;}
+@media (max-width:560px){ .block{flex-wrap:wrap;} .block .anim{width:min(230px,100%);margin-left:55px;} }
+.block textarea{width:100%;min-height:74px;border:1px solid var(--gold-line);border-radius:9px;background:var(--surface-2);
+  color:var(--ink);font-family:inherit;font-size:.85rem;line-height:1.45;padding:8px;resize:vertical;}
+.editbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 14px 8px;font-size:.72rem;color:var(--slate);}
+.editbar .savebtn{background:var(--royal);color:var(--gold);font-weight:800;border-radius:9px;padding:9px 14px;font-size:.72rem;letter-spacing:.08em;min-height:40px;}
+.editbar .restorebtn{border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:.72rem;color:var(--slate);min-height:40px;}
+
+/* PR TIME */
+.prtime{margin:12px 14px 14px;border-radius:15px;overflow:hidden;border:2px solid var(--gold);}
+.prtime-head{background:linear-gradient(170deg,var(--royal),var(--royal-2));color:var(--gold);
+  display:flex;align-items:center;gap:10px;padding:11px 13px;flex-wrap:wrap;}
+.prtime-head .pt-title{font-size:1.02rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;flex:1 1 auto;}
+.prtabs{display:inline-flex;background:rgba(255,255,255,.1);border-radius:10px;padding:3px;gap:3px;}
+.prtabs button{padding:8px 16px;border-radius:8px;font-weight:900;font-size:.8rem;color:#C8CFE8;min-height:40px;letter-spacing:.05em;}
+.prtabs button[aria-pressed="true"]{background:var(--gold);color:var(--royal);}
+.prtime-body{background:var(--surface);padding:11px 12px 13px;display:flex;flex-direction:column;gap:10px;}
+.measure{border:1px solid var(--line);border-radius:12px;padding:10px 11px;position:relative;overflow:hidden;}
+.measure.prpop{animation:prpop 1.4s ease-out;}
+@keyframes prpop{0%{box-shadow:inset 0 0 0 99px var(--green-soft);border-color:var(--green)}70%{box-shadow:inset 0 0 0 99px var(--green-soft);border-color:var(--green)}100%{box-shadow:none}}
+.m-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.m-name{font-size:.86rem;font-weight:900;}
+.m-unit{font-size:.66rem;color:var(--mist);font-weight:700;letter-spacing:.04em;}
+.smarts-chip{font-size:.56rem;font-weight:900;letter-spacing:.12em;background:var(--masia-blue);color:#fff;padding:3px 8px;border-radius:99px;text-transform:uppercase;}
+.pr-chip{margin-left:auto;font-size:.66rem;font-weight:800;color:var(--slate);background:var(--surface-2);
+  border:1px solid var(--line);padding:4px 9px;border-radius:99px;white-space:nowrap;}
+.pr-chip b{font-size:.85rem;color:var(--ink);}
+.m-entry{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap;}
+.stepbtn{width:46px;height:46px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);
+  font-size:1.4rem;font-weight:900;color:var(--slate);display:grid;place-items:center;}
+.stepbtn:active{transform:scale(.92);background:var(--gold-soft);}
+.m-val{min-width:86px;text-align:center;font-size:1.9rem;font-weight:900;letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1;}
+.m-val small{font-size:.62rem;font-weight:800;color:var(--mist);display:block;letter-spacing:.1em;margin-top:2px;}
+.logbtn{margin-left:auto;background:var(--royal);color:var(--gold);font-weight:900;font-size:.76rem;
+  letter-spacing:.1em;text-transform:uppercase;border-radius:11px;padding:13px 16px;min-height:46px;border:2px solid var(--gold);}
+.logbtn:active{transform:scale(.96);}
+.newpr{position:absolute;top:9px;right:10px;background:var(--green);color:#fff;font-weight:900;font-size:.72rem;
+  letter-spacing:.12em;padding:5px 11px;border-radius:99px;opacity:0;pointer-events:none;transform:scale(.6);}
+.measure.prpop .newpr{animation:newprin 1.4s ease-out;}
+@keyframes newprin{0%{opacity:0;transform:scale(.4)}18%{opacity:1;transform:scale(1.18)}80%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.brave-box{border:2px dashed var(--vermilion);border-radius:12px;padding:10px 11px;background:var(--vermilion-soft);}
+.brave-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.brave-head .m-name{color:var(--vermilion);}
+.brave-entry{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.brave-count{font-size:.8rem;font-weight:700;color:var(--ink);}
+.brave-count b{font-size:1.35rem;font-weight:900;}
+.bravebtn{margin-left:auto;background:var(--vermilion);color:#fff;font-weight:900;font-size:.78rem;
+  letter-spacing:.08em;border-radius:11px;padding:13px 16px;min-height:46px;}
+.bravebtn:active{transform:scale(.95);}
+.sess-done{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:2px solid var(--line);padding-top:11px;}
+.donebtn{flex:1 1 220px;background:var(--gold);color:var(--royal);font-weight:900;font-size:.9rem;
+  letter-spacing:.09em;text-transform:uppercase;border-radius:13px;padding:15px 16px;min-height:52px;border:2px solid var(--gold-deep);}
+.donebtn:disabled{opacity:.5;}
+.donebtn:active{transform:scale(.97);}
+.sess-count{font-size:.72rem;font-weight:800;color:var(--slate);letter-spacing:.05em;}
+
+/* ---------- history ---------- */
+.hist-item{margin-top:11px;background:var(--surface);border:1px solid var(--line);border-radius:15px;overflow:hidden;opacity:.94;}
+.hist-btn{width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:left;flex-wrap:wrap;min-height:52px;}
+.hist-btn .h-lbl{font-weight:900;font-size:.9rem;letter-spacing:.04em;}
+.hist-btn .h-dates{font-size:.7rem;color:var(--slate);font-weight:600;}
+.hist-btn .h-sum{margin-left:auto;font-size:.7rem;color:var(--slate);font-weight:800;}
+.frozen-chip{font-size:.56rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--slate);
+  border:1px solid var(--line);padding:3px 8px;border-radius:99px;}
+.hist-body{border-top:1px solid var(--line);padding:10px 12px 13px;}
+.hist-tbl-wrap{overflow-x:auto;}
+.hist-tbl{border-collapse:collapse;font-size:.68rem;min-width:430px;width:100%;}
+.hist-tbl th{font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:var(--mist);font-weight:900;text-align:left;padding:4px 7px;}
+.hist-tbl td{padding:4px 7px;border-top:1px dashed var(--line);white-space:nowrap;}
+.dotrow{letter-spacing:2px;font-size:.8rem;}
+.dot-on{color:var(--gold-deep);} .dot-off{color:var(--line);}
+.hist-wk-lbl td{font-weight:900;color:var(--slate);letter-spacing:.09em;text-transform:uppercase;font-size:.6rem;padding-top:9px;}
+
+/* ---------- fx ---------- */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden;}
+.confp{position:absolute;width:9px;height:13px;top:-16px;border-radius:2px;}
+#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:70;display:flex;flex-direction:column;gap:7px;align-items:center;pointer-events:none;width:min(92vw,480px);}
+.toast{background:var(--royal);color:var(--gold);border:2px solid var(--gold);border-radius:12px;
+  padding:10px 16px;font-size:.82rem;font-weight:800;letter-spacing:.03em;box-shadow:var(--shadow);
+  animation:toastin 2.9s ease forwards;text-align:center;max-width:100%;}
+.toast.green{border-color:var(--green);color:#fff;background:var(--green);}
+.toast.verm{border-color:var(--vermilion);color:#fff;background:var(--vermilion);}
+@keyframes toastin{0%{opacity:0;transform:translateY(14px)}8%{opacity:1;transform:none}84%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+
+.foot{margin-top:34px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;}
+.foot .ethos{font-size:.7rem;color:var(--slate);line-height:1.5;max-width:56ch;}
+.resetbtn{font-size:.68rem;font-weight:800;color:var(--mist);border:1px dashed var(--line);border-radius:9px;padding:9px 13px;min-height:40px;}
+
+/* ---------- drill animation palette hooks (skin-agnostic library, rethemed) ---------- */
+.anim{--ballfill:#F7F5EC;--ballstroke:#1A2440;--spot:#1A2440;--footfill:var(--slate);
+  display:block;height:auto;background:var(--surface-2);}
+:root[data-theme="dark"] .anim{--ballfill:#EFEEE6;--ballstroke:#0B1226;--spot:#0B1226;}
+@media (prefers-color-scheme:dark){ .anim{--ballfill:#EFEEE6;--ballstroke:#0B1226;--spot:#0B1226;} }
+.anim .f-player{fill:var(--gold-deep);} .anim .f-team{fill:#4E6FDB;} .anim .f-player2{fill:#4E6FDB;} .anim .f-player3{fill:var(--garnet);}
+.anim .f-def{fill:var(--vermilion);} .anim .f-gk{fill:var(--masia-blue);}
+.anim .st-field{stroke:var(--slate);fill:none;opacity:.5;} .anim .f-field{fill:var(--surface-3);}
+.anim .st-track{stroke:var(--mist);fill:none;opacity:.65;}
+.anim .st-arrow{stroke:var(--gold-deep);fill:none;} .anim .f-arrow{fill:var(--gold-deep);}
+.anim .st-goal{stroke:var(--slate);fill:none;opacity:.85;} .anim .st-zone{stroke:var(--slate);fill:var(--surface-3);opacity:.7;}
+.anim .svg-t{fill:var(--mist);font-family:var(--mono);font-size:8px;letter-spacing:.04em;}
+.anim .arrmk{fill:var(--gold-deep);opacity:.85;}
+/* drill keyframes (lifted from the age-8 animation library) */
+@keyframes tt-tapA{0%,100%{transform:translateY(0)}22%{transform:translateY(24px)}40%{transform:translateY(0)}}
+@keyframes kr-out{0%,42%{transform:translate(0,0);opacity:1}70%{transform:translate(42px,-32px);opacity:1}80%{transform:translate(48px,-36px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes kr-i1{0%,100%{transform:translate(0,0)}50%{transform:translate(-6px,5px)}}
+@keyframes kr-i2{0%,100%{transform:translate(0,0)}50%{transform:translate(7px,-4px)}}
+@keyframes kr-i3{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,6px)}}
+@keyframes lib-cruyffball{0%,10%{transform:translate(0,0);opacity:1}36%{transform:translate(0,-16px);opacity:1}48%{transform:translate(-2px,-16px);opacity:1}74%{transform:translate(-18px,16px);opacity:1}88%{transform:translate(-24px,22px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-cruyfffoot{0%,26%{transform:translate(0,0) rotate(0)}44%{transform:translate(-6px,-16px) rotate(-22deg)}64%{transform:translate(0,6px) rotate(4deg)}82%,100%{transform:translate(0,0) rotate(0)}}
+@keyframes lib-feint{0%,14%{transform:translate(0,0);opacity:1}34%{transform:translate(-9px,2px);opacity:1}48%{transform:translate(-5px,0);opacity:1}68%{transform:translate(13px,-15px);opacity:1}84%{transform:translate(22px,-24px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-rondo{0%{transform:translate(0,0)}25%{transform:translate(80px,0)}50%{transform:translate(88px,44px)}75%{transform:translate(-6px,44px)}100%{transform:translate(0,0)}}
+@keyframes lib-rondo3{0%{transform:translate(0,0)}33%{transform:translate(80px,0)}66%{transform:translate(88px,44px)}100%{transform:translate(0,0)}}
+@keyframes lib-up{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-42px)}}
+@keyframes lib-passr{0%,100%{transform:translateX(0)}44%,56%{transform:translateX(46px)}}
+@keyframes lib-passgate{0%,16%{transform:translate(0,0);opacity:1}60%{transform:translate(68px,-28px);opacity:1}78%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-ssg{0%{transform:translate(0,0)}30%{transform:translate(32px,-16px)}58%{transform:translate(62px,8px)}80%{transform:translate(94px,-14px)}100%{transform:translate(0,0)}}
+@keyframes lib-adv{0%,14%{transform:translate(0,0);opacity:1}46%{transform:translate(-13px,-28px);opacity:1}72%{transform:translate(0,-56px);opacity:1}84%{transform:translate(2px,-62px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-gagball{0%,10%{transform:translate(0,0);opacity:1}34%{transform:translate(84px,-40px);opacity:1}52%{transform:translate(84px,-40px);opacity:1}72%{transform:translate(68px,-20px);opacity:1}86%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-gagrun{0%,16%{transform:translate(0,0);opacity:1}52%{transform:translate(36px,-38px);opacity:1}74%{transform:translate(68px,-28px);opacity:1}88%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-ftin{0%{transform:translate(38px,-4px);opacity:0}14%{opacity:1}44%{transform:translate(0,0);opacity:1}56%{transform:translate(0,0);opacity:1}76%{transform:translate(16px,-13px);opacity:1}90%{opacity:0}100%{transform:translate(38px,-4px);opacity:0}}
+@keyframes lib-look{0%,100%{transform:rotate(-34deg)}50%{transform:rotate(34deg)}}
+@keyframes lib-rtin{0%{transform:translate(38px,-5px);opacity:0}12%{opacity:1}44%{transform:translate(9px,-3px);opacity:1}50%{opacity:0}100%{transform:translate(38px,-5px);opacity:0}}
+@keyframes lib-rtball2{0%,46%{opacity:0}54%,100%{opacity:1}}
+@keyframes lib-rtturn{0%,52%{transform:rotate(0)}78%{transform:rotate(-140deg)}90%{transform:rotate(-140deg)}100%{transform:rotate(0)}}
+@keyframes lib-jock{0%,100%{transform:translateX(0)}25%{transform:translateX(-16px)}75%{transform:translateX(16px)}}
+@keyframes lib-strike{0%,20%{transform:translate(0,0);opacity:1}58%{transform:translate(0,-62px);opacity:1}74%{transform:translate(0,-70px);opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes lib-gkin{0%{transform:translate(0,44px);opacity:0}26%{opacity:1}72%,100%{transform:translate(0,0)}}
+@keyframes lib-throw{0%,18%{transform:translate(0,0);opacity:1}50%{transform:translate(26px,-20px);opacity:1}72%{transform:translate(50px,-6px);opacity:1}84%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+.tt-lf{animation:tt-tapA 1.1s infinite ease-in-out;} .tt-rf{animation:tt-tapA 1.1s infinite ease-in-out;animation-delay:.55s;}
+.kr-out{transform-box:fill-box;transform-origin:center;animation:kr-out 4.5s infinite ease-in;}
+.kr-p1{animation:kr-i1 3s infinite ease-in-out;} .kr-p2{animation:kr-i2 3.4s infinite ease-in-out;} .kr-p3{animation:kr-i3 2.8s infinite ease-in-out;}
+.a-cruyffball{animation:lib-cruyffball 3.4s infinite ease-in-out;} .a-cruyfffoot{animation:lib-cruyfffoot 3.4s infinite ease-in-out;}
+.a-feint{animation:lib-feint 3s infinite ease-in-out;}
+.a-rondo{animation:lib-rondo 4.2s infinite ease-in-out;} .a-rondo3{animation:lib-rondo3 3.4s infinite ease-in-out;}
+.a-up{animation:lib-up 2.3s infinite ease-in-out;} .a-passr{animation:lib-passr 2s infinite ease-in-out;}
+.a-passgate{animation:lib-passgate 2.8s infinite ease-in-out;} .a-ssg{animation:lib-ssg 4.6s infinite ease-in-out;}
+.a-adv{animation:lib-adv 3s infinite ease-in;}
+.a-gagball{animation:lib-gagball 3.6s infinite ease-in-out;} .a-gagrun{animation:lib-gagrun 3.6s infinite ease-in-out;}
+.a-ftin{animation:lib-ftin 3.1s infinite ease-in-out;}
+.a-look{transform-box:fill-box;transform-origin:bottom center;animation:lib-look 2.2s infinite ease-in-out;}
+.a-rtin{animation:lib-rtin 3.4s infinite ease-in-out;} .a-rtball2{animation:lib-rtball2 3.4s infinite ease-in-out;} .a-rtturn{animation:lib-rtturn 3.4s infinite ease-in-out;}
+.a-jock{animation:lib-jock 2.4s infinite ease-in-out;} .a-jock2{animation:lib-jock 2.4s infinite ease-in-out;animation-delay:.06s;}
+.a-strike{animation:lib-strike 2.7s infinite ease-in;} .a-gkin{animation:lib-gkin 2.9s infinite ease-in;} .a-throw{animation:lib-throw 3.2s infinite ease-in-out;}
+
+@media (prefers-reduced-motion:reduce){
+  .anim *,.lionbox.roar .rig,.lionbox.roar .jaw,.lionbox.roar .breath,.lionbox.roar .roarburst,
+  .lionbox.tierup .rig,.emberp,.flick,.aurap,.measure.prpop,.measure.prpop .newpr{animation:none !important;}
+  .measure.prpop{border-color:var(--green);box-shadow:inset 0 0 0 3px var(--green-soft);}
+  .measure.prpop .newpr{opacity:1;transform:none;}
+}
+</style>
+
+<main class="app" id="app">
+  <header class="masthead">
+    <div class="wrap">
+      <svg class="mast-crest" viewBox="0 0 52 58" aria-hidden="true">
+        <path d="M26 2 L50 9 V30 C50 45 39 53 26 57 C13 53 2 45 2 30 V9 Z" fill="#F5B62C" stroke="#8C5E07" stroke-width="2"/>
+        <path d="M26 7 L45 12.5 V29.5 C45 41.5 36.5 48.5 26 52 C15.5 48.5 7 41.5 7 29.5 V12.5 Z" fill="#101B3B"/>
+        <circle cx="26" cy="26" r="9.5" fill="#F5B62C"/>
+        <path d="M26 20.6 l1.7 3.4 3.8.6-2.7 2.7.6 3.8-3.4-1.8-3.4 1.8.6-3.8-2.7-2.7 3.8-.6z" fill="#101B3B"/>
+        <path d="M13 40 h26" stroke="#F5B62C" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div class="mast-title">
+        <div class="eyebrow">Jack &amp; Blue · Age-8 Academy Year</div>
+        <h1>SOCCER <span class="plus">+</span> SMARTS</h1>
+      </div>
+      <div class="mast-ctl">
+        <button class="iconbtn" id="soundbtn" data-action="sound" aria-pressed="false" aria-label="Roar sound on or off" title="Roar sound">🔇</button>
+        <button class="iconbtn" id="themebtn" data-action="theme" aria-label="Switch theme (auto, light, dark)" title="Theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="zone" id="cardszone" aria-label="My Card">
+      <div class="zone-head">
+        <h2>My Card</h2>
+        <div class="seg" role="group" aria-label="Choose card view" id="cardseg"></div>
+      </div>
+      <div id="cards"></div>
+      <p class="compare-note" id="comparenote" hidden>Side-by-side is for high-fives, not standings — one neutral frame for both, and every spoke only ever measures a kid against <b>their own</b> last best.</p>
+    </section>
+
+    <section class="zone" id="gridzone" aria-label="Active 3-week grid">
+      <div id="gridhead"></div>
+      <div id="weekrow"></div>
+      <div id="daypanel"></div>
+    </section>
+
+    <section class="zone" id="histzone" aria-label="Season scrapbook — past grids">
+      <div class="zone-head"><h2>Season scrapbook</h2><span class="eyebrow" id="histcount"></span></div>
+      <div id="histstack"></div>
+    </section>
+
+    <footer class="foot">
+      <p class="ethos">Every number on this page is <b>yours-vs-yours</b>: beat your own last best. No standings, no overall rating — a leaderboard is unrepresentable here, on purpose. Brave tries feed the lion. 🦁</p>
+      <button class="resetbtn" data-action="reset">Reset demo data</button>
+    </footer>
+  </div>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="ball">
+    <circle r="11" style="fill:var(--ballfill);stroke:var(--ballstroke)" stroke-width="1.1"/>
+    <polygon style="fill:var(--spot)" points="0,-5 4.8,-1.5 3,4 -3,4 -4.8,-1.5"/>
+    <path style="fill:none;stroke:var(--ballstroke)" stroke-width=".9" d="M0,-11 L0,-5 M4.8,-1.5 L10.4,-3.3 M3,4 L6.4,9 M-3,4 L-6.4,9 M-4.8,-1.5 L-10.4,-3.3"/>
+  </g>
+  <g id="foot"><path style="fill:var(--footfill);stroke:var(--surface)" stroke-width="1" d="M0,-14 C5,-14 7,-7 6.5,0 C6,8 4,13 0,13 C-4,13 -6,8 -6.5,0 C-7,-7 -5,-14 0,-14 Z"/></g>
+  <g id="pawicon"><path d="M9 16.5 C5.5 16.5 3.6 14.6 3.6 12.6 C3.6 10.2 6.2 9.3 9 9.3 C11.8 9.3 14.4 10.2 14.4 12.6 C14.4 14.6 12.5 16.5 9 16.5 Z M3.4 8.2 C2.2 8.2 1.3 7.1 1.3 5.8 C1.3 4.5 2.2 3.4 3.4 3.4 C4.6 3.4 5.5 4.5 5.5 5.8 C5.5 7.1 4.6 8.2 3.4 8.2 Z M7.3 6.4 C6.1 6.4 5.2 5.3 5.2 3.9 C5.2 2.5 6.1 1.4 7.3 1.4 C8.5 1.4 9.4 2.5 9.4 3.9 C9.4 5.3 8.5 6.4 7.3 6.4 Z M10.7 6.4 C9.5 6.4 8.6 5.3 8.6 3.9 C8.6 2.5 9.5 1.4 10.7 1.4 C11.9 1.4 12.8 2.5 12.8 3.9 C12.8 5.3 11.9 6.4 10.7 6.4 Z M14.6 8.2 C13.4 8.2 12.5 7.1 12.5 5.8 C12.5 4.5 13.4 3.4 14.6 3.4 C15.8 3.4 16.7 4.5 16.7 5.8 C16.7 7.1 15.8 8.2 14.6 8.2 Z"/></g>
+</defs></svg>
+
+<div id="fx" aria-hidden="true"></div>
+<div id="toasts" role="status" aria-live="polite"></div>
+<input type="file" id="photoIn" accept="image/*" hidden>
+
+<script>
+(function(){
+'use strict';
+/* =============== utilities =============== */
+var LS_KEY='soccerSmarts.age8.v1';
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+var RM=false; try{RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+/* =============== config: spokes, metrics, weeks, days =============== */
+var SPOKES=['PAC','SHO','PAS','DRI','DEF','PHY'];
+var SPOKE_NAME={PAC:'Pace',SHO:'Finishing',PAS:'Passing',DRI:'Dribbling',DEF:'Defending',PHY:'Physical'};
+var NUDGE={DRI:.5,PAS:.5,SHO:1.15,DEF:2.2,PAC:2.2,PHY:2.2};
+var JUMP={DRI:2.2,PAS:2.2,SHO:3.2,DEF:4.5,PAC:3.5,PHY:3.5};
+
+/* metric defs — units/direction/growth-step mined from metrics.json; extras follow the same shapes.
+   dir:+1 higher=better, -1 lower(time)=better. gs = meaningful-improvement unit (growth math).
+   us = UI stepper. dp = decimals. start = friendly first staging. */
+var M={
+ touch:{l:'Touch Count',u:'touches · 30s',sp:'DRI',dir:1,gs:3,us:1,dp:0,start:20,hint:'both feet'},
+ toetap:{l:'Toe-Taps',u:'taps · 30s',sp:'DRI',dir:1,gs:3,us:1,dp:0,start:24},
+ fig8:{l:'Figure-8 Weave',u:'weaves · 45s',sp:'DRI',dir:1,gs:2,us:1,dp:0,start:6},
+ gate:{l:'Gate Run',u:'gates · 60s',sp:'DRI',dir:1,gs:2,us:1,dp:0,start:8},
+ gatewf:{l:'Weak-Foot Gate Run',u:'gates · 60s',sp:'DRI',dir:1,gs:2,us:1,dp:0,start:5},
+ slalom:{l:'Slalom (fastest clean)',u:'seconds',sp:'DRI',dir:-1,gs:.5,us:.5,dp:1,start:20},
+ beatdef:{l:'Beat-the-Defender',u:'of 10',sp:'DRI',dir:1,gs:1,us:1,dp:0,max:10,start:3},
+ gauntlet:{l:'Move-Gauntlet',u:'seconds',sp:'DRI',dir:-1,gs:.5,us:.5,dp:1,start:25},
+ cushion:{l:'Cushion Count',u:'clean · 60s',sp:'DRI',dir:1,gs:2,us:1,dp:0,start:12},
+ walltouch:{l:'Wall-Touch',u:'touches · 60s',sp:'DRI',dir:1,gs:2,us:1,dp:0,start:15},
+ trapgo:{l:'Trap-and-Go',u:'seconds',sp:'DRI',dir:-1,gs:.5,us:.5,dp:1,start:10},
+ trickmenu:{l:'Trick Menu',u:'of 5 tricks',sp:'DRI',dir:1,gs:1,us:1,dp:0,max:5,start:1},
+ juggle:{l:'Juggling PB',u:'total juggles',sp:'DRI',dir:1,gs:4,us:1,dp:0,start:3},
+ mymoveshow:{l:'My-Move Shows',u:'in the game',sp:'DRI',dir:1,gs:1,us:1,dp:0,start:1},
+ pass:{l:'Pass Count',u:'passes · 60s',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:14},
+ targethit:{l:'Target Hits',u:'of 10',sp:'PAS',dir:1,gs:1,us:1,dp:0,max:10,start:4},
+ passwf:{l:'Weak-Foot Pass Count',u:'passes · 60s',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:8},
+ onetwo:{l:'One-Two Count',u:'1-2s · 60s',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:8},
+ wallstreak:{l:'Wall-Pass Streak',u:'best streak',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:4},
+ gate12:{l:'Through-Gate 1-2',u:'of 10',sp:'PAS',dir:1,gs:1,us:1,dp:0,max:10,start:3},
+ rondostreak:{l:'Rondo Streak',u:'best streak',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:4},
+ beforeloss:{l:'Passes Before Loss',u:'passes',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:6},
+ splitpass:{l:'Split Passes',u:'through the middle',sp:'PAS',dir:1,gs:1,us:1,dp:0,start:1},
+ halfturn:{l:'Half-Turn Count',u:'turns · 60s',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:8},
+ rtp:{l:'Receive-Turn-Pass',u:'seconds',sp:'PAS',dir:-1,gs:.5,us:.5,dp:1,start:8},
+ scan:{l:'Scan Score',u:'of 10',sp:'PAS',dir:1,gs:1.5,us:1,dp:0,max:10,smarts:true,start:3},
+ teamstreak:{l:'Team Keep-Ball Streak',u:'best streak',sp:'PAS',dir:1,gs:2,us:1,dp:0,start:5},
+ support:{l:'Support-Angle Receives',u:'receives',sp:'PAS',dir:1,gs:1,us:1,dp:0,start:2},
+ switchplay:{l:'Switch-of-Play Count',u:'switches',sp:'PAS',dir:1,gs:1,us:1,dp:0,start:1},
+ finish:{l:'Finish Ten',u:'of 10',sp:'SHO',dir:1,gs:2,us:1,dp:0,max:10,start:4},
+ finishwf:{l:'Weak-Foot Finish',u:'of 10',sp:'SHO',dir:1,gs:1,us:1,dp:0,max:10,start:2},
+ firsttime:{l:'First-Time Finish',u:'of 10',sp:'SHO',dir:1,gs:1,us:1,dp:0,max:10,start:2},
+ dash:{l:'20-yd Dash PB',u:'seconds · lower is better',sp:'PAC',dir:-1,gs:.3,us:.1,dp:1,start:6},
+ ddash:{l:'Dribble-Dash 20yd',u:'seconds · with the ball',sp:'PAC',dir:-1,gs:.3,us:.1,dp:1,start:8},
+ ladder:{l:'SAQ-Ladder Clean Reps',u:'clean reps',sp:'PHY',dir:1,gs:2,us:1,dp:0,start:6},
+ jockey:{l:'Jockey Clock',u:'seconds · longer is better',sp:'DEF',dir:1,gs:1.5,us:.5,dp:1,max:10,start:3,hint:'patience PB · cap 10s'},
+ poke:{l:'Poke-Steal',u:'of 10 · no foul',sp:'DEF',dir:1,gs:1,us:1,dp:0,max:10,start:2},
+ keeper:{l:"Keeper's Ten",u:'of 10 · W-catch',sp:'SHO',dir:1,gs:2,us:1,dp:0,max:10,start:4},
+ scoop:{l:'Scoop-and-Roll',u:'of 10',sp:'SHO',dir:1,gs:1,us:1,dp:0,max:10,start:4},
+ reaction:{l:'Reaction Saves',u:'saves',sp:'SHO',dir:1,gs:1,us:1,dp:0,start:2},
+ rules:{l:'Rules Five',u:'of 5 · unprompted',sp:null,dir:1,gs:1,us:1,dp:0,max:5,smarts:true,start:1},
+ fairplay:{l:'Fair-Play Acts',u:'acts',sp:null,dir:1,gs:1,us:1,dp:0,start:1},
+ festival:{l:'Festival Involvement',u:'touches on the game',sp:null,dir:1,gs:1,us:1,dp:0,start:2}
+};
+
+var WEEKS={
+ A:{academy:'AJAX',name:'Me & the Ball',focus:'Technique & creativity',crest:'A'},
+ B:{academy:'LA MASIA',name:'Me, the Ball & a Friend',focus:'Position & passing',crest:'B'},
+ C:{academy:'BENFICA',name:'Playing the Game',focus:'Athlete, finish & compete',crest:'C'}
+};
+var INTENSITY={Mon:['ease-in','int-easein'],Tue:['build','int-build'],Wed:['peak','int-peak'],Thu:['recover','int-recover'],Fri:['light','int-light']};
+var DOWS=['Mon','Tue','Wed','Thu','Fri'];
+
+var DAYS=[
+ {id:'D1',week:'A',dow:'Mon',title:'Ball-mastery basics',family:'Dribbling',spokes:['DRI'],
+  warm:'Ball each, free dribble anywhere. On <b>“FREEZE!”</b> — stop it dead with the sole. Word of the day: <b>“Both feet.”</b>',
+  ind:'In your box: <b>sole rolls, toe taps, tick-tocks</b> (side-to-side) — both feet. Count your touches out loud.',
+  grp:'<b>King of the Ring</b> — shield your ball, knock the others out. Last ball in wins the crown.',
+  hud:'“Which surface felt best on your <b>weaker foot</b>?”',
+  aInd:'toetaps',aGrp:'king',
+  measures:['touch','toetap','fig8']},
+ {id:'D2',week:'A',dow:'Tue',title:'Dribbling & change of direction',family:'Dribbling',spokes:['DRI'],
+  warm:'<b>Traffic</b> — dribble in the grid without bumping; on “freeze”, <b>turn away</b> (Cruyff or drag-back).',
+  ind:'<b>Through the gates</b> — most gates in 60s, no gate twice. Round 2 is <b>weak-foot only</b>.',
+  grp:'<b>Sharks &amp; Minnows</b>, then 1v1 to gates — beat your defender with a change of direction.',
+  hud:'“How did you find space — or beat someone with a turn?”',
+  aInd:'gates',aGrp:'sharks',
+  measures:['gate','gatewf','slalom']},
+ {id:'D3',week:'A',dow:'Wed',title:'1v1 & the body feint',family:'Dribbling · 1v1',spokes:['DRI'],
+  warm:'Free dribble; practise the <b>body feint</b> — drop the shoulder, sell it BIG.',
+  ind:'<b>Body feint → explode past</b> a cone, then a passive defender. Both sides.',
+  grp:'<b>1v1 to four goals</b> — try a move EVERY turn. No penalty for a miss, ever.',
+  hud:'“Did the defender buy your fake?”',
+  aInd:'feint',aGrp:'fourgoals',
+  measures:['beatdef','gauntlet'],
+  braveLbl:'Brave 1v1 moves tried — a failed move still counts',braveBig:true},
+ {id:'D4',week:'A',dow:'Thu',title:'First touch into dribble',family:'Dribbling · receiving',spokes:['DRI'],
+  warm:'Pairs, one ball — gentle rolls; <b>cushion</b> it soft and stop it.',
+  ind:'Receive the roll, first touch <b>OUT of your feet into space</b>, then dribble to the cone. Check your shoulders first.',
+  grp:'<b>2v2 tiny game</b> — a great first touch earns a bonus point.',
+  hud:'“Where did your first touch go — into space, or stuck under you?”',
+  aInd:'firsttouch',aGrp:'ssg22',
+  measures:['cushion','walltouch','trapgo']},
+ {id:'D5',week:'A',dow:'Fri',title:'Creativity & skill-move showcase',family:'Dribbling · creativity',spokes:['DRI'],checkpoint:true,
+  warm:'Free stage — <b>show your favourite move</b>.',
+  ind:'<b>Invent-a-move</b> station + trick menu: sole roll, cut, feint, Cruyff, <b>your move</b>. Child’s choice.',
+  grp:'Mini <b>festival</b> — just play. Shout out every brave try.',
+  hud:'“Name your move. What will you show next week?”',
+  aInd:'cruyff',aGrp:'ssg44',
+  measures:['trickmenu','juggle','mymoveshow'],
+  braveLbl:'My-Move attempts — every time they dared it in the game',braveBig:true},
+ {id:'D6',week:'B',dow:'Mon',title:'Inside-foot passing',family:'Passing',spokes:['PAS'],
+  warm:'<b>3v1 rondo</b> — keepers pass, middle chases. Everyone rotates.',
+  ind:'<b>Inside-foot pass</b> to a partner through a gate — weight it “just right”. Both feet; two-touch, then one-touch.',
+  grp:'<b>Passing-gates game</b> — a point for every pass through a gate to a teammate.',
+  hud:'“Was your pass too soft, too hard, or just right?”',
+  aWarm:'rondo3',aInd:'insidepass',aGrp:'passgates',
+  measures:['pass','targethit','passwf']},
+ {id:'D7',week:'B',dow:'Tue',title:'Give-and-go (1-2)',family:'Passing',spokes:['PAS'],
+  warm:'<b>4v1 rondo</b>.',
+  ind:'<b>Give-and-go</b> around the cone defender — pass, MOVE, get it back.',
+  grp:'<b>2v2 to a target</b> — a 1-2 that beats a defender counts double.',
+  hud:'“What did you do right after you passed? (Move!)”',
+  aWarm:'rondo4',aInd:'gag',aGrp:'ssg22',
+  measures:['onetwo','wallstreak','gate12']},
+ {id:'D8',week:'B',dow:'Wed',title:'Rondo — keep the ball',family:'Passing',spokes:['PAS'],
+  warm:'Free tick-tocks, then quick-passing pairs — fast feet, fast eyes.',
+  ind:'<b>3v1 rondo</b> — pass and support, one-touch when you’re ready. Rotate the middle.',
+  grp:'<b>4v4 keep-ball</b> — 4 passes in a row = a point.',
+  hud:'“How did you keep the ball away from the defender?”',
+  aInd:'rondo3',aGrp:'ssg44',
+  measures:['rondostreak','beforeloss','splitpass']},
+ {id:'D9',week:'B',dow:'Thu',title:'Receive on the half-turn + scanning',family:'Passing · receiving',spokes:['PAS'],
+  warm:'<b>“Scan when you can”</b> — look over both shoulders before every receive.',
+  ind:'<b>Receive on the half-turn</b> to play forward. Coach flashes a number behind you — call it before your touch.',
+  grp:'<b>4v2 keep-ball</b> — turn and find the free player.',
+  hud:'“What did you SEE before the ball came?”',
+  aWarm:'look',aInd:'halfturn',aGrp:'rondo42',
+  measures:['halfturn','rtp','scan']},
+ {id:'D10',week:'B',dow:'Fri',title:'Positional keep-ball / find space',family:'Passing',spokes:['PAS'],checkpoint:true,
+  warm:'<b>Positional rondo</b> — hold your zone; coach as game-leader.',
+  ind:'<b>Find the free player</b> — 3v1 / 4v2; move to a passing angle, then switch the play.',
+  grp:'<b>4v4 to two goals</b> — spreading out beats clumping.',
+  hud:'“Where was the space — near friends, or away from them?”',
+  aWarm:'rondo4',aInd:'rondo42',aGrp:'ssg44',
+  measures:['teamstreak','support','switchplay']},
+ {id:'D11',week:'C',dow:'Mon',title:'Finishing — placement, both feet',family:'Finishing',spokes:['SHO'],
+  warm:'Dribble &amp; shoot at the mini-goals — pick your corner early.',
+  ind:'<b>Finish Ten</b> — side-foot placement up close, then laces with a run-up. Both feet. <b>Placement beats power.</b>',
+  grp:'Pass → <b>1-2 → finish</b>, then a small game. Celebrate composed finishes.',
+  hud:'“Which corner did you pick — and why?”',
+  aInd:'strike',aGrp:'gag',
+  measures:['finish','finishwf','firsttime']},
+ {id:'D12',week:'C',dow:'Tue',title:'Speed & agility with the ball',family:'Speed & agility',spokes:['PAC','PHY'],
+  warm:'Traffic dribble, building speed — <b>head up</b>.',
+  ind:'<b>Dribble-dash</b> — 20 yards with the ball, then the <b>SAQ ladder</b>: quick, clean steps.',
+  grp:'Relay races &amp; Sharks — fast feet, big smiles.',
+  hud:'“What felt faster today — you, or the ball?”',
+  aInd:'dashrun',aGrp:'sharks',
+  measures:['dash','ddash','ladder'],
+  note:'Monthly fun-PB — maturation-guarded (LTAD): log it playful, off the daily flow, about once a month. Legs grow on biology’s clock.'},
+ {id:'D13',week:'C',dow:'Wed',title:'Defending 1v1 — jockey & win',family:'Defending',spokes:['DEF'],
+  warm:'<b>Shadow your partner</b> — mirror their moves, stay on your toes.',
+  ind:'<b>Jockey</b> — slow them down, don’t dive in. When the ball pops loose: <b>POKE</b>. Stay goal-side.',
+  grp:'Small game — loudest cheers for <b>patient defending</b> and win-backs.',
+  hud:'“Why not dive in straight away?”',
+  aInd:'jockeya',aGrp:'ssg44',
+  measures:['jockey','poke'],
+  braveLbl:'Patient win-backs — jockey, wait, win it (process, not outcome)',braveBig:true},
+ {id:'D14',week:'C',dow:'Thu',title:'Goalkeeping taster — “Safe Hands”',family:'Goalkeeping',spokes:['SHO'],
+  warm:'<b>Circle Catch</b> — roll &amp; catch in pairs. Soft <b>“W” hands</b>.',
+  ind:'<b>Ready position</b> → scoop the roller → roll or throw it out. Everyone has a go in goal.',
+  grp:'Small game <b>with</b> a keeper — rotate the gloves often.',
+  hud:'“What’s tricky about being the keeper?”',
+  aWarm:'circlecatch',aInd:'circlecatch',aGrp:'ssg44',
+  measures:['keeper','scoop','reaction']},
+ {id:'D15',week:'C',dow:'Fri',title:'Festival, compete & rules',family:'Game Ready',spokes:[],checkpoint:true,
+  warm:'Free game; coach pauses to name <b>in / out of play</b>.',
+  ind:'Restarts by doing: <b>throw-in</b> (both hands, over the head), goal kick, corner. “Which goal is ours?”',
+  grp:'<b>FESTIVAL</b> — coach referees as a game-leader. Just play. <b>No standings, ever.</b>',
+  hud:'“Everyone names one thing they’re proud of.”',
+  aInd:'throwin',aGrp:'ssg44',
+  measures:['rules','fairplay','festival'],
+  note:'Celebrated, never ranked. The festival is uncounted against anyone — these marks only chase the kid’s own best.'}
+];
+function dayById(id){for(var i=0;i<DAYS.length;i++)if(DAYS[i].id===id)return DAYS[i];return null;}
+
+/* =============== lion config =============== */
+var FULL=195, TIER_MAX=24;
+var THR=[]; for(var ti=0;ti<TIER_MAX;ti++)THR.push(Math.round(ti*FULL/(TIER_MAX-1)));
+var ANCHORS=['newborn','curious','playful','tuft','halfmane','fullmane'];
+var MIDDLE=['boots','bracers','chainmail','chestplate','pauldrons','helmet','crown','macetail','fangs','scars','gloweyes','ember','firebreath','roarflame','flamemane','banner','aura'];
+var FINAL='greatlion';
+var TIER_INFO={
+ newborn:'Newborn Cub',curious:'Curious Cub',playful:'Playful Cub',tuft:'First Mane Tuft',
+ halfmane:'Half-Mane',fullmane:'Full-Maned Young Lion',boots:'Leather Boots',bracers:'Bracers & Greaves',
+ chainmail:'Chain Mail',chestplate:'Chest Plate',pauldrons:'Pauldrons',helmet:'War Helmet',crown:'Crown',
+ macetail:'Spiked Mace-Tail',fangs:'Saber Fangs',scars:'Battle-Scarred',gloweyes:'Glowing Eyes',
+ ember:'Ember Smoke',firebreath:'Fire Breath',roarflame:'Roaring Flame',flamemane:'Flaming Mane',
+ banner:'War-Banner',aura:'Legendary Aura',greatlion:'GREAT ARMORED FIRE-LION'};
+function tierSeq(seed){var m=MIDDLE.slice(),r=mulberry(seed),i,j,t;
+ for(i=m.length-1;i>0;i--){j=Math.floor(r()*(i+1));t=m[i];m[i]=m[j];m[j]=t;}
+ return ANCHORS.concat(m,[FINAL]);}
+function tierOf(pts){var t=1;for(var i=1;i<TIER_MAX;i++)if(pts>=THR[i])t=i+1;return t;}
+
+/* =============== state =============== */
+var S=null;
+var UI={week:'A',openDay:null,prPlayer:'jack',staged:{},openHist:{},editDay:null,pendingPhoto:null};
+var FXQ=[];
+
+function defaultDrills(){return {};}
+function seedState(){
+ var r=mulberry(424242);
+ function att(p){ /* deterministic seeded attendance for a frozen grid */
+  var o={};for(var d=0;d<15;d++){var arr=[];for(var s=0;s<3;s++){arr.push(r()< (p==='jack'?.94:.88) ?1:0);}o['D'+(d+1)]=arr;}return o;}
+ function awardsFor(attMap){var o={};for(var k in attMap){var a=attMap[k],w={};for(var s=0;s<3;s++)if(a[s])w['s'+s]=1;
+  if(a[0]&&a[1]&&a[2])w.day=1;o[k]=w;}return o;}
+ var g1a={jack:att('jack'),blue:att('blue')},g2a={jack:att('jack'),blue:att('blue')};
+ var act={jack:{},blue:{}};
+ var base={jack:{D1:[1,1,1],D2:[1,1,1],D3:[1,1,1],D4:[1,0,1],D5:[1,1,1],D6:[1,1,1],D7:[1,1,1],D8:[1,0,0]},
+           blue:{D1:[1,1,1],D2:[1,1,0],D3:[1,1,1],D4:[1,1,1],D5:[0,1,1],D6:[1,1,1],D7:[1,1,0],D8:[0,0,0]}};
+ ['jack','blue'].forEach(function(p){for(var d=1;d<=15;d++){var k='D'+d;act[p][k]=(base[p][k]||[0,0,0]).slice();}});
+ return {
+  v:1,
+  players:[
+   {id:'jack',name:'Jack',seed:811723,photo:null},
+   {id:'blue',name:'Blue',seed:240311,photo:null}
+  ],
+  card:{
+   jack:{spokes:{PAC:22,SHO:30,PAS:34,DRI:52,DEF:26,PHY:24},
+     prs:{touch:34,toetap:41,fig8:9,gate:12,gatewf:8,slalom:14.5,beatdef:6,gauntlet:18.5,cushion:21,walltouch:26,trapgo:6.5,
+          trickmenu:3,juggle:11,mymoveshow:2,pass:24,targethit:7,passwf:16,onetwo:14,wallstreak:9,gate12:6,rondostreak:8,
+          beforeloss:11,splitpass:2,halfturn:15,rtp:4.5,scan:6,teamstreak:10,support:5,switchplay:2,finish:6,finishwf:4,
+          firsttime:3,dash:4.9,ddash:6.8,ladder:12,jockey:6.5,poke:5,keeper:6,scoop:7,reaction:4,rules:3,fairplay:4,festival:5},
+     roarPts:74,braveTotal:58,prBeats:19,smarts:{scan:6,rules:3}},
+   blue:{spokes:{PAC:26,SHO:24,PAS:49,DRI:38,DEF:31,PHY:27},
+     prs:{touch:29,toetap:35,fig8:7,gate:10,gatewf:7,slalom:15.5,beatdef:5,gauntlet:20,cushion:18,walltouch:22,trapgo:7.5,
+          trickmenu:2,juggle:7,mymoveshow:3,pass:27,targethit:8,passwf:19,onetwo:17,wallstreak:12,gate12:7,rondostreak:11,
+          beforeloss:14,splitpass:3,halfturn:18,rtp:3.5,scan:8,teamstreak:12,support:7,switchplay:3,finish:5,finishwf:3,
+          firsttime:2,dash:5.1,ddash:7.2,ladder:10,jockey:7.5,poke:4,keeper:5,scoop:6,reaction:3,rules:4,fairplay:6,festival:6},
+     roarPts:69,braveTotal:41,prBeats:14,smarts:{scan:8,rules:4}}
+  },
+  grids:[
+   {id:'g1',cycle:1,label:'Cycle 1',createdAt:'2026-05-25',frozen:true,attendance:g1a,
+    brave:{jack:{D3:5,D5:4,D13:3},blue:{D3:3,D5:6,D13:2}},awards:{jack:awardsFor(g1a.jack),blue:awardsFor(g1a.blue)}},
+   {id:'g2',cycle:2,label:'Cycle 2',createdAt:'2026-06-15',frozen:true,attendance:g2a,
+    brave:{jack:{D3:7,D5:3,D8:4},blue:{D3:4,D5:5,D8:3}},awards:{jack:awardsFor(g2a.jack),blue:awardsFor(g2a.blue)}},
+   {id:'g3',cycle:3,label:'Cycle 3',createdAt:'2026-07-06',frozen:false,attendance:act,
+    brave:{jack:{D3:6,D5:3,D8:2},blue:{D3:4,D5:5}},awards:{jack:awardsFor(act.jack),blue:awardsFor(act.blue)}}
+  ],
+  activeGridId:'g3',
+  drillEdits:defaultDrills(),
+  settings:{soundOn:false,theme:null,compare:false,solo:'jack'}
+ };
+}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
+function load(){try{var s=localStorage.getItem(LS_KEY);if(!s)return null;var o=JSON.parse(s);if(o&&o.v===1&&o.players&&o.card&&o.grids)return o;}catch(e){}return null;}
+function activeGrid(){for(var i=0;i<S.grids.length;i++)if(S.grids[i].id===S.activeGridId)return S.grids[i];return S.grids[S.grids.length-1];}
+function playerById(id){for(var i=0;i<S.players.length;i++)if(S.players[i].id===id)return S.players[i];return S.players[0];}
+
+/* live week/day from the active grid's start Monday */
+function liveInfo(){
+ var g=activeGrid(),start=new Date(g.createdAt+'T00:00:00'),now=new Date();
+ var days=Math.floor((now-start)/86400000); if(days<0)days=0;
+ var wk=Math.floor(days/7)%3;
+ var dow=(now.getDay()+6)%7; // Mon=0
+ var dayId=null;
+ if(dow<5)dayId='D'+(wk*5+dow+1);
+ return {week:['A','B','C'][wk],dayId:dayId};
+}
+
+/* =============== growth engine (monotone) =============== */
+function nudgeSpoke(p,sp,amt){var c=S.card[p],v=c.spokes[sp]||0;c.spokes[sp]=clamp(v+amt*(1-v/100),0,100);}
+function awardSession(p,dayId){ // small nudge per attended session — idempotent via grid.awards
+ var day=dayById(dayId);
+ if(day.spokes.length===0){SPOKES.forEach(function(sp){nudgeSpoke(p,sp,.15);});return;}
+ day.spokes.forEach(function(sp){nudgeSpoke(p,sp,NUDGE[sp]);});
+}
+function prJump(p,mkey,imp){
+ var m=M[mkey]; if(!m.sp)return;
+ var f=clamp(Math.abs(imp)/m.gs,.5,2);
+ nudgeSpoke(p,m.sp,JUMP[m.sp]*f);
+}
+function addRoarPts(p,amt,why){
+ var c=S.card[p],before=tierOf(c.roarPts);
+ c.roarPts=+(c.roarPts+amt).toFixed(2);
+ var after=tierOf(c.roarPts);
+ if(after>before){
+  var seq=tierSeq(playerById(p).seed),feat=seq[after-1];
+  FXQ.push({t:'tierup',p:p,name:TIER_INFO[feat]||feat});
+ }
+}
+
+/* z-scores → superpower / next quest */
+function shape(p){
+ var c=S.card[p],vals=SPOKES.map(function(s){return c.spokes[s]||0;});
+ var mean=vals.reduce(function(a,b){return a+b;},0)/6;
+ var sd=Math.sqrt(vals.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/6)||1e-6;
+ var best=SPOKES[0],bz=-1e9,tech=['SHO','PAS','DRI','DEF'],quest=tech[0],qv=1e9;
+ SPOKES.forEach(function(s,i){var z=(vals[i]-mean)/sd;if(z>bz){bz=z;best=s;}});
+ tech.forEach(function(s){var v=c.spokes[s]||0;if(v<qv){qv=v;quest=s;}});
+ return {superpower:best,quest:quest};
+}
+function journey(p){
+ var c=S.card[p];
+ if(c.prBeats>=30&&c.braveTotal>=50)return 'gold';
+ if(c.prBeats>=12&&c.braveTotal>=15)return 'silver';
+ return 'bronze';
+}
+
+/* =============== SVG builders =============== */
+function crestSVG(w,cls){
+ var inner;
+ if(w==='A')inner='<path d="M8 6 L20 40 L32 6" stroke="#fff" stroke-width="7" fill="none"/>';
+ else if(w==='B')inner='<rect x="4" y="4" width="16" height="38" fill="#A0123E"/><rect x="20" y="4" width="16" height="38" fill="#12428E"/><circle cx="20" cy="21" r="6" fill="#F5B62C"/>';
+ else inner='<circle cx="20" cy="19" r="9" fill="#fff"/><path d="M20 13 l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="#E63329"/>';
+ var base=w==='A'?'#E4322B':(w==='B'?'#A0123E':'#E63329');
+ return '<svg class="'+(cls||'crest')+'" viewBox="0 0 40 46" aria-hidden="true">'+
+  '<path d="M20 1 L38 7 V24 C38 35 30 41.5 20 45 C10 41.5 2 35 2 24 V7 Z" fill="'+base+'" stroke="#8C5E07" stroke-width="1.6"/>'+
+  '<g clip-path="url(#none)">'+inner+'</g></svg>';
+}
+function hexSVG(spokes){
+ var cx=110,cy=100,R=76,i,a,pts=[],axes='',rings='',labels='';
+ function pt(frac,rr){var x=cx+Math.cos(a)*rr*frac,y=cy+Math.sin(a)*rr*frac;return x.toFixed(1)+','+y.toFixed(1);}
+ [.25,.5,.75,1].forEach(function(f){var p=[];for(i=0;i<6;i++){a=(-90+i*60)*Math.PI/180;p.push(pt(f,R));}
+  rings+='<polygon points="'+p.join(' ')+'" fill="none" stroke="rgba(238,242,255,.14)" stroke-width="1"/>';});
+ for(i=0;i<6;i++){a=(-90+i*60)*Math.PI/180;
+  axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a)*R).toFixed(1)+'" y2="'+(cy+Math.sin(a)*R).toFixed(1)+'" stroke="rgba(238,242,255,.14)" stroke-width="1"/>';
+  var lx=cx+Math.cos(a)*(R+18),ly=cy+Math.sin(a)*(R+15)+4;
+  labels+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" font-size="12" font-weight="800" letter-spacing="1.5" fill="#C8CFE8">'+SPOKES[i]+'</text>';
+  var f=.08+.92*clamp((spokes[SPOKES[i]]||0)/100,0,1);
+  pts.push(pt(f,R));
+ }
+ var tips='';for(i=0;i<6;i++){var xy=pts[i].split(',');tips+='<circle cx="'+xy[0]+'" cy="'+xy[1]+'" r="3.4" fill="#F5B62C"/>';}
+ return '<svg viewBox="0 0 220 205" role="img" aria-label="Skill hexagon — spoke lengths only, no numbers">'+
+  rings+axes+
+  '<polygon points="'+pts.join(' ')+'" fill="rgba(245,182,44,.42)" stroke="#F5B62C" stroke-width="2.5" stroke-linejoin="round"/>'+
+  tips+labels+'</svg>';
+}
+function manePath(cx,cy,rIn,rOut,n,arcStart,arcEnd){
+ var d='',i,step=(arcEnd-arcStart)/n;
+ for(i=0;i<n;i++){
+  var a1=(arcStart+i*step)*Math.PI/180,a2=(arcStart+(i+.5)*step)*Math.PI/180,a3=(arcStart+(i+1)*step)*Math.PI/180;
+  var x1=cx+Math.cos(a1)*rIn,y1=cy+Math.sin(a1)*rIn,
+      x2=cx+Math.cos(a2)*rOut,y2=cy+Math.sin(a2)*rOut,
+      x3=cx+Math.cos(a3)*rIn,y3=cy+Math.sin(a3)*rIn;
+  d+=(i===0?'M':'L')+x1.toFixed(1)+','+y1.toFixed(1)+' L'+x2.toFixed(1)+','+y2.toFixed(1)+' L'+x3.toFixed(1)+','+y3.toFixed(1)+' ';
+ }
+ return d+'Z';
+}
+function flame(cx,cy,w,h,cls,fill){
+ return '<path class="'+(cls||'')+'" fill="'+fill+'" d="M'+cx+','+cy+' C'+(cx-w*.55)+','+(cy-h*.25)+' '+(cx-w*.28)+','+(cy-h*.62)+' '+cx+','+(cy-h)+
+  ' C'+(cx+w*.28)+','+(cy-h*.62)+' '+(cx+w*.55)+','+(cy-h*.25)+' '+cx+','+cy+' Z"/>';
+}
+function lionSVG(pid){
+ var pl=playerById(pid),c=S.card[pid];
+ var pts=c.roarPts,g=clamp(pts/FULL,0,1),tier=tierOf(pts);
+ var seq=tierSeq(pl.seed),feats={};seq.slice(0,tier).forEach(function(f){feats[f]=1;});
+ var great=!!feats.greatlion;
+ var scl=(0.60+0.40*g)*(great?1.04:1);
+ var headScl=1.22-0.24*g;                 /* cubs have big heads */
+ var muscle=1+0.45*g+(feats.scars?0.08:0)+(great?0.06:0);
+ var maneStage=feats.fullmane?3:(feats.halfmane?2:(feats.tuft?1:0));
+ var maneR=[0,30,36,42][maneStage]*(0.82+0.18*g);
+ var u=pid; /* id suffix */
+ var BODY='url(#bodyg-'+u+')',OUT='#5C3D0A',MANE=feats.flamemane?('url(#flameg-'+u+')'):'#A65E0B';
+ var s='';
+ /* defs */
+ s+='<defs>'+
+  '<linearGradient id="bodyg-'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+   '<stop offset="0" stop-color="'+(great?'#FFD34D':'#F5B62C')+'"/><stop offset="1" stop-color="#D99A0F"/></linearGradient>'+
+  '<linearGradient id="flameg-'+u+'" x1="0" y1="1" x2="0" y2="0">'+
+   '<stop offset="0" stop-color="#FF5B49"/><stop offset=".55" stop-color="#F5B62C"/><stop offset="1" stop-color="#FFE9A8"/></linearGradient>'+
+  '<radialGradient id="aurag-'+u+'"><stop offset="0" stop-color="rgba(245,182,44,.55)"/><stop offset="1" stop-color="rgba(245,182,44,0)"/></radialGradient>'+
+  '<pattern id="chainp-'+u+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
+   '<rect width="7" height="7" fill="rgba(85,97,138,.55)"/><circle cx="3.5" cy="3.5" r="2.2" fill="none" stroke="#C9D2EA" stroke-width="1"/></pattern>'+
+ '</defs>';
+ /* aura behind everything */
+ if(feats.aura)s+='<circle class="aurap" cx="120" cy="118" r="'+(great?102:92)+'" fill="url(#aurag-'+u+')"/>';
+ s+='<ellipse cx="120" cy="186" rx="'+(58+26*g)+'" ry="7" fill="rgba(16,27,59,.18)"/>';
+ /* rig scaled about bottom-center */
+ s+='<g transform="translate(120,184) scale('+scl.toFixed(3)+') translate(-120,-184)">';
+ /* war banner (behind body) */
+ if(feats.banner)s+='<g><line x1="152" y1="92" x2="152" y2="20" stroke="'+OUT+'" stroke-width="3.4"/>'+
+  '<path d="M152,22 L200,30 L176,39 L200,48 L152,56 Z" fill="#F5B62C" stroke="#8C5E07" stroke-width="1.6"/>'+
+  '<circle cx="168" cy="38" r="4.6" fill="#101B3B"/></g>';
+ /* roaring flame aura hugging the back */
+ if(feats.roarflame){
+  s+=flame(78,96,16,26,'flick','rgba(255,91,73,.55)')+flame(104,84,18,30,'flick','rgba(245,182,44,.5)')+
+     flame(136,80,18,32,'flick','rgba(255,91,73,.5)')+flame(168,88,16,26,'flick','rgba(245,182,44,.5)')+
+     flame(192,102,14,22,'flick','rgba(255,91,73,.45)');
+ }
+ /* tail */
+ if(feats.macetail){
+  s+='<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="'+OUT+'" stroke-width="7" stroke-linecap="round"/>'+
+   '<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="#D99A0F" stroke-width="4" stroke-linecap="round"/>'+
+   '<g><circle cx="210" cy="62" r="9" fill="#55618A" stroke="#101B3B" stroke-width="1.6"/>'+
+   '<path d="M210,49 l2.6,7 h-5.2Z M223,62 l-7,2.6 v-5.2Z M197,62 l7,2.6 v-5.2Z M219,52 l-2,6.4 -4.4,-3.6Z M201,52 l2,6.4 4.4,-3.6Z" fill="#55618A"/></g>';
+ }else{
+  s+='<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="'+OUT+'" stroke-width="7" stroke-linecap="round"/>'+
+   '<path d="M176,118 C206,112 218,92 210,68" fill="none" stroke="#D99A0F" stroke-width="4" stroke-linecap="round"/>'+
+   '<circle cx="210" cy="63" r="'+(5+3*g)+'" fill="#A65E0B"/>';
+ }
+ /* far legs */
+ s+='<rect x="162" y="136" width="12" height="44" rx="5.5" fill="#C9940D"/>'+
+    '<rect x="96" y="136" width="12" height="44" rx="5.5" fill="#C9940D"/>';
+ /* body */
+ s+='<path d="M82,126 C82,100 108,88 138,88 C166,88 192,100 194,126 C195,146 184,162 160,164 L112,164 C92,162 82,146 82,126 Z" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2.4"/>';
+ /* chest muscle */
+ s+='<ellipse cx="96" cy="124" rx="'+(15*muscle).toFixed(1)+'" ry="24" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>';
+ /* cub spots */
+ if(tier<=3)s+='<g fill="#A65E0B" opacity=".38"><circle cx="130" cy="112" r="4"/><circle cx="150" cy="124" r="3.4"/><circle cx="138" cy="140" r="3.8"/><circle cx="166" cy="112" r="3"/><circle cx="118" cy="132" r="3"/></g>';
+ /* scars */
+ if(feats.scars)s+='<g stroke="#7A4C10" stroke-width="2.4" stroke-linecap="round"><path d="M158,108 l12,14 M166,106 l-4,18"/><path d="M126,124 l10,10"/></g>';
+ /* chain mail over torso */
+ if(feats.chainmail)s+='<path d="M96,102 C112,92 164,92 182,104 C190,116 190,138 182,150 C160,158 118,158 102,150 C94,136 92,116 96,102 Z" fill="url(#chainp-'+u+')" stroke="#38466F" stroke-width="1.6" opacity=".92"/>';
+ /* near legs */
+ s+='<rect x="150" y="140" width="13" height="42" rx="6" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>'+
+    '<rect x="84" y="140" width="13" height="42" rx="6" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2"/>';
+ /* paws */
+ s+='<ellipse cx="90" cy="181" rx="10" ry="5.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
+    '<ellipse cx="157" cy="181" rx="10" ry="5.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
+    '<ellipse cx="103" cy="179" rx="8" ry="4.5" fill="#C9940D"/>'+
+    '<ellipse cx="169" cy="179" rx="8" ry="4.5" fill="#C9940D"/>';
+ /* bracers (front-leg bands) */
+ if(feats.bracers)s+='<rect x="82" y="148" width="17" height="11" rx="3" fill="#8FA2C6" stroke="#38466F" stroke-width="1.4"/>'+
+  '<rect x="94" y="146" width="16" height="10" rx="3" fill="#8FA2C6" stroke="#38466F" stroke-width="1.4" opacity=".85"/>';
+ /* boots */
+ if(feats.boots)s+='<g stroke="#5C2318" stroke-width="1.6">'+
+  '<path d="M81,166 h19 v12 a5,5 0 0 1 -5,5 h-9 a5,5 0 0 1 -5,-5 Z" fill="#8A4030"/>'+
+  '<path d="M148,166 h17 v12 a5,5 0 0 1 -5,5 h-7 a5,5 0 0 1 -5,-5 Z" fill="#8A4030"/>'+
+  '<path d="M95,164 h15 v11 a4,4 0 0 1 -4,4 h-7 a4,4 0 0 1 -4,-4 Z" fill="#7A3226" opacity=".9"/>'+
+  '<path d="M161,164 h14 v11 a4,4 0 0 1 -4,4 h-6 a4,4 0 0 1 -4,-4 Z" fill="#7A3226" opacity=".9"/>'+
+  '<path d="M81,169 h19 M148,169 h17" stroke="#F5B62C" stroke-width="2"/></g>';
+ /* chest plate */
+ if(feats.chestplate)s+='<path d="M80,106 C74,122 76,142 88,156 C100,152 108,136 106,116 C100,104 88,102 80,106 Z" fill="url(#bodyg-'+u+')" stroke="#8C5E07" stroke-width="2.6"/>'+
+  '<g fill="#8C5E07"><circle cx="88" cy="116" r="1.8"/><circle cx="94" cy="128" r="1.8"/><circle cx="90" cy="142" r="1.8"/></g>';
+ /* pauldrons */
+ if(feats.pauldrons)s+='<circle cx="158" cy="98" r="11" fill="#D99A0F" stroke="#8C5E07" stroke-width="2" opacity=".9"/>'+
+  '<circle cx="106" cy="100" r="14" fill="#F5B62C" stroke="#8C5E07" stroke-width="2.4"/>'+
+  '<circle cx="106" cy="100" r="6" fill="none" stroke="#8C5E07" stroke-width="1.6"/>';
+ /* ember smoke rising from the mane */
+ if(feats.ember)s+='<g><circle class="emberp" cx="58" cy="56" r="2.6" fill="#FF5B49"/>'+
+  '<circle class="emberp" style="animation-delay:.7s" cx="74" cy="46" r="2.2" fill="#F5B62C"/>'+
+  '<circle class="emberp" style="animation-delay:1.3s" cx="88" cy="54" r="1.8" fill="#FF5B49"/>'+
+  '<circle class="emberp" style="animation-delay:1.9s" cx="66" cy="42" r="1.6" fill="#F5B62C"/></g>';
+ /* ---- head group ---- */
+ s+='<g transform="translate(70,86) scale('+headScl.toFixed(3)+')">';
+ /* mane behind head */
+ if(maneStage===1)s+='<path d="'+manePath(0,0,20,32,5,-150,-30)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>';
+ if(maneStage===2)s+='<path d="'+manePath(0,0,21,Math.max(30,maneR),9,-200,20)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>';
+ if(maneStage===3)s+='<path class="'+(feats.flamemane?'flick':'')+'" d="'+manePath(0,0,21,maneR+4,12,0,360)+'" fill="'+MANE+'" stroke="'+OUT+'" stroke-width="1.6"/>'+
+   '<path d="'+manePath(0,0,20,maneR-6,10,0,360)+'" fill="'+(feats.flamemane?'url(#flameg-'+u+')':'#8C5E07')+'" opacity=".55"/>';
+ /* ear */
+ s+='<circle cx="13" cy="-17" r="6.5" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.8"/>';
+ /* head */
+ s+='<circle cx="0" cy="0" r="21" fill="'+BODY+'" stroke="'+OUT+'" stroke-width="2.2"/>';
+ /* muzzle (upper) */
+ s+='<path d="M-14,-1 C-25,-2 -30,4 -28,9 C-25,14 -14,15 -6,12 L-4,2 Z" fill="#F8CE6B" stroke="'+OUT+'" stroke-width="1.8"/>';
+ /* jaw (animates open on roar) */
+ s+='<g class="jaw" style="transform-box:fill-box;transform-origin:85% 15%;">'+
+  '<path d="M-26,11 C-22,19 -9,21 -3,16 L-5,10 C-12,13 -20,12 -26,11 Z" fill="#D99A0F" stroke="'+OUT+'" stroke-width="1.6"/>'+
+  '<path d="M-23,12 C-19,15 -12,16 -7,14" fill="none" stroke="#8A2A1E" stroke-width="1.8" stroke-linecap="round"/></g>';
+ /* fangs */
+ if(feats.fangs)s+='<path d="M-22,12 l1.6,10 3,-9Z" fill="#FFF6E3" stroke="'+OUT+'" stroke-width="1"/>'+
+  '<path d="M-13,14 l1.2,8 2.6,-7Z" fill="#FFF6E3" stroke="'+OUT+'" stroke-width="1"/>';
+ /* nose + eye */
+ s+='<circle cx="-27" cy="4" r="3" fill="#3A2A08"/>';
+ if(feats.gloweyes)s+='<circle cx="-7" cy="-7" r="6" fill="rgba(255,91,73,.4)"/><circle cx="-7" cy="-7" r="2.8" fill="#FF5B49"/><circle cx="-8" cy="-8" r="1" fill="#FFE9A8"/>';
+ else s+='<circle cx="-7" cy="-7" r="2.6" fill="#16203A"/><circle cx="-8" cy="-8" r=".9" fill="#fff"/>';
+ /* brow */
+ s+='<path d="M-13,-12 C-9,-14 -4,-14 -1,-12" fill="none" stroke="'+OUT+'" stroke-width="2" stroke-linecap="round"/>';
+ /* helmet & crown */
+ if(feats.helmet)s+='<path d="M-20,-7 A20.5,20.5 0 0 1 20,-7 L20,-3 L-20,-3 Z" fill="#D99A0F" stroke="#8C5E07" stroke-width="2"/>'+
+  '<path d="M0,-27 L0,-20" stroke="#8C5E07" stroke-width="3" stroke-linecap="round"/>'+
+  '<rect x="-24" y="-7" width="5" height="18" rx="2" fill="#D99A0F" stroke="#8C5E07" stroke-width="1.4"/>';
+ if(feats.crown)s+='<path d="M-11,'+(feats.helmet?-30:-24)+' l0,-8 5,4 6,-9 6,9 5,-4 0,8 Z" fill="#F5B62C" stroke="#8C5E07" stroke-width="1.6" transform="translate(0,'+(feats.helmet?0:2)+')"/>'+
+  '<circle cx="0" cy="'+(feats.helmet?-40:-34)+'" r="1.8" fill="#FF5B49"/>';
+ s+='</g>'; /* head */
+ /* fire breath from the mouth */
+ if(feats.firebreath)s+='<g class="breath" style="transform-box:fill-box;transform-origin:right center;opacity:.85">'+
+  '<path d="M40,98 C28,92 14,92 4,98 C12,100 12,102 6,105 C16,110 30,108 40,104 Z" fill="url(#flameg-'+u+')" stroke="#FF5B49" stroke-width="1"/></g>';
+ /* great-lion flair */
+ if(great)s+='<g fill="#FFE9A8"><path d="M46,40 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2Z"/><path d="M198,34 l1.6,4 4,1.6 -4,1.6 -1.6,4 -1.6,-4 -4,-1.6 4,-1.6Z"/><path d="M212,140 l1.4,3.6 3.6,1.4 -3.6,1.4 -1.4,3.6 -1.4,-3.6 -3.6,-1.4 3.6,-1.4Z"/></g>';
+ s+='</g>'; /* rig scale */
+ return '<svg class="rig" viewBox="0 0 240 200" role="img" aria-label="'+esc(playerById(pid).name)+'’s bravery lion, growing with roar-points">'+s+'</svg>';
+}
+
+/* =============== drill animation sketches (reused library) =============== */
+var USE_B='<use href="#ball"',USE_F='<use href="#foot"';
+var ANIMS={
+ toetaps:'<svg class="anim" viewBox="0 0 170 120" role="img" aria-label="Toe taps: the sole of each foot taps the top of the ball, alternating">'+USE_B+' transform="translate(85,86)"/><g transform="translate(67,50)"><g class="tt-lf">'+USE_F+' transform="scale(.88)"/></g></g><g transform="translate(103,50)"><g class="tt-rf">'+USE_F+' transform="scale(.88)"/></g></g></svg>',
+ king:'<svg class="anim" viewBox="0 0 180 140" role="img" aria-label="King of the Ring: everyone dribbles inside a circle; one ball gets knocked out"><circle cx="90" cy="66" r="52" class="f-field st-field" stroke-width="1.6" stroke-dasharray="5 5"/><g transform="translate(66,50)"><g class="kr-p1"><circle r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.5)"/></g></g><g transform="translate(112,72)"><g class="kr-p2"><circle r="5.5" class="f-player2"/>'+USE_B+' transform="translate(11,4) scale(.5)"/></g></g><g transform="translate(84,94)"><g class="kr-p3"><circle r="5.5" class="f-player3"/>'+USE_B+' transform="translate(-3,-12) scale(.5)"/></g></g><g transform="translate(96,62)"><g class="kr-out">'+USE_B+' transform="scale(.5)"/></g></g></svg>',
+ gates:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Through the gates: dribble through each cone gate"><path class="f-team" d="M70,44 l3,5.4 h-6 z"/><path class="f-team" d="M96,44 l3,5.4 h-6 z"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M84,92 V52"/><g transform="translate(84,86)"><g class="a-up"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.55)"/></g></g></svg>',
+ sharks:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Sharks and Minnows"><rect x="18" y="14" width="148" height="100" rx="9" class="st-zone" style="stroke-width:1.4"/><circle cx="60" cy="60" r="5.5" class="f-def"/><circle cx="104" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="74" y="18">sharks</text><g transform="translate(40,104)"><g class="a-up"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.52)"/></g></g><g transform="translate(90,104)"><g class="a-up" style="animation-delay:.5s"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.52)"/></g></g><g transform="translate(140,104)"><g class="a-up" style="animation-delay:.9s"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.52)"/></g></g></svg>',
+ feint:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Body feint: lean one way, take the ball the other way"><path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M76,82 l-14,4"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M90,72 l16,-18"/><text class="svg-t" x="104" y="48">go</text><g transform="translate(84,84)"><g class="a-feint"><circle r="7" class="f-player"/>'+USE_B+' transform="translate(4,-15) scale(.8)"/></g></g></svg>',
+ fourgoals:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="1v1 to four goals"><path class="f-team" d="M44,20 l3,5.4 h-6 z"/><path class="f-team" d="M124,20 l3,5.4 h-6 z"/><path class="f-team" d="M44,96 l3,5.4 h-6 z"/><path class="f-team" d="M124,96 l3,5.4 h-6 z"/><circle cx="92" cy="74" r="5.5" class="f-def"/><g transform="translate(92,104)"><g class="a-adv"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.55)"/></g></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,100 q-16,-30 0,-58"/></svg>',
+ firsttouch:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="First touch into space"><circle cx="112" cy="60" r="5.5" class="f-team"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M112,60 L74,64"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M74,64 l16,-13"/><g transform="translate(74,64)"><g class="a-ftin">'+USE_B+' transform="scale(.72)"/></g></g></svg>',
+ ssg22:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="2v2 to small goals"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">2v2</text><g transform="translate(64,68)"><g class="a-ssg">'+USE_B+' transform="scale(.6)"/></g></g></svg>',
+ ssg44:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Small-sided game, 4v4"><path class="st-goal" style="stroke-width:2.4" d="M150,70 v-9 h26 v9"/><path class="st-goal" style="stroke-width:2.4" d="M8,70 v-9 h26 v9"/><circle cx="70" cy="44" r="5.5" class="f-player"/><circle cx="64" cy="92" r="5.5" class="f-player"/><circle cx="112" cy="50" r="5.5" class="f-def"/><circle cx="118" cy="96" r="5.5" class="f-def"/><text class="svg-t" x="86" y="20">4v4</text><g transform="translate(64,68)"><g class="a-ssg">'+USE_B+' transform="scale(.6)"/></g></g></svg>',
+ cruyff:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Cruyff turn: fake the kick, chop the ball behind the standing foot"><path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M84,64 v-16"/><path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M82,52 q-16,18 -20,28"/><path class="arrmk" d="M60,88 l9,-2 l-4,8 z"/><g transform="translate(92,80)"><g class="a-cruyfffoot">'+USE_F+' transform="scale(.95)"/></g></g><g transform="translate(84,64)"><g class="a-cruyffball">'+USE_B+' transform="scale(.82)"/></g></g></svg>',
+ rondo3:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo 3v1"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">3v1</text><g transform="translate(52,42)"><g class="a-rondo3">'+USE_B+' transform="scale(0.6)"/></g></g></svg>',
+ rondo4:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Rondo 4v1"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><text class="svg-t" x="80" y="70" style="font-size:9px">4v1</text><g transform="translate(52,42)"><g class="a-rondo">'+USE_B+' transform="scale(0.6)"/></g></g></svg>',
+ rondo42:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Keep-ball 4v2 — find the free player"><circle cx="92" cy="66" r="52" class="st-goal" stroke-dasharray="5 5" style="stroke-width:1.4"/><circle cx="52" cy="42" r="5.5" class="f-player"/><circle cx="132" cy="42" r="5.5" class="f-player"/><circle cx="140" cy="86" r="5.5" class="f-player"/><circle cx="46" cy="86" r="5.5" class="f-player"/><circle cx="92" cy="66" r="5.5" class="f-def"/><circle cx="80" cy="82" r="5.5" class="f-def"/><text class="svg-t" x="98" y="72" style="font-size:9px">4v2</text><g transform="translate(52,42)"><g class="a-rondo">'+USE_B+' transform="scale(0.6)"/></g></g></svg>',
+ insidepass:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Inside-foot pass between partners"><g transform="translate(48,66)">'+USE_F+' transform="scale(0.9)"/></g><g transform="translate(120,66) rotate(180)">'+USE_F+' transform="scale(0.9)"/></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M58,66 H110"/><g transform="translate(58,66)"><g class="a-passr">'+USE_B+' transform="scale(0.72)"/></g></g></svg>',
+ passgates:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Passing gates: score by passing through cones to a teammate"><path class="f-team" d="M74,54 l3,5.4 h-6 z"/><path class="f-team" d="M100,54 l3,5.4 h-6 z"/><circle cx="46" cy="80" r="5.5" class="f-player"/><circle cx="126" cy="42" r="5.5" class="f-team"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M52,76 L120,48"/><g transform="translate(52,76)"><g class="a-passgate">'+USE_B+' transform="scale(0.62)"/></g></g></svg>',
+ gag:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Give-and-go: pass, run past the defender, receive it back"><circle cx="132" cy="52" r="5.5" class="f-team"/><circle cx="96" cy="70" r="5.5" class="f-def"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M40,88 L124,50"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M124,50 L110,66"/><text class="svg-t" x="138" y="42">1-2</text><g transform="translate(40,88)"><g class="a-gagball">'+USE_B+' transform="scale(.55)"/></g></g><g transform="translate(40,96)"><g class="a-gagrun"><circle r="5.5" class="f-player"/></g></g></svg>',
+ look:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Check your shoulders before the ball arrives"><circle cx="84" cy="74" r="8" class="f-player"/><g transform="translate(84,66)"><g class="a-look"><path class="st-arrow" style="stroke-width:1.6" d="M0,0 V-22"/><path class="f-arrow" d="M0,-24 l4,7 h-8 z"/></g></g></svg>',
+ halfturn:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Receive on the half-turn: open the body, turn to play forward"><circle cx="120" cy="60" r="5.5" class="f-team"/><path class="st-track" stroke-width="1.6" stroke-dasharray="3 3" d="M120,60 L88,63"/><g transform="translate(80,66)"><g class="a-rtturn"><circle r="7" class="f-player"/><g class="a-rtball2">'+USE_B+' transform="translate(12,-4) scale(.55)"/></g></g></g><g transform="translate(80,66)"><g class="a-rtin">'+USE_B+' transform="scale(.55)"/></g></g></svg>',
+ strike:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Side-foot finish: place it in the corner"><path class="st-goal" style="stroke-width:2.4" d="M64,26 v-9 h56 v9"/><circle cx="92" cy="104" r="5.5" class="f-player"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,98 V44"/><g transform="translate(92,92)"><g class="a-strike">'+USE_B+' transform="scale(.62)"/></g></g></svg>',
+ dashrun:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Dribble-dash: sprint 20 yards with the ball, then the agility ladder"><line class="st-track" x1="28" y1="78" x2="140" y2="78" stroke-width="2" stroke-dasharray="3 4"/><g stroke-width="1.6" class="st-track"><path d="M96,92 h36 M96,104 h36 M104,92 v12 M112,92 v12 M120,92 v12 M128,92 v12"/></g><path class="arrmk" d="M140,78 l-9,-5 v10 z"/><g transform="translate(40,72)"><g class="a-passr"><circle r="5.5" class="f-player"/>'+USE_B+' transform="translate(10,4) scale(.5)"/></g></g><text class="svg-t" x="30" y="30">20 yd — with the ball</text></svg>',
+ jockeya:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Jockey and poke: mirror the attacker, stay goal-side"><path class="st-goal" style="stroke-width:2.4" d="M78,22 v-9 h28 v9"/><g transform="translate(92,96)"><g class="a-jock"><circle cx="0" cy="0" r="5.5" class="f-player"/>'+USE_B+' transform="translate(0,-12) scale(.55)"/></g></g><g transform="translate(92,62)"><g class="a-jock2"><circle cx="0" cy="0" r="5.5" class="f-def"/></g></g></svg>',
+ circlecatch:'<svg class="anim" viewBox="0 0 184 128" role="img" aria-label="Circle Catch: soft W hands, catch from a ready position"><path class="st-goal" style="stroke-width:2.4" d="M58,44 v-9 h68 v9"/><g transform="translate(92,50)"><circle cx="0" cy="0" r="7" class="f-gk"/></g><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M92,110 V64"/><g transform="translate(92,66)"><g class="a-gkin">'+USE_B+' transform="scale(.6)"/></g></g></svg>',
+ throwin:'<svg class="anim" viewBox="0 0 168 116" role="img" aria-label="Throw-in: both hands, ball from behind the head"><path class="st-track" stroke-width="1.6" stroke-dasharray="2 3" d="M24,100 H144"/><circle cx="60" cy="88" r="7" class="f-player"/><path class="st-arrow" style="stroke-width:1.6" stroke-dasharray="3 3" d="M60,62 q26,-24 50,-4"/><circle cx="118" cy="62" r="5.5" class="f-team"/><g transform="translate(60,64)"><g class="a-throw">'+USE_B+' transform="scale(.66)"/></g></g></svg>'
+};
+
+/* =============== audio: synthesized roar (no files) =============== */
+var AC=null;
+function playRoar(depth){
+ if(!S.settings.soundOn)return;
+ try{
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  if(AC.state==='suspended')AC.resume();
+  var t=AC.currentTime,dur=1.15;
+  var master=AC.createGain();
+  master.gain.setValueAtTime(.0001,t);
+  master.gain.exponentialRampToValueAtTime(.65,t+.09);
+  master.gain.setValueAtTime(.65,t+.5);
+  master.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  master.connect(AC.destination);
+  var sh=AC.createWaveShaper(),curve=new Float32Array(256),k=14;
+  for(var i=0;i<256;i++){var x=i/128-1;curve[i]=(1+k)*x/(1+k*Math.abs(x));}
+  sh.curve=curve;sh.connect(master);
+  /* breathy rumble: shaped brownish noise through a sweeping bandpass */
+  var n=Math.floor(AC.sampleRate*dur),buf=AC.createBuffer(1,n,AC.sampleRate),ch=buf.getChannelData(0),last=0;
+  for(i=0;i<n;i++){var w=Math.random()*2-1;last=(last+.02*w)/1.02;ch[i]=last*3.2;}
+  var src=AC.createBufferSource();src.buffer=buf;
+  var bp=AC.createBiquadFilter();bp.type='bandpass';bp.Q.value=.9;
+  bp.frequency.setValueAtTime(340-140*depth,t);
+  bp.frequency.exponentialRampToValueAtTime(105,t+dur*.85);
+  src.connect(bp);bp.connect(sh);
+  /* chest growl: falling sawtooth with amplitude roughness */
+  var o=AC.createOscillator();o.type='sawtooth';
+  var f0=100-38*depth;
+  o.frequency.setValueAtTime(f0,t);
+  o.frequency.exponentialRampToValueAtTime(f0*.55,t+dur);
+  var og=AC.createGain();og.gain.value=.42;
+  var lfo=AC.createOscillator();lfo.frequency.value=26;
+  var lg=AC.createGain();lg.gain.value=.3;
+  lfo.connect(lg);lg.connect(og.gain);
+  o.connect(og);og.connect(sh);
+  src.start(t);o.start(t);lfo.start(t);
+  src.stop(t+dur);o.stop(t+dur);lfo.stop(t+dur);
+ }catch(e){}
+}
+
+/* =============== fx helpers =============== */
+function toast(msg,cls){
+ var box=$('#toasts'),el=document.createElement('div');
+ el.className='toast'+(cls?' '+cls:'');el.textContent=msg;
+ box.appendChild(el);
+ setTimeout(function(){el.remove();},2950);
+}
+function confetti(){
+ if(RM)return;
+ var fx=$('#fx'),colors=['#F5B62C','#FF5B49','#35C56A','#4E6FDB','#FFE9A8'];
+ for(var i=0;i<28;i++){
+  var d=document.createElement('div');d.className='confp';
+  d.style.left=(5+Math.random()*90)+'vw';
+  d.style.background=colors[i%colors.length];
+  d.style.transform='rotate('+(Math.random()*360)+'deg)';
+  fx.appendChild(d);
+  try{
+   d.animate([{transform:d.style.transform+' translateY(0)',opacity:1},
+    {transform:'rotate('+(Math.random()*720-360)+'deg) translateY('+(60+Math.random()*35)+'vh)',opacity:0}],
+    {duration:1100+Math.random()*900,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=(function(el){return function(){el.remove();};})(d);
+  }catch(e){d.remove();}
+ }
+}
+function applyFx(){
+ var q=FXQ;FXQ=[];
+ q.forEach(function(f){
+  if(f.t==='roar'){
+   var el=document.querySelector('.lionbox[data-lion="'+f.p+'"]');
+   if(el&&!RM){el.classList.remove('roar');void el.offsetWidth;el.classList.add('roar');
+    setTimeout(function(){el.classList.remove('roar');},1000);}
+   playRoar(clamp(S.card[f.p].roarPts/FULL,0,1));
+  }else if(f.t==='tierup'){
+   var el2=document.querySelector('.lionbox[data-lion="'+f.p+'"]');
+   if(el2&&!RM){el2.classList.add('tierup');setTimeout(function(){el2.classList.remove('tierup');},1700);}
+   confetti();
+   toast('⚡ TRANSFORMATION! '+playerById(f.p).name+'’s lion earned: '+f.name,'verm');
+  }else if(f.t==='prpop'){
+   var m=document.querySelector('.measure[data-mrow="'+f.p+':'+f.m+'"]');
+   if(m){m.classList.remove('prpop');void m.offsetWidth;m.classList.add('prpop');}
+  }
+ });
+}
+
+/* =============== renderers =============== */
+function fmt(v,m){return (+v).toFixed(m.dp||0);}
+function photoOrPlaceholder(p){
+ if(p.photo)return '<img src="'+p.photo+'" alt="Photo of '+esc(p.name)+'">';
+ var hue=p.id==='jack'?'#4E6FDB':'#35A0C5',skin='#F2C79C';
+ return '<svg viewBox="0 0 96 96" role="img" aria-label="Friendly placeholder portrait — tap to add a real photo">'+
+  '<rect width="96" height="96" fill="'+hue+'"/>'+
+  '<circle cx="48" cy="40" r="17" fill="'+skin+'"/>'+
+  '<path d="M48 23 a17 17 0 0 1 17 15 c-6 -3 -10 -8 -11 -12 c-4 5 -13 8 -22 8 a17 17 0 0 1 16 -11z" fill="'+(p.id==='jack'?'#5C3A1E':'#1E2A5C')+'"/>'+
+  '<circle cx="42" cy="40" r="1.8" fill="#16203A"/><circle cx="54" cy="40" r="1.8" fill="#16203A"/>'+
+  '<path d="M42 47 q6 5 12 0" stroke="#16203A" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+  '<path d="M24 96 c2 -18 12 -25 24 -25 s22 7 24 25 z" fill="#F5B62C"/>'+
+  '<path d="M40 74 l8 8 8 -8" fill="none" stroke="#101B3B" stroke-width="2.4"/></svg>';
+}
+function pawPips(total){
+ var th=[5,15,30,60,100],out='';
+ for(var i=0;i<5;i++){out+='<svg class="paw'+(total>=th[i]?' lit':'')+'" viewBox="0 0 18 18" aria-hidden="true"><use href="#pawicon" fill="'+(total>=th[i]?'#FF5B49':'#55618A')+'"/></svg>';}
+ return out;
+}
+function renderCardSeg(){
+ var seg=$('#cardseg'),h='';
+ S.players.forEach(function(p){
+  h+='<button data-action="solo" data-p="'+p.id+'" aria-pressed="'+(!S.settings.compare&&S.settings.solo===p.id)+'">'+esc(p.name)+'</button>';
+ });
+ h+='<button data-action="compare" aria-pressed="'+(!!S.settings.compare)+'">Compare</button>';
+ seg.innerHTML=h;
+}
+function cardHTML(pid,neutral){
+ var p=playerById(pid),c=S.card[pid],li=liveInfo(),wk=WEEKS[li.week];
+ var sh=shape(pid),jn=journey(pid),tier=tierOf(c.roarPts);
+ var seq=tierSeq(p.seed),feat=seq[tier-1];
+ var frameCls=neutral?'frame-neutral':('frame-'+jn);
+ var h='<article class="card '+frameCls+'" aria-label="'+esc(p.name)+'’s card — number-free">';
+ if(!neutral)h+='<span class="journey j-'+jn+'">'+jn+' journey · vs your own start</span>';
+ h+='<div class="card-top">';
+ h+='<div class="card-slot"><div class="lionbox" data-lion="'+pid+'"><span class="roarburst" aria-hidden="true">ROAR!</span>'+lionSVG(pid)+'</div>';
+ if(!neutral)h+='<div class="lion-tier">'+esc(TIER_INFO[feat]||'')+'</div>';
+ h+='<span class="week-badge">'+crestSVG(li.week,'')+' Week '+li.week+' · '+esc(wk.academy)+'</span></div>';
+ h+='<div class="card-id">';
+ h+='<button class="photo-btn" data-action="photo" data-p="'+pid+'" aria-label="'+(p.photo?'Change':'Add')+' photo for '+esc(p.name)+'">'+photoOrPlaceholder(p)+'</button>';
+ h+='<span class="photo-hint">'+(p.photo?'tap to change photo':'tap to add photo')+'</span>';
+ h+='<div class="card-name">'+esc(p.name)+'</div>';
+ h+='</div></div>';
+ h+='<div class="hexwrap">'+hexSVG(c.spokes)+'</div>';
+ h+='<div class="hex-caption">spokes grow from your own past marks — no numbers, no rankings</div>';
+ h+='<div class="chips">'+
+  '<span class="chip super">⚡ Superpower · '+SPOKE_NAME[sh.superpower]+'</span>'+
+  '<span class="chip quest">🧭 Next quest · '+SPOKE_NAME[sh.quest]+'</span></div>';
+ h+='<div class="pawrow"><span class="pawlbl">Brave tries</span>'+pawPips(c.braveTotal)+'</div>';
+ h+='</article>';
+ return h;
+}
+function renderCards(){
+ renderCardSeg();
+ var box=$('#cards');
+ if(S.settings.compare){
+  box.className='cards compare';
+  box.innerHTML=cardHTML('jack',true)+cardHTML('blue',true);
+  $('#comparenote').hidden=false;
+ }else{
+  box.className='cards';
+  box.innerHTML=cardHTML(S.settings.solo,false);
+  $('#comparenote').hidden=true;
+ }
+}
+function renderGridHead(){
+ var g=activeGrid(),li=liveInfo(),wk=WEEKS[UI.week];
+ var h='<div class="gridhead">'+crestSVG(UI.week,'crest')+
+  '<div class="gh-txt"><div class="gh-week">Week '+UI.week+' — '+esc(wk.academy)+'</div>'+
+  '<div class="gh-sub">“'+esc(wk.name)+'” · '+esc(wk.focus)+' · '+esc(g.label)+' of the repeating 3-week crest cycle</div></div>'+
+  '<div class="weekseg" role="group" aria-label="Pick a week">';
+ ['A','B','C'].forEach(function(w){
+  h+='<button data-action="week" data-w="'+w+'" aria-pressed="'+(UI.week===w)+'">'+w+(li.week===w?'<span class="live-dot" aria-hidden="true"></span>':'')+'</button>';
+ });
+ h+='</div><button class="dupbtn" data-action="dup" title="Archive this sheet below and start a fresh one — card, PRs and lion carry over">Duplicate ⤵</button></div>';
+ $('#gridhead').innerHTML=h;
+}
+function tickCell(g,p,d,s,ro){
+ var on=!!(g.attendance[p]&&g.attendance[p][d]&&g.attendance[p][d][s]);
+ if(ro)return '<span class="dotrow '+(on?'dot-on':'dot-off')+'">'+(on?'●':'○')+'</span>';
+ var arr=g.attendance[p][d],all=arr[0]&&arr[1]&&arr[2];
+ return '<button class="tick'+(all?' done3':'')+'" data-action="tick" data-p="'+p+'" data-d="'+d+'" data-s="'+s+'" aria-pressed="'+!!on+'" aria-label="'+p+' '+d+' session '+(s+1)+(on?' done':' not yet')+'">'+(on?'✓':'')+'</button>';
+}
+function renderWeekRow(){
+ var g=activeGrid(),li=liveInfo();
+ var h='<div class="weekrow-outer"><div class="weekrow">';
+ DAYS.forEach(function(day){
+  if(day.week!==UI.week)return;
+  var intn=INTENSITY[day.dow];
+  h+='<div class="tile int-'+intn[0].replace('-','')+' '+intn[1]+(li.dayId===day.id?' live':'')+(UI.openDay===day.id?' open':'')+'">';
+  h+='<button class="tile-btn" data-action="day" data-d="'+day.id+'" aria-expanded="'+(UI.openDay===day.id)+'">'+
+   '<span class="tile-dow"><span class="int-dot"></span>'+day.dow+' · '+day.id+' <span class="int-lbl">'+intn[0]+'</span></span>'+
+   '<span class="tile-title">'+day.title+(day.checkpoint?' ✦':'')+'</span></button>';
+  h+='<div class="att">';
+  S.players.forEach(function(p){
+   h+='<div class="att-row"><span class="att-name">'+esc(p.name)+'</span>';
+   for(var s=0;s<3;s++)h+=tickCell(g,p.id,day.id,s,false);
+   h+='</div>';
+  });
+  h+='</div></div>';
+ });
+ h+='</div></div>';
+ $('#weekrow').innerHTML=h;
+}
+function drillText(day,blk){
+ var ed=S.drillEdits[day.id];
+ if(ed&&typeof ed[blk]==='string')return esc(ed[blk]).replace(/\n/g,'<br>');
+ return day[blk];
+}
+function rawDrill(day,blk){
+ var ed=S.drillEdits[day.id];
+ if(ed&&typeof ed[blk]==='string')return ed[blk];
+ return day[blk].replace(/<[^>]+>/g,'');
+}
+function blockHTML(day,blk,name,mins,animKey,editing){
+ var h='<div class="block"><div class="block-time"><b>'+mins+'</b><span>MIN</span></div><div class="block-main">'+
+  '<div class="block-name">'+name+'</div>';
+ if(editing)h+='<textarea data-edit="'+day.id+':'+blk+'" aria-label="Edit '+name+' drill text ('+esc(day.family)+' family)">'+esc(rawDrill(day,blk))+'</textarea>';
+ else h+='<p class="block-txt">'+drillText(day,blk)+'</p>';
+ h+='</div>';
+ if(animKey&&ANIMS[animKey])h+=ANIMS[animKey];
+ h+='</div>';
+ return h;
+}
+function measureHTML(day,mkey){
+ var p=UI.prPlayer,m=M[mkey],c=S.card[p],pr=c.prs[mkey];
+ var staged=UI.staged[p+':'+mkey];
+ if(staged==null)staged=(pr!=null?pr:m.start);
+ var prTxt=pr!=null
+  ?('PR to beat <b>'+fmt(pr,m)+'</b>'+(m.dir<0?' <span aria-hidden="true">▼</span>':''))
+  :'no record yet — set the first!';
+ return '<div class="measure" data-mrow="'+p+':'+mkey+'">'+
+  '<span class="newpr">NEW PR!</span>'+
+  '<div class="m-head"><span class="m-name">'+m.l+'</span><span class="m-unit">'+m.u+(m.hint?' · '+m.hint:'')+'</span>'+
+  (m.smarts?'<span class="smarts-chip">Smarts</span>':'')+
+  '<span class="pr-chip">'+prTxt+'</span></div>'+
+  '<div class="m-entry">'+
+   '<button class="stepbtn" data-action="step" data-m="'+mkey+'" data-dir="-1" aria-label="Decrease '+m.l+'">−</button>'+
+   '<div class="m-val" aria-live="off">'+fmt(staged,m)+'<small>'+(m.dir<0?'lower = better':'higher = better')+'</small></div>'+
+   '<button class="stepbtn" data-action="step" data-m="'+mkey+'" data-dir="1" aria-label="Increase '+m.l+'">+</button>'+
+   '<button class="logbtn" data-action="log" data-m="'+mkey+'" data-d="'+day.id+'">Log mark</button>'+
+  '</div></div>';
+}
+function renderDayPanel(){
+ var box=$('#daypanel');
+ if(!UI.openDay){box.innerHTML='';return;}
+ var day=dayById(UI.openDay);
+ if(!day||day.week!==UI.week){box.innerHTML='';return;}
+ var g=activeGrid(),p=UI.prPlayer,editing=UI.editDay===day.id;
+ var intn=INTENSITY[day.dow];
+ var h='<section class="session" aria-label="'+day.id+' session plan — one plan, run in all three sessions">';
+ h+='<div class="session-head"><h3>'+day.id+' · '+day.title+'</h3>'+
+  '<span class="fam-chip">family-locked · '+esc(day.family)+'</span>'+
+  '<span class="int-lbl">'+intn[0]+' day</span>'+
+  '<button class="editbtn" data-action="edit" data-d="'+day.id+'">'+(editing?'Close editor':'Edit drills ✎')+'</button></div>';
+ h+='<div class="session-note">One 60-minute plan — it runs in <b>all 3</b> of today’s sessions (never rendered three times). Tick a session box, or hit “Session done” below.'+(day.note?' <br><b>Note:</b> '+day.note:'')+'</div>';
+ if(editing)h+='<div class="editbar" style="margin-top:8px"><span>Swap any drill you like — just <b>keep it in the '+esc(day.family)+' family</b>, so the day’s PRs stay comparable.</span>'+
+  '<button class="savebtn" data-action="saveedit" data-d="'+day.id+'">Save drills</button>'+
+  '<button class="restorebtn" data-action="restoredrills" data-d="'+day.id+'">Restore originals</button></div>';
+ h+='<div class="blocks">'+
+  blockHTML(day,'warm','① Warm-up',15,day.aWarm,editing)+
+  blockHTML(day,'ind','② Individual — the day’s focus',20,day.aInd,editing)+
+  blockHTML(day,'grp','③ Group — the game',20,day.aGrp,editing)+
+  blockHTML(day,'hud','④ Huddle',5,null,editing);
+ h+='</div>';
+ /* PR TIME */
+ h+='<div class="prtime"><div class="prtime-head"><span class="pt-title">⏱ PR Time</span><div class="prtabs" role="group" aria-label="Log marks for which player">';
+ S.players.forEach(function(pl){h+='<button data-action="prtab" data-p="'+pl.id+'" aria-pressed="'+(UI.prPlayer===pl.id)+'">'+esc(pl.name)+'</button>';});
+ h+='</div></div><div class="prtime-body">';
+ day.measures.forEach(function(mk){h+=measureHTML(day,mk);});
+ /* brave tries */
+ var todays=(g.brave[p]&&g.brave[p][day.id])||0,c=S.card[p];
+ h+='<div class="brave-box"><div class="brave-head"><span class="m-name">🔥 Brave Tries'+(day.braveBig?' — today’s headline':'')+'</span>'+
+  '<span class="m-unit">'+(day.braveLbl||'moves attempted — a miss still counts')+'</span></div>'+
+  '<div class="brave-entry"><span class="brave-count">'+esc(playerById(p).name)+' tried <b>'+todays+'</b> brave moves today · <b>'+c.braveTotal+'</b> this year</span>'+
+  '<button class="bravebtn" data-action="brave" data-d="'+day.id+'">+1 brave try 🦁</button></div></div>';
+ /* session done */
+ var att=g.attendance[p][day.id],done=(att[0]?1:0)+(att[1]?1:0)+(att[2]?1:0);
+ h+='<div class="sess-done"><button class="donebtn" data-action="sessdone" data-d="'+day.id+'"'+(done>=3?' disabled':'')+'>'+
+  (done>=3?'All 3 sessions done — day complete! 🦁':'Session done — ROAR! 🦁')+'</button>'+
+  '<span class="sess-count">'+esc(playerById(p).name)+': '+done+' of 3 sessions ticked'+(done===2?' — one more grows the lion!':'')+'</span></div>';
+ h+='</div></div></section>';
+ box.innerHTML=h;
+}
+function fmtDate(iso){
+ var d=new Date(iso+'T00:00:00');
+ return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
+function renderHistory(){
+ var stack=S.grids.filter(function(g){return g.frozen;}).sort(function(a,b){return b.cycle-a.cycle;});
+ $('#histcount').textContent=stack.length?(stack.length+' frozen sheet'+(stack.length>1?'s':'')):'nothing archived yet';
+ var h='';
+ stack.forEach(function(g){
+  var open=!!UI.openHist[g.id];
+  var sums=S.players.map(function(p){
+   var n=0;for(var d in g.attendance[p.id]){var a=g.attendance[p.id][d];n+=(a[0]?1:0)+(a[1]?1:0)+(a[2]?1:0);}
+   return esc(p.name)+' '+n+'/45';
+  }).join(' · ');
+  var end=new Date(g.createdAt+'T00:00:00');end.setDate(end.getDate()+18);
+  h+='<div class="hist-item"><button class="hist-btn" data-action="hist" data-g="'+g.id+'" aria-expanded="'+open+'">'+
+   '<span class="h-lbl">'+esc(g.label)+'</span><span class="frozen-chip">frozen</span>'+
+   '<span class="h-dates">'+fmtDate(g.createdAt)+' – '+end.toLocaleDateString(undefined,{month:'short',day:'numeric'})+'</span>'+
+   '<span class="h-sum">'+sums+'</span></button>';
+  if(open){
+   h+='<div class="hist-body"><div class="hist-tbl-wrap"><table class="hist-tbl"><thead><tr><th>Day</th><th>Jack — 3 sessions</th><th>Blue — 3 sessions</th><th>Brave</th></tr></thead><tbody>';
+   ['A','B','C'].forEach(function(w){
+    h+='<tr class="hist-wk-lbl"><td colspan="4">Week '+w+' · '+esc(WEEKS[w].academy)+'</td></tr>';
+    DAYS.forEach(function(day){
+     if(day.week!==w)return;
+     h+='<tr><td>'+day.id+' '+day.dow+'</td>';
+     S.players.forEach(function(p){
+      h+='<td>';for(var s=0;s<3;s++)h+=tickCell(g,p.id,day.id,s,true);h+='</td>';
+     });
+     var b=[];S.players.forEach(function(p){var n=(g.brave[p.id]&&g.brave[p.id][day.id])||0;if(n)b.push(esc(p.name)+' 🔥'+n);});
+     h+='<td>'+(b.join(' · ')||'—')+'</td></tr>';
+    });
+   });
+   h+='</tbody></table></div><p class="compare-note">The season scrapbook: attendance is frozen with the sheet. PRs, the card and the lion carried forward when this sheet was duplicated.</p></div>';
+  }
+  h+='</div>';
+ });
+ $('#histstack').innerHTML=h||'<p class="compare-note">When you hit <b>Duplicate</b>, the finished sheet slides down here as a frozen keepsake and a fresh one starts on top.</p>';
+}
+function render(){
+ $('#soundbtn').setAttribute('aria-pressed',String(!!S.settings.soundOn));
+ $('#soundbtn').textContent=S.settings.soundOn?'🔊':'🔇';
+ renderCards();renderGridHead();renderWeekRow();renderDayPanel();renderHistory();
+ applyFx();
+}
+
+/* =============== actions =============== */
+function ensureBraveMap(g,p){g.brave[p]=g.brave[p]||{};}
+function ensureAwards(g,p,d){g.awards=g.awards||{};g.awards[p]=g.awards[p]||{};g.awards[p][d]=g.awards[p][d]||{};return g.awards[p][d];}
+
+function doTick(p,d,s,fromDone){
+ var g=activeGrid();if(g.frozen)return;
+ var arr=g.attendance[p][d];
+ if(arr[s]&&!fromDone){arr[s]=0;save();render();return;} /* correction untick — growth already earned stays earned */
+ if(arr[s]&&fromDone)return;
+ arr[s]=1;
+ var aw=ensureAwards(g,p,d);
+ if(!aw['s'+s]){aw['s'+s]=1;awardSession(p,d);}
+ var done=(arr[0]?1:0)+(arr[1]?1:0)+(arr[2]?1:0);
+ if(done>=3&&!aw.day){aw.day=1;addRoarPts(p,1,'day');
+  toast('🦁 '+playerById(p).name+' finished all 3 sessions of '+d+' — the lion GROWS!');}
+ else toast('Session done — '+playerById(p).name+' · '+d+' ('+done+' of 3)');
+ /* every tick roars; show that player's card so the lion is visible */
+ if(!S.settings.compare)S.settings.solo=p;
+ FXQ.push({t:'roar',p:p});
+ save();render();
+}
+function doLog(p,d,mkey){
+ var m=M[mkey],c=S.card[p];
+ var v=UI.staged[p+':'+mkey];
+ if(v==null)v=(c.prs[mkey]!=null?c.prs[mkey]:m.start);
+ v=+(+v).toFixed(m.dp||0);
+ var prev=c.prs[mkey],isPR=prev==null||(m.dir>0?v>prev:v<prev);
+ if(isPR){
+  c.prs[mkey]=v;c.prBeats++;
+  if(m.smarts){c.smarts=c.smarts||{};c.smarts[mkey]=v;}
+  if(m.sp)prJump(p,mkey,prev==null?m.gs:(v-prev));
+  if(mkey==='fairplay'||mkey==='festival')addRoarPts(p,.5,'festival');
+  FXQ.push({t:'prpop',p:p,m:mkey});
+  toast('NEW PR! '+playerById(p).name+' — '+m.l+' '+fmt(v,m)+(prev==null?' (first record!)':' (was '+fmt(prev,m)+')'),'green');
+ }else{
+  toast('Logged '+fmt(v,m)+'. The PR to beat is still '+fmt(prev,m)+' — next session’s the one!');
+ }
+ save();render();
+}
+function doBrave(p,d){
+ var g=activeGrid(),c=S.card[p];
+ ensureBraveMap(g,p);
+ g.brave[p][d]=(g.brave[p][d]||0)+1;
+ c.braveTotal++;
+ addRoarPts(p,.2,'brave');
+ if(c.braveTotal%5===0)toast('🔥 '+playerById(p).name+' has tried '+c.braveTotal+' brave moves this year!','verm');
+ save();render();
+}
+function doDuplicate(){
+ var g=activeGrid();
+ g.frozen=true;
+ var maxC=0;S.grids.forEach(function(x){if(x.cycle>maxC)maxC=x.cycle;});
+ var now=new Date(),dow=(now.getDay()+6)%7;
+ var mon=new Date(now);mon.setDate(now.getDate()-dow);
+ var iso=mon.getFullYear()+'-'+String(mon.getMonth()+1).padStart(2,'0')+'-'+String(mon.getDate()).padStart(2,'0');
+ var att={},brv={},awd={};
+ S.players.forEach(function(p){att[p.id]={};brv[p.id]={};awd[p.id]={};
+  for(var i=1;i<=15;i++){att[p.id]['D'+i]=[0,0,0];awd[p.id]['D'+i]={};}});
+ var ng={id:'g'+Date.now(),cycle:maxC+1,label:'Cycle '+(maxC+1),createdAt:iso,frozen:false,attendance:att,brave:brv,awards:awd};
+ S.grids.push(ng);S.activeGridId=ng.id;
+ UI.openDay=null;UI.week=liveInfo().week;
+ toast('Sheet archived below ⤵ — fresh '+ng.label+' on top. Card, PRs & lion carried over.');
+ save();render();
+}
+function doReset(){
+ if(!window.confirm('Reset all demo data? Attendance, PRs, lions and photos go back to the seeded demo.'))return;
+ try{localStorage.removeItem(LS_KEY);}catch(e){}
+ S=seedState();UI.week=liveInfo().week;UI.openDay=null;UI.staged={};UI.openHist={};UI.editDay=null;
+ save();render();
+ toast('Demo data reset.');
+}
+function applyTheme(){
+ var t=S.settings.theme;
+ if(t)document.documentElement.setAttribute('data-theme',t);
+ else document.documentElement.removeAttribute('data-theme');
+}
+
+/* =============== event wiring =============== */
+document.addEventListener('click',function(ev){
+ var b=ev.target.closest('[data-action]');
+ if(!b)return;
+ var a=b.getAttribute('data-action');
+ if(a==='sound'){S.settings.soundOn=!S.settings.soundOn;
+  if(S.settings.soundOn){playRoar(.4);toast('Roar sound ON 🔊');}else toast('Roar sound off');
+  save();render();}
+ else if(a==='theme'){
+  var seqT=[null,'light','dark'],ix=seqT.indexOf(S.settings.theme||null);
+  S.settings.theme=seqT[(ix+1)%3];applyTheme();
+  toast('Theme: '+(S.settings.theme||'auto'));save();}
+ else if(a==='solo'){S.settings.compare=false;S.settings.solo=b.getAttribute('data-p');UI.prPlayer=S.settings.solo;save();render();}
+ else if(a==='compare'){S.settings.compare=!S.settings.compare;save();render();}
+ else if(a==='photo'){UI.pendingPhoto=b.getAttribute('data-p');$('#photoIn').click();}
+ else if(a==='week'){UI.week=b.getAttribute('data-w');UI.openDay=null;UI.editDay=null;render();}
+ else if(a==='day'){var d=b.getAttribute('data-d');UI.openDay=(UI.openDay===d?null:d);UI.editDay=null;UI.staged={};render();
+  if(UI.openDay){var el=$('#daypanel');if(el&&el.scrollIntoView&&!RM)setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'nearest'});},60);}}
+ else if(a==='tick'){doTick(b.getAttribute('data-p'),b.getAttribute('data-d'),+b.getAttribute('data-s'),false);}
+ else if(a==='prtab'){UI.prPlayer=b.getAttribute('data-p');if(!S.settings.compare){S.settings.solo=UI.prPlayer;}UI.staged={};save();render();}
+ else if(a==='step'){
+  var mk=b.getAttribute('data-m'),m=M[mk],p=UI.prPlayer,key=p+':'+mk;
+  var cur=UI.staged[key];if(cur==null)cur=(S.card[p].prs[mk]!=null?S.card[p].prs[mk]:m.start);
+  cur=+(+cur+(+b.getAttribute('data-dir'))*m.us).toFixed(2);
+  cur=clamp(cur,0,m.max!=null?m.max:999);
+  UI.staged[key]=cur;
+  var row=b.closest('.measure');if(row){var val=row.querySelector('.m-val');if(val)val.firstChild.nodeValue=fmt(cur,m);}
+ }
+ else if(a==='log'){doLog(UI.prPlayer,b.getAttribute('data-d'),b.getAttribute('data-m'));}
+ else if(a==='brave'){doBrave(UI.prPlayer,b.getAttribute('data-d'));}
+ else if(a==='sessdone'){
+  var day=b.getAttribute('data-d'),g=activeGrid(),arr=g.attendance[UI.prPlayer][day];
+  var slot=-1;for(var s=0;s<3;s++)if(!arr[s]){slot=s;break;}
+  if(slot<0){toast('All 3 sessions already done today — legend!');return;}
+  doTick(UI.prPlayer,day,slot,true);
+ }
+ else if(a==='edit'){var dd=b.getAttribute('data-d');UI.editDay=(UI.editDay===dd?null:dd);render();}
+ else if(a==='saveedit'){
+  var d2=b.getAttribute('data-d');
+  var tas=document.querySelectorAll('textarea[data-edit^="'+d2+':"]');
+  S.drillEdits[d2]=S.drillEdits[d2]||{};
+  tas.forEach(function(ta){var kk=ta.getAttribute('data-edit').split(':')[1];S.drillEdits[d2][kk]=ta.value;});
+  UI.editDay=null;
+  toast('Drills saved — still in the '+dayById(d2).family+' family ✓');
+  save();render();
+ }
+ else if(a==='restoredrills'){var d3=b.getAttribute('data-d');delete S.drillEdits[d3];UI.editDay=null;toast('Original drills restored.');save();render();}
+ else if(a==='dup'){doDuplicate();}
+ else if(a==='hist'){var gid=b.getAttribute('data-g');UI.openHist[gid]=!UI.openHist[gid];render();}
+ else if(a==='reset'){doReset();}
+});
+$('#photoIn').addEventListener('change',function(ev){
+ var f=ev.target.files&&ev.target.files[0];ev.target.value='';
+ if(!f||!UI.pendingPhoto)return;
+ var pid=UI.pendingPhoto;UI.pendingPhoto=null;
+ var rd=new FileReader();
+ rd.onload=function(){
+  var img=new Image();
+  img.onload=function(){
+   var mx=300,sc=Math.min(1,mx/Math.max(img.width,img.height));
+   var cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+   cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+   var uri;try{uri=cv.toDataURL('image/jpeg',.82);}catch(e){uri=rd.result;}
+   playerById(pid).photo=uri;save();render();
+   toast(playerById(pid).name+'’s photo added ✓');
+  };
+  img.src=rd.result;
+ };
+ rd.readAsDataURL(f);
+});
+
+/* =============== boot =============== */
+S=load()||seedState();
+applyTheme();
+UI.week=liveInfo().week;
+UI.prPlayer=S.settings.solo||'jack';
+save();
+render();
+})();
+</script>
