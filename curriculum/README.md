@@ -12,6 +12,7 @@ The Soccer-Academy curriculum and the knowledge it's built from.
 |---|---|
 | **[`DOC_STANDARD.md`](DOC_STANDARD.md)** | integrity rules for every doc here (**read first**) |
 | **[`references/`](references/sources.md)** | the cited source backbone — every number should trace here |
+| **[`mastery-model.md`](mastery-model.md)** | training-hours philosophy — the evidence-based target (not the 10k myth) + safety guardrails |
 | **[`index/`](index/README.md)** | the knowledge index — the *building blocks* (skills, moves, tactics, attributes, metrics, laws, teaching cues) |
 | **[`research/`](research/README.md)** | academy model research (Benfica, La Masia, Ajax) + the merged model — the *how* |
 | **[`age-08/`](age-08/README.md)** | the age-8 curriculum (first of the 8→13 age-by-age build) |

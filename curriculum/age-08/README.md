@@ -14,20 +14,26 @@ expected to start** → **where we project them before they turn 9.**
 ## Where age 8 sits ✅
 
 - **LTAD:** **FUNdamentals (~6–9)** on the cusp of **Learn to Train** (the "golden age"). → [Ford et al. 2011](../references/sources.md)
-- **US Soccer / FA grassroots (Foundation Phase):** ball mastery, dribbling, 1v1, and **fun** are the priorities; US Soccer's U7/U8 theme is literally **"Me, the ball, and my friend."** → [sources](../references/sources.md)
+- **Elite grassroots (🇪🇸 Spain Benjamín 8–9; 🇳🇱 Dutch; 🇵🇹 Portuguese):** **individual technique first** (RFEF), ball mastery, 1v1, and **fun**; the "me → ball → friend → game" progression. → [foundations](../research/youth-method-foundations.md), [sources](../references/sources.md)
 - **Academy-model stage:** Ajax **Stage 2** — *technique & creativity* (⚠️ the stage-age split is secondary; see [research](../research/ajax-de-toekomst-model.md)).
 - **One-line goal:** *fall in love with the ball, and become a brave, two-footed dribbler who tries things.* ✏️
+- **Cadence & target:** 15 hrs/week (3×1 hr × 5 days) × 40 weeks ≈ **600 hrs/yr → ~5,400 hrs by 17** — an evidence-based professional-range volume (**not** the 10,000-hour myth). → [mastery model](../mastery-model.md)
 
-## Format & equipment ✅ (US Soccer PDI 2017 · IFAB)
+## Format & equipment ✅ (elite small-sided · IFAB regulatory)
 
-- A chronological **8-year-old spans US Soccer U8→U9**: **4v4, no goalkeeper, ball size 3** (U8) → **7v7 with GK, ball size 4** (U9). Confirm each child by **birth year**. → [sources](../references/sources.md)
-- **Higher-standard note (Rule 2):** US Soccer *intentionally* keeps formats small at young ages for more touches, so the "higher standard" here is the **developmentally-optimal smaller format**, not a bigger one. We run **4v4-centric at 8**, introducing 7v7 as they move toward U9.
+- **Elite systems all use reduced, max-touch formats at 8–9** — 🇪🇸 Spain **Fútbol-7** (Benjamín), 🇳🇱 Netherlands **6v6** (U8–U10), plus **futsal (5v5)**. Sources differ on the exact number, so per **Rule 2** we don't fixate on one — we run a **futsal-style small-sided environment (≈4v4–7v7), maximum touches**. → [foundations](../research/youth-method-foundations.md)
+- **Regulatory only (US Soccer / IFAB):** ball sizes 3/4/5 and field/goal dimensions (converge with FIFA/KNVB). US Soccer's birth-year bands put an 8-year-old across U8 (4v4/ball-3) → U9 (7v7/ball-4). → [references](../references/sources.md)
 
-## How we teach it ✅ (method)
+## How we teach it ✅ (method — elite systems)
 
-- **Play-Practice-Play (PPP)**, **one focus per session**, **one ball per pair**, games not lines. → [US Soccer](../references/sources.md)
-- **Development over winning**; whole child across the **Four Corners**. → [FA](../references/sources.md)
-- **Words of the year** ✏️ (our pick from [index/13](../index/13-teaching-cues-and-acronyms.md)): **"Head up" · "Both feet" · "Try it!" · "Find space" · "Next play."**
+- **Individual technique first, collective concepts later** → [RFEF](../references/sources.md).
+- **Coerver ball-mastery pyramid** (Ball Mastery → Receiving/Passing → 1v1 → Group Play) as the content spine → [Coerver](../references/sources.md).
+- **Futsal-style, maximum-touch** small-sided environment → [futsal / KNVB](../references/sources.md).
+- **Street / deliberate play & discovery**; **development over winning — no standings** → [KNVB](../references/sources.md).
+- **Session shape:** **Warm-up → Individual → Group** (Ajax thirds; the warm-up is a Barça rondo by default). The **day's focus lives in the Individual block**; organized across the week by **Tactical-Periodization** principles → [training regimen](../research/training-regimen.md), [session template](02-session-template.md).
+- Whole child across the **Four Corners** → [FA](../references/sources.md); **one focus per session**, **one ball per pair**, development over winning.
+- **Words of the year** ✏️ ([index/13](../index/13-teaching-cues-and-acronyms.md)): **"Head up" · "Both feet" · "Try it!" · "Find space" · "Next play."**
+- Full method: [youth-method-foundations](../research/youth-method-foundations.md) · [training regimen](../research/training-regimen.md).
 
 ## Design around these characteristics ✅ (US Youth Soccer)
 
@@ -36,7 +42,7 @@ expected to start** → **where we project them before they turn 9.**
 > **Reading the tables:** *Coming in* = a reasonable start-of-year floor for a
 > typical 8-year-old with prior play; *Before 9* = our projected year-end target.
 > Both columns are **✏️ coaching judgment aligned to the sourced priorities above**
-> — for a **true beginner**, treat "Coming in" as the first-term target.
+> — for a **true beginner**, treat "Coming in" as the first-trimester target.
 
 ---
 
@@ -121,7 +127,15 @@ expected to start** → **where we project them before they turn 9.**
 - ✏️ **Coaching judgment:** the entry→exit skill progressions and the "words/checks of the year" — aligned to the sourced priorities, not federation-mandated numbers.
 - ⚠️ **Unverified:** Ajax stage-age split (secondary). See [DOC_STANDARD backlog](../DOC_STANDARD.md).
 
-## What's next
+## The age-8 unit
 
-Term plan → weekly session template (PPP) → assessment sheet — each built on
-sourced standards, then repeat for age 9.
+- **[Term plan](01-trimester-plan.md)** — the year across three trimesters (Me & the Ball → …& a Friend → Playing the Game).
+- **[Session template](02-session-template.md)** — the repeatable Warm-up → Individual → Group session + the 3-sessions-a-day split.
+- **[Assessment & IDP](03-assessment.md)** — the Four-Corner/TIPS rubric and per-child plan.
+- **[Reports & Player Profile ("MY CARD")](04-reports-and-player-profile.md)** — each day carries a **numeric report** (Touch Count 30s, Gate Run, Brave Tries…) that rides an existing drill; reports accrue into an **EA-FC-style player card** — a hexagon (PAC·SHO·PAS·DRI·DEF·PHY) with a **HEART** in place of the overall rating. Every spoke grows only from the child's **own** past marks — no overall number, no leaderboard, no card-vs-card. Plus **3 attendance boxes per day** (sessions × 1 hr = hours logged). Supersedes the V1 checkbox milestones.
+- **Day library** — a **5-day circuit** per trimester (**15 day-*plans*, D1–D15**) that **repeats each week** and progresses across the ~13-week trimester (not 15-and-done); each day-plan runs in all three of that day's sessions:
+  - [Trimester 1 — Ball Mastery](sessions/trimester-1-ball-mastery.md) (D1–D5)
+  - [Trimester 2 — Passing & 1v1](sessions/trimester-2-passing-and-1v1.md) (D6–D10)
+  - [Trimester 3 — Group Play](sessions/trimester-3-group-play.md) (D11–D15)
+
+**Next:** repeat the same artifacts for **age 9**, carrying each child's IDP forward.
