@@ -10,6 +10,10 @@ heading when you cut a release for production.
 ## [Unreleased]
 
 ### Added
+- Contributor/agent onboarding docs: **`AGENTS.md`** (repo orientation, the
+  zero-invention documentation rule, working commands, repo-specific gotchas) and
+  **`docs/HANDOFF.md`** (state of play, in-flight pull requests, backlog, next
+  steps), both linked from the README.
 - GitHub Pages publishing for the curriculum via **MkDocs** (`mkdocs.yml`,
   Material theme): staging validates the site build; production builds and
   publishes to the `gh-pages` branch through `mkdocs gh-deploy`, behind the

@@ -19,6 +19,12 @@ pipeline:
 
 Start here:
 
+- [`AGENTS.md`](AGENTS.md) — **new contributor or AI agent? read this first**:
+  what the repo is, the zero-invention documentation rule, commands, gotchas.
+- [`docs/HANDOFF.md`](docs/HANDOFF.md) — current state of play, in-flight pull
+  requests, backlog, and what to build next.
+- [`curriculum/README.md`](curriculum/README.md) — the curriculum itself (the
+  product): knowledge index, academy-model research, age units.
 - [`docs/WORKFLOW.md`](docs/WORKFLOW.md) — the full workflow and pipeline diagram.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — day-to-day: branches, commits, PRs.
 - [`flags/README.md`](flags/README.md) — feature flag lifecycle & conventions.
