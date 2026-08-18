@@ -16,6 +16,7 @@ export type CalendarEvent = {
   syncNotes?: boolean;
   driveBefore?: number;
   driveAfter?: number;
+  address?: string;
 };
 
 /**
@@ -24,7 +25,7 @@ export type CalendarEvent = {
  */
 export const EVENT_FIELDS = [
   "title", "day", "start", "end", "color", "bullets", "people",
-  "town", "kind", "tentativeEnd", "tag", "syncNotes", "driveBefore", "driveAfter",
+  "town", "kind", "tentativeEnd", "tag", "syncNotes", "driveBefore", "driveAfter", "address",
 ] as const;
 
 export type EventField = (typeof EVENT_FIELDS)[number];
@@ -62,6 +63,7 @@ export function isCalendarEvent(value: unknown): value is CalendarEvent {
     (event.syncNotes === undefined || typeof event.syncNotes === "boolean") &&
     (event.driveBefore === undefined || (typeof event.driveBefore === "number" && Number.isFinite(event.driveBefore) && event.driveBefore >= 0)) &&
     (event.driveAfter === undefined || (typeof event.driveAfter === "number" && Number.isFinite(event.driveAfter) && event.driveAfter >= 0)) &&
+    (event.address === undefined || typeof event.address === "string") &&
     (event.end - event.start - (event.driveBefore ?? 0) - (event.driveAfter ?? 0) >= CALENDAR_SNAP_MINUTES)
   );
 }

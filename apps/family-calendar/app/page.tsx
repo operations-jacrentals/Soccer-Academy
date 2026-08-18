@@ -146,6 +146,17 @@ type HourPickerPosition = {
   top: number;
 };
 
+type AddressPreview = {
+  eventId: string;
+  address: string;
+  anchor: HourPickerAnchor;
+};
+
+type AddressPreviewPosition = {
+  left: number;
+  top: number;
+};
+
 type AutoScrollPointer = {
   clientX: number;
   clientY: number;
@@ -547,6 +558,28 @@ function formatMinuteDuration(minutes: number) {
   return `${hours} hr${hours === 1 ? "" : "s"}${remainder ? ` ${remainder} min` : ""}`;
 }
 
+function detectMapsPlatform(): "ios" | "android" | "other" {
+  if (typeof navigator === "undefined") return "other";
+  const ua = navigator.userAgent || "";
+  if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
+  if (/Android/.test(ua)) return "android";
+  return "other";
+}
+
+function mapsEmbedUrl(address: string) {
+  return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+}
+
+// Each platform hands the address to whichever map app the family already
+// uses there, rather than forcing everyone through one web page.
+function mapsNavigationUrl(address: string) {
+  const encoded = encodeURIComponent(address);
+  const platform = detectMapsPlatform();
+  if (platform === "ios") return `https://maps.apple.com/?address=${encoded}`;
+  if (platform === "android") return `geo:0,0?q=${encoded}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+}
+
 function hasScheduleChange(origin: CalendarEvent, next: CalendarEvent) {
   return origin.day !== next.day
     || origin.start !== next.start
@@ -683,8 +716,10 @@ function layoutEvents(dayEvents: CalendarEvent[]): LaidOutEvent[] {
   return result;
 }
 
+// An event has a "neighbor below" when the next event in the same lane track
+// starts exactly as this one ends -- its end clock can then wait for hover,
+// since the neighbor's own start clock already says where this one ends.
 function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
-  const incoming = new Map<string, LaidOutEvent>();
   const outgoing = new Set<string>();
   const previousByTrack = new Map<string, LaidOutEvent>();
   [...dayEvents]
@@ -701,19 +736,11 @@ function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
         activityMinutes(previous) >= 45 &&
         !previous.tentativeEnd
       ) {
-        incoming.set(event.id, previous);
         outgoing.add(previous.id);
       }
       previousByTrack.set(track, event);
     });
-  return { incoming, outgoing };
-}
-
-function sharedTimeBoundaryTokens(previousColor: string, nextColor: string): CSSProperties {
-  return {
-    "--shared-time-from": `color-mix(in srgb, ${previousColor} 72%, #f4f8f7)`,
-    "--shared-time-to": `color-mix(in srgb, ${nextColor} 72%, #f4f8f7)`,
-  } as CSSProperties;
+  return { outgoing };
 }
 
 function makeId() {
@@ -788,6 +815,9 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<ViewMode>("week");
   const [activeDay, setActiveDay] = useState(0);
   const [compactMode, setCompactMode] = useState(false);
+  // Filters live inline in the header on desktop; on a phone width they collapse
+  // behind this toggle so the header stays one row.
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<SummaryFilter | null>(null);
   const [todayIndex, setTodayIndex] = useState(-1);
   // Dates depend on the viewer's clock and time zone, so they stay empty until
@@ -807,6 +837,8 @@ export default function Home() {
   const [eventToolEdges, setEventToolEdges] = useState<EventToolEdges>({ start: true, end: true });
   const [hourPicker, setHourPicker] = useState<HourPicker | null>(null);
   const [hourPickerPosition, setHourPickerPosition] = useState<HourPickerPosition | null>(null);
+  const [addressPreview, setAddressPreview] = useState<AddressPreview | null>(null);
+  const [addressPreviewPosition, setAddressPreviewPosition] = useState<AddressPreviewPosition | null>(null);
   const [baseHourHeight, setBaseHourHeight] = useState(DESKTOP_HOUR_HEIGHT);
   const [displayStartMinutes, setDisplayStartMinutes] = useState(INITIAL_DISPLAY_RANGE.start);
   const [displayEndMinutes, setDisplayEndMinutes] = useState(INITIAL_DISPLAY_RANGE.end);
@@ -840,6 +872,7 @@ export default function Home() {
   const eventToolsOpenTimerRef = useRef<number | null>(null);
   const eventToolsHoverIdRef = useRef<string | null>(null);
   const hourPickerRef = useRef<HTMLDivElement>(null);
+  const addressPreviewRef = useRef<HTMLDivElement>(null);
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollPointerRef = useRef<AutoScrollPointer | null>(null);
   const touchPressRef = useRef<TouchPress | null>(null);
@@ -1110,6 +1143,41 @@ export default function Home() {
     };
   }, [hourPicker]);
 
+  useLayoutEffect(() => {
+    const preview = addressPreviewRef.current;
+    if (!addressPreview || !preview) return;
+    let frame = 0;
+    const updatePosition = () => {
+      const currentPreview = addressPreviewRef.current;
+      if (!currentPreview) return;
+      const rect = currentPreview.getBoundingClientRect();
+      const gap = 8;
+      const left = clamp(
+        addressPreview.anchor.left + addressPreview.anchor.width / 2 - rect.width / 2,
+        8,
+        Math.max(8, window.innerWidth - rect.width - 8),
+      );
+      let top = addressPreview.anchor.bottom + gap;
+      if (top + rect.height > window.innerHeight - 8) top = addressPreview.anchor.top - rect.height - gap;
+      top = clamp(top, 8, Math.max(8, window.innerHeight - rect.height - 8));
+      setAddressPreviewPosition((current) => current?.left === left && current.top === top ? current : { left, top });
+    };
+    updatePosition();
+    frame = requestAnimationFrame(updatePosition);
+    const observer = new ResizeObserver(updatePosition);
+    observer.observe(preview);
+    window.addEventListener("resize", updatePosition);
+    window.visualViewport?.addEventListener("resize", updatePosition);
+    window.visualViewport?.addEventListener("scroll", updatePosition);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", updatePosition);
+      window.visualViewport?.removeEventListener("resize", updatePosition);
+      window.visualViewport?.removeEventListener("scroll", updatePosition);
+    };
+  }, [addressPreview]);
+
   useEffect(() => {
     if (!quickAddOpen) return;
     const closeQuickAddFromOutside = (event: PointerEvent) => {
@@ -1164,6 +1232,17 @@ export default function Home() {
     document.addEventListener("pointerdown", closeFromOutside, true);
     return () => document.removeEventListener("pointerdown", closeFromOutside, true);
   }, [hourPicker]);
+
+  useEffect(() => {
+    if (!addressPreview) return;
+    const closeFromOutside = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(".calendar-address-preview, .drive-segment-address")) return;
+      closeAddressPreview();
+    };
+    document.addEventListener("pointerdown", closeFromOutside, true);
+    return () => document.removeEventListener("pointerdown", closeFromOutside, true);
+  }, [addressPreview]);
 
   useEffect(() => () => {
     if (eventToolsCloseTimerRef.current !== null) window.clearTimeout(eventToolsCloseTimerRef.current);
@@ -1279,6 +1358,11 @@ export default function Home() {
       if (event.key === "Escape" && hourPicker) {
         event.preventDefault();
         closeHourPicker();
+        return;
+      }
+      if (event.key === "Escape" && addressPreview) {
+        event.preventDefault();
+        closeAddressPreview();
         return;
       }
       if (event.key === "Escape" && quickAddOpen) {
@@ -1451,6 +1535,7 @@ export default function Home() {
       syncNotes: false,
       driveBefore: 0,
       driveAfter: 0,
+      address: "",
     });
     setActiveDay(day);
     setResizeSurface(null);
@@ -1627,6 +1712,41 @@ export default function Home() {
     setHourPickerPosition(null);
   }
 
+  function closeAddressPreview() {
+    setAddressPreview(null);
+    setAddressPreviewPosition(null);
+  }
+
+  function openAddressPreview(target: HTMLElement, event: CalendarEvent) {
+    const address = (event.address ?? "").trim();
+    if (!address) return;
+    const rect = target.getBoundingClientRect();
+    setAddressPreviewPosition(null);
+    setAddressPreview({
+      eventId: event.id,
+      address,
+      anchor: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
+    });
+  }
+
+  // First interaction previews the address on the map; if it is already
+  // open, the family clearly wants to go there, so this one hands off to
+  // whichever map app the device prefers.
+  function handleAddressClick(clickEvent: ReactMouseEvent<HTMLElement>, event: CalendarEvent) {
+    clickEvent.stopPropagation();
+    clickEvent.preventDefault();
+    const address = (event.address ?? "").trim();
+    if (!address) {
+      openEditor(event, clickEvent.currentTarget);
+      return;
+    }
+    if (addressPreview?.eventId === event.id) {
+      window.location.href = mapsNavigationUrl(address);
+      return;
+    }
+    openAddressPreview(clickEvent.currentTarget, event);
+  }
+
   function openEventTools(event: CalendarEvent, card: HTMLElement, announce = true, preferredEdge?: keyof EventToolEdges) {
     if (eventToolsOpenTimerRef.current !== null) {
       window.clearTimeout(eventToolsOpenTimerRef.current);
@@ -1672,10 +1792,13 @@ export default function Home() {
       window.clearTimeout(eventToolsOpenTimerRef.current);
       eventToolsOpenTimerRef.current = null;
     }
+    // Instant: the ref-based scheduling still exists so a pointer that leaves
+    // before this fires can cancel it, but nothing should make a family
+    // member wait to see what a hover already promised.
     eventToolsOpenTimerRef.current = window.setTimeout(() => {
       eventToolsOpenTimerRef.current = null;
       if (eventToolsHoverIdRef.current === event.id && !interactionRef.current) openEventTools(event, card, false, preferredEdge);
-    }, 360);
+    }, 0);
   }
 
   function cancelEventToolsOpen() {
@@ -2310,6 +2433,7 @@ export default function Home() {
   const resizeEvent = resizeSurface ? events.find((event) => event.id === resizeSurface.eventId) ?? null : null;
   const eventToolsEvent = eventToolsId ? events.find((event) => event.id === eventToolsId) ?? null : null;
   const hourPickerEvent = hourPicker ? events.find((event) => event.id === hourPicker.eventId) ?? null : null;
+  const addressPreviewEvent = addressPreview ? events.find((event) => event.id === addressPreview.eventId) ?? null : null;
   const hourPickerTimeOptions = hourPicker && hourPickerEvent
     ? timeOptions.filter((time) => hourPicker.edge === "start"
       ? time >= START_MINUTES + driveBefore(hourPickerEvent) && time < activityEnd(hourPickerEvent)
@@ -2355,6 +2479,32 @@ export default function Home() {
             <h1>WALL BALL</h1>
           </div>
         </div>
+
+        <button
+          type="button"
+          className="filters-toggle"
+          aria-expanded={filtersOpen}
+          aria-controls="header-filters-row"
+          onClick={() => setFiltersOpen((open) => !open)}
+        >
+          <span aria-hidden="true">▾</span><span>Filters</span>
+        </button>
+
+        <div id="header-filters-row" className={`header-filters-row${filtersOpen ? " is-open" : ""}`}>
+          <div className="summary-strip" role="group" aria-label="Filter calendar by keyword. Totals include all visible days.">
+            <button type="button" className="summary-filter" data-summary-filter="class" aria-pressed={activeFilter === "class"} aria-label={`Class, ${formatDuration(classMinutes)}. ${activeFilter === "class" ? "Filter active; activate to show all events." : "Activate to show only Class events."}`} onClick={() => handleSummaryFilter("class")}>
+              <span>Class</span><strong>{formatDuration(classMinutes)}</strong>
+            </button>
+            <button type="button" className="summary-filter" data-summary-filter="soccer" aria-pressed={activeFilter === "soccer"} aria-label={`Soccer, ${formatDuration(soccerMinutes)}. ${activeFilter === "soccer" ? "Filter active; activate to show all events." : "Activate to show only Soccer events."}`} onClick={() => handleSummaryFilter("soccer")}>
+              <span>Soccer</span><strong>{formatDuration(soccerMinutes)}</strong>
+            </button>
+            <button type="button" className="summary-filter drive-total" data-summary-filter="drive" aria-pressed={activeFilter === "drive"} aria-label={`Drive Time, ${formatDuration(driveMinutes)}. ${activeFilter === "drive" ? "Filter active; activate to show all events." : "Activate to show only events with Drive Time."}`} onClick={() => handleSummaryFilter("drive")}>
+              <span>Drive Time</span><strong>{formatDuration(driveMinutes)}</strong>
+            </button>
+          </div>
+          <PwaInstallControl onRestoreCalendar={restoreSharedCalendar} />
+        </div>
+
         <div className="header-view-controls">
           <p className="header-date-range">
             <span className="range-full">Monday–{visibleDays[visibleDays.length - 1]}{rangeLabel ? ` · ${rangeLabel}` : ""}</span>
@@ -2399,21 +2549,6 @@ export default function Home() {
           </span>
         </p>
       )}
-
-      <section className="summary-row">
-        <div className="summary-strip" role="group" aria-label="Filter calendar by keyword. Totals include all visible days.">
-          <button type="button" className="summary-filter" data-summary-filter="class" aria-pressed={activeFilter === "class"} aria-label={`Class, ${formatDuration(classMinutes)}. ${activeFilter === "class" ? "Filter active; activate to show all events." : "Activate to show only Class events."}`} onClick={() => handleSummaryFilter("class")}>
-            <span>Class</span><strong>{formatDuration(classMinutes)}</strong>
-          </button>
-          <button type="button" className="summary-filter" data-summary-filter="soccer" aria-pressed={activeFilter === "soccer"} aria-label={`Soccer, ${formatDuration(soccerMinutes)}. ${activeFilter === "soccer" ? "Filter active; activate to show all events." : "Activate to show only Soccer events."}`} onClick={() => handleSummaryFilter("soccer")}>
-            <span>Soccer</span><strong>{formatDuration(soccerMinutes)}</strong>
-          </button>
-          <button type="button" className="summary-filter drive-total" data-summary-filter="drive" aria-pressed={activeFilter === "drive"} aria-label={`Drive Time, ${formatDuration(driveMinutes)}. ${activeFilter === "drive" ? "Filter active; activate to show all events." : "Activate to show only events with Drive Time."}`} onClick={() => handleSummaryFilter("drive")}>
-            <span>Drive Time</span><strong>{formatDuration(driveMinutes)}</strong>
-          </button>
-        </div>
-        <PwaInstallControl onRestoreCalendar={restoreSharedCalendar} />
-      </section>
 
       <section className="calendar-section" aria-label="Weekly calendar">
         <div className="calendar-shell">
@@ -2563,10 +2698,11 @@ export default function Home() {
                         const top = ((event.start - visualStartMinutes) / 60) * hourHeight;
                         const height = ((event.end - event.start) / 60) * hourHeight;
                         const duration = activityMinutes(event);
-                        const sharedBoundary = sharedTimeBoundariesByDay[dayIndex]?.incoming.get(event.id);
-                        const sharesStartTime = Boolean(sharedBoundary);
-                        const sharesEndTime = sharedTimeBoundariesByDay[dayIndex]?.outgoing.has(event.id) ?? false;
-                        const showRailConnector = duration >= 45 || sharesStartTime || sharesEndTime;
+                        // A card always shows its own start clock. The end clock is only
+                        // pinned when nothing follows immediately below it — otherwise the
+                        // next card's start clock already says where this one ends, and the
+                        // end clock stays quiet until the card is hovered.
+                        const hasNeighborBelow = sharedTimeBoundariesByDay[dayIndex]?.outgoing.has(event.id) ?? false;
                         const isOverlapFocus = hasOverlapFocus && overlapFocusEvent?.id === event.id;
                         const overlapPeerIndex = overlapPeerIndexes.get(event.id);
                         const isOverlapPeer = overlapPeerIndex !== undefined;
@@ -2619,7 +2755,7 @@ export default function Home() {
                         const ariaLabel = `${event.title}, ${day}, ${formatTime(activityStart(event))} to ${formatTime(activityEnd(event))}${event.people.length ? `, with ${event.people.join(", ")}` : ""}${driveBefore(event) || driveAfter(event) ? `, ${formatDuration(driveBefore(event) + driveAfter(event))} Drive Time` : ""}, ${event.bullets.length} notes`;
                         return (
                           <div
-                            className={`calendar-event event--${density} ${duration <= 60 ? "event--single-clock" : ""} ${narrow ? "event--narrow" : ""} ${longTitle ? "event--long-title" : ""} ${duration < 60 ? "event--short-roster" : ""} ${showRoster ? "event--has-roster" : "event--no-roster"} ${sharesStartTime ? "event--shared-start-time" : ""} ${sharesEndTime ? "event--shared-end-time" : ""} ${driveBefore(event) > 0 ? "has-drive-before" : ""} ${driveAfter(event) > 0 ? "has-drive-after" : ""} ${toolsVisible ? "event-tools-open" : ""} ${toolsVisible && toolEdges.length === 1 ? "event-tools-single-edge" : ""} ${isOverlapFocus ? "is-overlap-focus" : ""} ${isOverlapPeer ? "is-overlap-peer" : ""} ${activeId === event.id ? "is-dragging" : ""} ${event.tentativeEnd ? "tentative-end" : ""}`}
+                            className={`calendar-event event--${density} ${narrow ? "event--narrow" : ""} ${longTitle ? "event--long-title" : ""} ${duration < 60 ? "event--short-roster" : ""} ${showRoster ? "event--has-roster" : "event--no-roster"} ${driveBefore(event) > 0 ? "has-drive-before" : ""} ${driveAfter(event) > 0 ? "has-drive-after" : ""} ${toolsVisible ? "event-tools-open" : ""} ${toolsVisible && toolEdges.length === 1 ? "event-tools-single-edge" : ""} ${isOverlapFocus ? "is-overlap-focus" : ""} ${isOverlapPeer ? "is-overlap-peer" : ""} ${activeId === event.id ? "is-dragging" : ""} ${event.tentativeEnd ? "tentative-end" : ""}`}
                             key={event.id}
                             style={style}
                             data-event-id={event.id}
@@ -2746,10 +2882,20 @@ export default function Home() {
                               <span className="drive-segment drive-before">
                                 <span className="drive-segment-label">Leave</span>
                                 <strong>{shortTime(event.start)}</strong>
-                                <span className="drive-segment-route" aria-hidden="true">→</span>
+                                <button
+                                  type="button"
+                                  className={`drive-segment-address${(event.address ?? "").trim() ? "" : " drive-segment-address--empty"}`}
+                                  aria-label={(event.address ?? "").trim() ? `Address for ${event.title}: ${event.address}. Shows a map, tap again to start navigation.` : `Add an address for ${event.title}`}
+                                  onPointerDown={(pointerEvent) => pointerEvent.stopPropagation()}
+                                  onMouseEnter={(mouseEvent) => {
+                                    if ((event.address ?? "").trim()) openAddressPreview(mouseEvent.currentTarget, event);
+                                  }}
+                                  onClick={(clickEvent) => handleAddressClick(clickEvent, event)}
+                                >
+                                  {(event.address ?? "").trim() || "Add Address"}
+                                </button>
                               </span>
                             )}
-                            {!toolsVisible && sharedBoundary && <span className="event-shared-time" style={sharedTimeBoundaryTokens(sharedBoundary.color, event.color)} aria-hidden="true">{shortTime(activityStart(event))}</span>}
                             {toolsVisible && (
                               <div
                                 id={`event-tools-${event.id}`}
@@ -2800,25 +2946,28 @@ export default function Home() {
                                         onClick={(clickEvent) => openHourPicker(clickEvent, event, edge)}
                                       >
                                         <span className="event-time-clock-value">{shortTime(time)}</span>
-                                        <i className="event-time-clock-grip" aria-hidden="true">↕</i>
                                       </button>
                                       <button
                                         type="button"
                                         className={`event-departure-button event-departure-button--${edge}`}
-                                        aria-label={`Add travel time ${position} ${event.title}`}
-                                        title={`Drag or click to add travel time ${position}`}
-                                        onPointerDown={(pointerEvent) => beginInteraction(pointerEvent, event, mode, "drive", true)}
-                                        onPointerMove={moveInteraction}
-                                        onPointerUp={endInteraction}
-                                        onPointerCancel={cancelInteraction}
+                                        aria-label={`Add 15 minutes of travel time ${position} ${event.title}`}
+                                        title={`Add 15 minutes of travel time ${position}`}
                                         onClick={(clickEvent) => handleEventToolClick(clickEvent, event, edge, "drive")}
-                                      ><span className="event-departure-glyph" aria-hidden="true" /></button>
+                                      >
+                                        <span className="event-departure-glyph" aria-hidden="true">
+                                          <i className="event-departure-car" />
+                                          <i className="event-departure-plus" />
+                                        </span>
+                                      </button>
                                     </Fragment>
                                   );
                                 })}
-                                {!toolsVisible && !sharesStartTime && <span className="event-rail-time event-rail-start">{shortTime(activityStart(event))}</span>}
-                                {showRailConnector && <span className="event-rail-connector" />}
-                                {!toolsVisible && !sharesEndTime && duration >= 45 && <span className="event-rail-time event-rail-end">{shortTime(activityEnd(event))}</span>}
+                                {!toolsVisible && <span className="event-rail-time event-rail-start">{shortTime(activityStart(event))}</span>}
+                                {!toolsVisible && (
+                                  <span className={`event-rail-time event-rail-end${hasNeighborBelow ? " event-rail-end--peek" : ""}`}>
+                                    {shortTime(activityEnd(event))}
+                                  </span>
+                                )}
                               </div>
                               <div className={`event-main ${artwork ? "has-artwork" : ""}`}>
                                 {artwork && <span className="event-artwork-wash" aria-hidden="true" />}
@@ -2840,7 +2989,6 @@ export default function Home() {
                               <span className="drive-segment drive-after">
                                 <span className="drive-segment-label">Arrive</span>
                                 <strong>{shortTime(event.end)}</strong>
-                                <span className="drive-segment-route" aria-hidden="true">→</span>
                               </span>
                             )}
                           </div>
@@ -2932,6 +3080,44 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {addressPreview && addressPreviewEvent && (
+        <div
+          id="calendar-address-preview"
+          ref={addressPreviewRef}
+          className="calendar-address-preview"
+          role="dialog"
+          aria-label={`Map for ${addressPreviewEvent.title}`}
+          style={{
+            left: `${addressPreviewPosition?.left ?? addressPreview.anchor.left}px`,
+            top: `${addressPreviewPosition?.top ?? addressPreview.anchor.bottom + 8}px`,
+            visibility: addressPreviewPosition ? "visible" : "hidden",
+            ...eventColorTokens(addressPreviewEvent.color),
+          } as CSSProperties}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <div className="calendar-address-preview-head">
+            <span className="calendar-address-preview-kicker">Address</span>
+            <button type="button" onClick={closeAddressPreview} aria-label="Close map preview">×</button>
+          </div>
+          <div className="calendar-address-preview-map">
+            <iframe
+              title={`Map for ${addressPreview.address}`}
+              src={mapsEmbedUrl(addressPreview.address)}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <a
+            className="calendar-address-preview-open"
+            href={mapsNavigationUrl(addressPreview.address)}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span>{addressPreview.address}</span>
+            <span className="calendar-address-preview-hint">Open in Maps</span>
+          </a>
         </div>
       )}
 
@@ -3031,17 +3217,36 @@ export default function Home() {
               </label>
 
               {quickAddOpen ? (
-                <button
-                  className="quick-add-more"
-                  type="button"
-                  aria-label="Show more event details"
-                  onClick={() => setNewEventDetailsOpen(true)}
-                >
-                  <span>More</span>
-                  <span className="quick-add-more-chevron" aria-hidden="true" />
-                </button>
+                <div className="quick-add-more-row">
+                  <label className="field field-address quick-add-address">
+                    <span className="sr-only">Address</span>
+                    <input
+                      value={draft.address ?? ""}
+                      onChange={(event) => setDraft({ ...draft, address: event.target.value })}
+                      placeholder="Add address"
+                    />
+                  </label>
+                  <button
+                    className="quick-add-more"
+                    type="button"
+                    aria-label="Show more event details"
+                    onClick={() => setNewEventDetailsOpen(true)}
+                  >
+                    <span>More</span>
+                    <span className="quick-add-more-chevron" aria-hidden="true" />
+                  </button>
+                </div>
               ) : (
                 <div className="editor-details">
+                  <label className="field field-address">
+                    <span>Address</span>
+                    <input
+                      value={draft.address ?? ""}
+                      onChange={(event) => setDraft({ ...draft, address: event.target.value })}
+                      placeholder="Add address"
+                    />
+                  </label>
+
                   <label className="field bullet-field">
                     <span>Notes <small>one bullet per line</small></span>
                     <textarea
