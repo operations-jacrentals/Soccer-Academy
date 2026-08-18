@@ -27,8 +27,13 @@ or WSL) for the bounded build scripts.
 
 ```bash
 npm ci
+npm run db:migrate
 npm run dev
 ```
+
+`db:migrate` creates the `calendar_state` table in the local D1 store. Without
+it the calendar still opens, but it runs on this device only and shows a
+"Not syncing" warning in the header.
 
 Quality gates:
 
@@ -40,11 +45,30 @@ npm test
 `npm test` builds the deployable Vinext artifact and then runs the rendered
 source contracts.
 
-## Storage contract
+## Access and storage
 
-The API at `app/api/calendar/route.ts` persists one canonical family calendar
-document in the `calendar_state` D1 table. Writes use revision-checked patches,
-and the UI keeps local storage only as a cache and recovery source.
+Every call to `app/api/calendar/route.ts` is identified before it touches
+storage. The hosting platform authenticates the visitor and forwards the
+signed-in identity as headers; `app/calendar-access.ts` turns that identity into
+an authorization decision and a storage key. Unidentified requests get 401 and
+requests outside the allowlist get 403.
+
+In development there are no platform identity headers, so the route falls back
+to a local development identity. That branch sits behind `import.meta.env.DEV`,
+which Vite replaces at build time, so it does not exist in a production bundle.
+
+| Variable | Effect |
+| --- | --- |
+| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Unset means any signed-in visitor. |
+| `CALENDAR_HOUSEHOLDS` | JSON object mapping email to household id, for more than one family. |
+| `CALENDAR_DEFAULT_HOUSEHOLD` | Household for anyone not named above. Defaults to `family`, the existing row. |
+| `CALENDAR_DEV_EMAIL` | Development identity only. Ignored in production builds. |
+
+The API stores one document per household in the `calendar_state` D1 table,
+keyed by household id. Writes use revision-checked compare-and-swap, and a change
+to an existing event is sent as only the fields that changed, so two people
+editing different fields of one event merge instead of overwriting each other.
+The UI keeps local storage as a cache and recovery source.
 
 The binding name is `DB`; the schema and first migration live in `db/` and
 `drizzle/`. The existing Sites project identity remains in

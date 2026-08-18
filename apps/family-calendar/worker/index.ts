@@ -1,6 +1,7 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { setWorkerEnv } from "../app/worker-env";
 
 interface Env {
   ASSETS: Fetcher;
@@ -38,6 +39,9 @@ async function addViewportFit(response: Response) {
 
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    // Publish the environment before routing so route handlers can read their
+    // bindings and settings without importing `cloudflare:workers`.
+    setWorkerEnv(env);
     const url = new URL(request.url);
 
     if (url.pathname === "/_vinext/image") {

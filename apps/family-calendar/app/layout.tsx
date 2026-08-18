@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import "./standalone.css";
 import "./globals.css";
 import { PwaRegistration } from "./pwa-registration";
 

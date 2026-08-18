@@ -7,8 +7,12 @@ will eventually join WALL BALL. It is intentionally handed off as a separate
 application: that preserves a working calendar while the combined product's
 route structure, account model, and shared data ownership are decided.
 
-The handoff is gated by `family-calendar`, enabled in development and staging
-and disabled in production.
+A `family-calendar` flag is registered in `flags/flags.json`, enabled in
+development and staging and disabled in production. Note what that flag does
+and does not do today: no code reads the registry, so the flag does not gate
+anything by itself. The calendar is currently isolated because nothing mounts
+it, not because the flag is off. The flag becomes a real gate at step 4 below,
+when the combined shell reads it before mounting the route.
 
 ## What is ready
 
@@ -27,11 +31,11 @@ and disabled in production.
 
 | Concern | Calendar owner today | Merge decision |
 | --- | --- | --- |
-| UI shell | `app/page.tsx` and `app/globals.css` | Replace the duplicated header with WALL BALL navigation after the calendar is mounted. |
+| UI shell | `app/page.tsx` and `app/globals.css` | Replace the duplicated header with WALL BALL navigation after the calendar is mounted. `globals.css` is scoped to `.planner-app` and its tokens are `--fc-` prefixed, so it can be imported alongside WALL BALL's stylesheet; `app/standalone.css` holds the document-level rules and is not imported by a host app. |
 | Time controls | Calendar-specific clock picker | Share visual tokens and interaction rules; retain calendar start/end validation. |
 | Calendar rules | Pure modules under `app/calendar-*.ts` | Keep as the domain boundary and import from the combined route. |
-| Persistence | `app/api/calendar/route.ts` + D1 `DB` | Decide whether WALL BALL uses the same database before moving the API. |
-| Identity | Hosting access policy / optional ChatGPT headers | Choose the combined app's family membership and write authorization policy. |
+| Persistence | `app/api/calendar/route.ts` + D1 `DB`, one row per household | Decide whether WALL BALL uses the same database before moving the API. |
+| Identity | `app/calendar-access.ts` — platform identity headers, an email allowlist, and a household map | Replace with WALL BALL's own membership model, keeping the rule that the calendar key is derived from the verified identity and never from the request body. |
 | Offline recovery | service worker + local cache | Preserve API bypasses and backup semantics when merging service workers. |
 
 ## Recommended merge sequence
@@ -55,7 +59,9 @@ and disabled in production.
 
 - Node.js `>=22.13.0`
 - a Cloudflare D1 binding named `DB`
-- migration `apps/family-calendar/drizzle/0000_ambiguous_namora.sql`
+- the migrations in `apps/family-calendar/drizzle/`, applied with
+  `npm run db:migrate` locally or `npm run db:migrate:remote` against a
+  deployed database
 - the existing `.openai/hosting.json` only while the standalone Sites deployment
   remains the canonical reference
 
@@ -67,9 +73,13 @@ From `apps/family-calendar`:
 
 ```bash
 npm ci
+npm run db:migrate
 npm run lint
 npm test
 ```
+
+Without `db:migrate` the calendar runs on the local device only and says so in
+the header; it does not silently pretend to be shared.
 
 Before enabling the combined route, perform a phone-width pass in both normal
 and Compact modes and verify a second browser receives saved changes.

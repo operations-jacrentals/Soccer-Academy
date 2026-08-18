@@ -60,6 +60,7 @@ Full lifecycle and conventions: [`flags/README.md`](flags/README.md).
 python scripts/validate-flags.py     # validate the flag registry
 cd apps/family-calendar
 npm ci
+npm run db:migrate
 npm run lint
 npm test
 ```
