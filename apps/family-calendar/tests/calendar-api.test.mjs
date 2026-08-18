@@ -6,7 +6,7 @@ import test from "node:test";
  * through the built Worker with an in-memory stand-in for D1.
  */
 
-const OWNER = "operations@jacrentals.com";
+const OWNER = "owner@example.com";
 
 async function loadWorker() {
   const url = new URL("../dist/server/index.js", import.meta.url);
@@ -82,13 +82,13 @@ function call(worker, { headers = {}, env = {}, body } = {}) {
 function event(overrides = {}) {
   return {
     id: "soccer-1",
-    title: "Albion soccer",
+    title: "Soccer club",
     day: 0,
     start: 18 * 60,
     end: 19 * 60 + 30,
     color: "#3c6fb0",
-    bullets: ["Jack + Blue"],
-    people: ["Jack", "Blue"],
+    bullets: ["Sam + Alex"],
+    people: ["Sam", "Alex"],
     town: true,
     kind: "fixed",
     ...overrides,
@@ -107,7 +107,7 @@ test("a host without sign-in serves the calendar rather than locking everyone ou
 
   const read = await call(worker, { env });
   assert.equal(read.status, 200);
-  assert.equal((await read.json()).events[0].title, "Albion soccer");
+  assert.equal((await read.json()).events[0].title, "Soccer club");
 });
 
 test("two devices with no sign-in share one calendar", async () => {
@@ -118,12 +118,12 @@ test("two devices with no sign-in share one calendar", async () => {
   await call(worker, { env, body: { type: "bootstrap", events: [event()] } });
   const edit = await call(worker, {
     env,
-    body: { type: "patch", patch: { upserts: [], removeIds: [], updates: [{ id: "soccer-1", fields: { title: "Albion — moved indoors" } }] } },
+    body: { type: "patch", patch: { upserts: [], removeIds: [], updates: [{ id: "soccer-1", fields: { title: "Soccer club — moved indoors" } }] } },
   });
   assert.equal(edit.status, 200);
 
   const otherDevice = await call(worker, { env });
-  assert.equal((await otherDevice.json()).events[0].title, "Albion — moved indoors");
+  assert.equal((await otherDevice.json()).events[0].title, "Soccer club — moved indoors");
 });
 
 test("an unidentified request is refused once sign-in is required", async () => {
@@ -189,7 +189,7 @@ test("each household gets its own calendar document", async () => {
   await call(worker, {
     headers: { "oai-authenticated-user-email": OWNER },
     env,
-    body: { type: "bootstrap", events: [event({ title: "Albion soccer" })] },
+    body: { type: "bootstrap", events: [event({ title: "Soccer club" })] },
   });
   await call(worker, {
     headers: { "oai-authenticated-user-email": "coach@example.com" },
@@ -219,7 +219,7 @@ test("two people editing different fields of one event both keep their change", 
   const renamed = await call(worker, {
     headers,
     env,
-    body: { type: "patch", patch: { upserts: [], removeIds: [], updates: [{ id: "soccer-1", fields: { title: "Albion — moved indoors" } }] } },
+    body: { type: "patch", patch: { upserts: [], removeIds: [], updates: [{ id: "soccer-1", fields: { title: "Soccer club — moved indoors" } }] } },
   });
   assert.equal(renamed.status, 200);
 
@@ -231,7 +231,7 @@ test("two people editing different fields of one event both keep their change", 
   assert.equal(rescheduled.status, 200);
 
   const [saved] = (await rescheduled.json()).events;
-  assert.equal(saved.title, "Albion — moved indoors", "the rename must survive the reschedule");
+  assert.equal(saved.title, "Soccer club — moved indoors", "the rename must survive the reschedule");
   assert.equal(saved.start, 17 * 60);
 });
 
