@@ -31,11 +31,51 @@ export class CalendarAccessError extends Error {
 
 /** The environment values this module reads. All are optional. */
 export type CalendarAccessEnv = {
+  CALENDAR_ACCESS_MODE?: string;
   CALENDAR_ALLOWED_EMAILS?: string;
   CALENDAR_HOUSEHOLDS?: string;
   CALENDAR_DEFAULT_HOUSEHOLD?: string;
   CALENDAR_DEV_EMAIL?: string;
 };
+
+/**
+ * How the calendar decides who may open it.
+ *
+ * `public`  — anyone with the link, sharing one household. No sign-in exists,
+ *             so this is the only mode that works on a host which does not
+ *             inject identity headers. It is the default because it matches how
+ *             this calendar has always been deployed, and because defaulting to
+ *             `identified` on such a host would lock every visitor out rather
+ *             than protecting anything.
+ * `identified` — the host authenticates the visitor and forwards their identity,
+ *             which is what enables the allowlist and per-household routing.
+ *
+ * Setting an allowlist implies `identified`: an allowlist is meaningless without
+ * someone to check it against, and silently ignoring it would be worse than
+ * failing.
+ */
+export type AccessMode = "public" | "identified";
+
+/** The stand-in identity used when the calendar is open to anyone with the link. */
+const PUBLIC_USER: ChatGPTUser = {
+  displayName: "Shared link",
+  email: "public@calendar.local",
+  fullName: null,
+};
+
+export function resolveAccessMode(env: CalendarAccessEnv): AccessMode {
+  const configured = env.CALENDAR_ACCESS_MODE?.trim().toLowerCase();
+  if (configured === "identified") return "identified";
+  if (configured === "public") return "public";
+  if (configured) {
+    throw new CalendarAccessError(
+      `CALENDAR_ACCESS_MODE must be "public" or "identified", not "${configured}".`,
+      500,
+    );
+  }
+  // An allowlist only means something when there is an identity to check.
+  return parseEmailList(env.CALENDAR_ALLOWED_EMAILS).length > 0 ? "identified" : "public";
+}
 
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase();
@@ -104,7 +144,12 @@ export function resolveCalendarAccess(
   requestHeaders: { get(name: string): string | null },
   env: CalendarAccessEnv,
 ): CalendarAccess {
-  const user = readChatGPTUserFromHeaders(requestHeaders) ?? developmentUser(env);
+  const mode = resolveAccessMode(env);
+  const identified = readChatGPTUserFromHeaders(requestHeaders) ?? developmentUser(env);
+
+  // In public mode a visitor who *is* identified still gets their own household
+  // routing; the link simply also works for anyone without an identity.
+  const user = identified ?? (mode === "public" ? PUBLIC_USER : null);
   if (!user) {
     throw new CalendarAccessError("Sign in to open the family calendar.", 401);
   }

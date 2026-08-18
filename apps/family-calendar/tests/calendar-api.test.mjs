@@ -95,19 +95,74 @@ function event(overrides = {}) {
   };
 }
 
-test("an unidentified request cannot read or write the calendar", async () => {
+test("a host without sign-in serves the calendar rather than locking everyone out", async () => {
+  // The deployed calendar has always been open to anyone with the link, and its
+  // host injects no identity headers. Defaulting to "identified" there would 401
+  // every visitor — including the people the calendar is for.
   const worker = await loadWorker();
+  const env = { DB: fakeD1() };
 
-  const read = await call(worker);
+  const bootstrap = await call(worker, { env, body: { type: "bootstrap", events: [event()] } });
+  assert.equal(bootstrap.status, 201);
+
+  const read = await call(worker, { env });
+  assert.equal(read.status, 200);
+  assert.equal((await read.json()).events[0].title, "Albion soccer");
+});
+
+test("two devices with no sign-in share one calendar", async () => {
+  // The whole point: a change made on one device is visible on the other.
+  const worker = await loadWorker();
+  const env = { DB: fakeD1() };
+
+  await call(worker, { env, body: { type: "bootstrap", events: [event()] } });
+  const edit = await call(worker, {
+    env,
+    body: { type: "patch", patch: { upserts: [], removeIds: [], updates: [{ id: "soccer-1", fields: { title: "Albion — moved indoors" } }] } },
+  });
+  assert.equal(edit.status, 200);
+
+  const otherDevice = await call(worker, { env });
+  assert.equal((await otherDevice.json()).events[0].title, "Albion — moved indoors");
+});
+
+test("an unidentified request is refused once sign-in is required", async () => {
+  const worker = await loadWorker();
+  const env = { DB: fakeD1(), CALENDAR_ACCESS_MODE: "identified" };
+
+  const read = await call(worker, { env });
   assert.equal(read.status, 401);
 
-  const write = await call(worker, { body: { type: "replace", events: [event()] } });
+  const write = await call(worker, { env, body: { type: "replace", events: [event()] } });
   assert.equal(write.status, 401);
+});
+
+test("setting an allowlist requires sign-in on its own", async () => {
+  // An allowlist with nobody to check it against would be silently ignored.
+  const worker = await loadWorker();
+  const env = { DB: fakeD1(), CALENDAR_ALLOWED_EMAILS: OWNER };
+
+  const anonymous = await call(worker, { env });
+  assert.equal(anonymous.status, 401);
+
+  const owner = await call(worker, {
+    headers: { "oai-authenticated-user-email": OWNER },
+    env,
+    body: { type: "bootstrap", events: [event()] },
+  });
+  assert.equal(owner.status, 201);
+});
+
+test("an unusable access mode fails loudly instead of guessing", async () => {
+  const worker = await loadWorker();
+  const response = await call(worker, { env: { DB: fakeD1(), CALENDAR_ACCESS_MODE: "sometimes" } });
+  assert.equal(response.status, 500);
+  assert.match((await response.json()).error, /CALENDAR_ACCESS_MODE/);
 });
 
 test("the allowlist decides who reaches the calendar, ignoring address case", async () => {
   const worker = await loadWorker();
-  const env = { CALENDAR_ALLOWED_EMAILS: OWNER, DB: fakeD1() };
+  const env = { CALENDAR_ALLOWED_EMAILS: OWNER, DB: fakeD1(), CALENDAR_ACCESS_MODE: "identified" };
 
   const stranger = await call(worker, {
     headers: { "oai-authenticated-user-email": "stranger@example.com" },
