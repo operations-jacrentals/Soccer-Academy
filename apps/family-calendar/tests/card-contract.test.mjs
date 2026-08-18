@@ -107,7 +107,7 @@ test("the start clock keeps one home at every duration", () => {
     "a short card must not relocate the start clock");
   assert.doesNotMatch(css, /\.event--micro \.event-rail-start\s*\{[^}]*position:\s*static/);
   assert.doesNotMatch(css, /\.event--compact \.event-rail-start\s*\{[^}]*position:\s*static/);
-  assert.match(css, /\.event-rail-start\s*\{\s*top:\s*7px;\s*\}/,
+  assert.match(css, /\.event-rail-start\s*\{\s*top:\s*5px;\s*\}/,
     "one home, expressed as a single top offset");
   // Short cards may shift that home enough to fit, but not move it elsewhere.
   const shortCard = atRuleBlock(css, "@container eventcard (max-height: 46px)");

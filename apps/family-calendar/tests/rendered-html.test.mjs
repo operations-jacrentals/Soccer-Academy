@@ -522,7 +522,7 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(pageSource, /title=\{`Drag or click to add travel time \$\{position\}`\}/);
   assert.match(pageSource, /aria-label=\{`Add an event \$\{edge === "start" \? "before" : "after"\} \$\{event\.title\}`\}/);
   assert.match(pageSource, /className="event-edge-add"/);
-  assert.match(pageSource, /className="event-departure-glyph"/);
+  assert.doesNotMatch(pageSource, /className="event-departure-glyph"/);
   assert.doesNotMatch(pageSource, /className="event-edge-extend"/);
   assert.doesNotMatch(pageSource, /className="event-edge-drive"/);
   assert.doesNotMatch(pageSource, /↝/);
@@ -611,9 +611,10 @@ test("travel bands name Leave and Arrive while retaining aligned dotted event se
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(pageSource, /driveBefore\(event\) > 0 && \([\s\S]*?className="drive-segment drive-before"[\s\S]*?className="drive-segment-label">Leave<\/span>[\s\S]*?<strong>\{shortTime\(event\.start\)\}<\/strong>[\s\S]*?className="drive-segment-route" aria-hidden="true">→<\/span>/);
-  assert.match(pageSource, /driveAfter\(event\) > 0 && \([\s\S]*?className="drive-segment drive-after"[\s\S]*?className="drive-segment-label">Arrive<\/span>[\s\S]*?<strong>\{shortTime\(event\.end\)\}<\/strong>[\s\S]*?className="drive-segment-route" aria-hidden="true">→<\/span>/);
-  assert.match(cssSource, /\.drive-segment \{[\s\S]*?grid-template-columns:\s*auto auto minmax\(10px, 1fr\)[\s\S]*?border-inline:\s*var\(--event-stroke\) dotted color-mix[\s\S]*?linear-gradient\(90deg, #789da4, #a9c4c3 56%, #c5d7d1\)/);
+  assert.match(pageSource, /driveBefore\(event\) > 0 && \([\s\S]*?className="drive-segment drive-before"[\s\S]*?className="drive-segment-label">Leave<\/span>[\s\S]*?<strong>\{shortTime\(event\.start\)\}<\/strong>/);
+  assert.match(pageSource, /driveAfter\(event\) > 0 && \([\s\S]*?className="drive-segment drive-after"[\s\S]*?className="drive-segment-label">Arrive<\/span>[\s\S]*?<strong>\{shortTime\(event\.end\)\}<\/strong>/);
+  assert.doesNotMatch(pageSource, /className="drive-segment-route"/);
+  assert.match(cssSource, /\.drive-segment \{[\s\S]*?grid-template-columns:\s*auto auto;[\s\S]*?border-inline:\s*var\(--event-stroke\) dotted color-mix[\s\S]*?linear-gradient\(90deg, #789da4, #a9c4c3 56%, #c5d7d1\)/);
   assert.match(cssSource, /\.drive-before \{[\s\S]*?border-top:\s*var\(--event-stroke\) dotted var\(--event-outline\)/);
   assert.match(cssSource, /\.drive-after \{[\s\S]*?border-bottom:\s*var\(--event-stroke\) dotted var\(--event-outline\)/);
 });

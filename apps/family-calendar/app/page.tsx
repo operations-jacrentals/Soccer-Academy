@@ -789,6 +789,7 @@ export default function Home() {
   const [activeDay, setActiveDay] = useState(0);
   const [compactMode, setCompactMode] = useState(false);
   const [activeFilter, setActiveFilter] = useState<SummaryFilter | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [todayIndex, setTodayIndex] = useState(-1);
   // Dates depend on the viewer's clock and time zone, so they stay empty until
   // after hydration. Server and first client render therefore agree exactly.
@@ -2355,6 +2356,28 @@ export default function Home() {
             <h1>WALL BALL</h1>
           </div>
         </div>
+        <div className={`header-summary${filtersOpen ? " is-open" : ""}`}>
+          <button
+            type="button"
+            className="summary-disclosure"
+            aria-expanded={filtersOpen}
+            aria-controls="calendar-summary-filters"
+            onClick={() => setFiltersOpen((open) => !open)}
+          >
+            <span>Filters</span><span aria-hidden="true">{filtersOpen ? "−" : "+"}</span>
+          </button>
+          <div id="calendar-summary-filters" className="summary-strip" role="group" aria-label="Filter calendar by keyword. Totals include all visible days.">
+            <button type="button" className="summary-filter" data-summary-filter="class" aria-pressed={activeFilter === "class"} aria-label={`Class, ${formatDuration(classMinutes)}. ${activeFilter === "class" ? "Filter active; activate to show all events." : "Activate to show only Class events."}`} onClick={() => handleSummaryFilter("class")}>
+              <span>Class</span><strong>{formatDuration(classMinutes)}</strong>
+            </button>
+            <button type="button" className="summary-filter" data-summary-filter="soccer" aria-pressed={activeFilter === "soccer"} aria-label={`Soccer, ${formatDuration(soccerMinutes)}. ${activeFilter === "soccer" ? "Filter active; activate to show all events." : "Activate to show only Soccer events."}`} onClick={() => handleSummaryFilter("soccer")}>
+              <span>Soccer</span><strong>{formatDuration(soccerMinutes)}</strong>
+            </button>
+            <button type="button" className="summary-filter drive-total" data-summary-filter="drive" aria-pressed={activeFilter === "drive"} aria-label={`Drive Time, ${formatDuration(driveMinutes)}. ${activeFilter === "drive" ? "Filter active; activate to show all events." : "Activate to show only events with Drive Time."}`} onClick={() => handleSummaryFilter("drive")}>
+              <span>Drive Time</span><strong>{formatDuration(driveMinutes)}</strong>
+            </button>
+          </div>
+        </div>
         <div className="header-view-controls">
           <p className="header-date-range">
             <span className="range-full">Monday–{visibleDays[visibleDays.length - 1]}{rangeLabel ? ` · ${rangeLabel}` : ""}</span>
@@ -2386,6 +2409,7 @@ export default function Home() {
             <button type="button" className={viewMode === "day" ? "selected" : ""} aria-pressed={viewMode === "day"} onClick={() => selectView("day")}>Day</button>
             <button type="button" className={viewMode === "week" ? "selected" : ""} aria-pressed={viewMode === "week"} onClick={() => selectView("week")}>Week</button>
           </div>
+          <PwaInstallControl onRestoreCalendar={restoreSharedCalendar} />
         </div>
       </header>
 
@@ -2399,21 +2423,6 @@ export default function Home() {
           </span>
         </p>
       )}
-
-      <section className="summary-row">
-        <div className="summary-strip" role="group" aria-label="Filter calendar by keyword. Totals include all visible days.">
-          <button type="button" className="summary-filter" data-summary-filter="class" aria-pressed={activeFilter === "class"} aria-label={`Class, ${formatDuration(classMinutes)}. ${activeFilter === "class" ? "Filter active; activate to show all events." : "Activate to show only Class events."}`} onClick={() => handleSummaryFilter("class")}>
-            <span>Class</span><strong>{formatDuration(classMinutes)}</strong>
-          </button>
-          <button type="button" className="summary-filter" data-summary-filter="soccer" aria-pressed={activeFilter === "soccer"} aria-label={`Soccer, ${formatDuration(soccerMinutes)}. ${activeFilter === "soccer" ? "Filter active; activate to show all events." : "Activate to show only Soccer events."}`} onClick={() => handleSummaryFilter("soccer")}>
-            <span>Soccer</span><strong>{formatDuration(soccerMinutes)}</strong>
-          </button>
-          <button type="button" className="summary-filter drive-total" data-summary-filter="drive" aria-pressed={activeFilter === "drive"} aria-label={`Drive Time, ${formatDuration(driveMinutes)}. ${activeFilter === "drive" ? "Filter active; activate to show all events." : "Activate to show only events with Drive Time."}`} onClick={() => handleSummaryFilter("drive")}>
-            <span>Drive Time</span><strong>{formatDuration(driveMinutes)}</strong>
-          </button>
-        </div>
-        <PwaInstallControl onRestoreCalendar={restoreSharedCalendar} />
-      </section>
 
       <section className="calendar-section" aria-label="Weekly calendar">
         <div className="calendar-shell">
@@ -2746,7 +2755,6 @@ export default function Home() {
                               <span className="drive-segment drive-before">
                                 <span className="drive-segment-label">Leave</span>
                                 <strong>{shortTime(event.start)}</strong>
-                                <span className="drive-segment-route" aria-hidden="true">→</span>
                               </span>
                             )}
                             {!toolsVisible && sharedBoundary && <span className="event-shared-time" style={sharedTimeBoundaryTokens(sharedBoundary.color, event.color)} aria-hidden="true">{shortTime(activityStart(event))}</span>}
@@ -2812,7 +2820,7 @@ export default function Home() {
                                         onPointerUp={endInteraction}
                                         onPointerCancel={cancelInteraction}
                                         onClick={(clickEvent) => handleEventToolClick(clickEvent, event, edge, "drive")}
-                                      ><span className="event-departure-glyph" aria-hidden="true" /></button>
+                                      ></button>
                                     </Fragment>
                                   );
                                 })}
@@ -2840,7 +2848,6 @@ export default function Home() {
                               <span className="drive-segment drive-after">
                                 <span className="drive-segment-label">Arrive</span>
                                 <strong>{shortTime(event.end)}</strong>
-                                <span className="drive-segment-route" aria-hidden="true">→</span>
                               </span>
                             )}
                           </div>
