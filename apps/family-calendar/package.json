@@ -16,7 +16,8 @@
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
     "db:migrate": "bash scripts/sites-env.sh -- wrangler d1 migrations apply DB --local --config db/wrangler.jsonc --persist-to .wrangler/state",
     "db:migrate:remote": "bash scripts/sites-env.sh -- wrangler d1 migrations apply DB --remote --config db/wrangler.jsonc",
-    "verify:cards": "node scripts/verify-card-geometry.mjs"
+    "verify:cards": "node scripts/verify-card-geometry.mjs",
+    "deploy:config": "node scripts/prepare-deploy-config.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
