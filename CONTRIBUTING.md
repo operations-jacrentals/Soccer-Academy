@@ -58,7 +58,11 @@ Full lifecycle and conventions: [`flags/README.md`](flags/README.md).
 
 ```bash
 python scripts/validate-flags.py     # validate the flag registry
-# TODO: add your stack's lint/test/build once the app exists
+cd apps/family-calendar
+npm ci
+npm run db:migrate
+npm run lint
+npm test
 ```
 
 ## Releasing

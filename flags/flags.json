@@ -1,6 +1,17 @@
 {
   "$schema": "./schema.json",
   "flags": {
+    "family-calendar": {
+      "description": "Editable shared family schedule being integrated with WALL BALL.",
+      "owner": "operations@jacrentals.com",
+      "created": "2026-08-17",
+      "cleanupBy": "2026-11-17",
+      "environments": {
+        "development": true,
+        "staging": true,
+        "production": false
+      }
+    },
     "parent-dashboard": {
       "description": "Parent-facing progress dashboard showing education + soccer mastery.",
       "owner": "operations@jacrentals.com",
