@@ -9,6 +9,38 @@ It runs on its own track rather than through the curriculum's MkDocs publish,
 because the calendar is a Cloudflare Worker with a D1 database rather than a
 static site.
 
+## The short route: host it yourself, no secrets
+
+If you would rather not depend on a hosting control plane that only someone else
+can operate, this moves the calendar onto your own Cloudflare account in one run.
+It uses your own `wrangler login` session — no API tokens, no repository secrets,
+no GitHub environments.
+
+```bash
+cd apps/family-calendar
+npx wrangler login                          # once, approve in the browser
+node scripts/deploy-to-cloudflare.mjs --import ../../path/to/calendar-export.json
+```
+
+That creates the D1 database if it is missing, applies migrations, deploys the
+Worker, imports a saved calendar export, and then checks the deployed URL
+actually serves the calendar before reporting success.
+
+Useful details:
+
+- **Re-running is safe.** The database is only created when missing, migrations
+  are tracked, and `--import` refuses to overwrite a calendar that already has
+  events unless you add `--force`.
+- **Take an export first.** `curl <site>/api/calendar > calendar-export.json`
+  against your current deployment captures everything; the importer keeps the
+  stored fields and drops the layout ones the app recomputes.
+- **`--dry-run`** shows the whole plan without deploying anything.
+- The result is a public `*.workers.dev` URL that needs no sign-in, which is
+  what lets two people edit the same calendar from different devices.
+
+The rest of this document covers the GitHub Actions route, which deploys on
+merge but does need Cloudflare credentials stored as environment secrets.
+
 ## What replaced the ChatGPT Sites project
 
 The calendar used to be deployed by a ChatGPT Sites project
