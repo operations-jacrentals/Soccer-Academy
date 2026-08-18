@@ -1,189 +1,92 @@
-# Deploying the Family Calendar
+# Releasing the Family Weekly Calendar
 
-Soccer-Academy is the source of truth for the calendar. Merging a change under
-`apps/family-calendar/` deploys staging automatically; publishing a release
-promotes the same commit to production behind the reviewer gate.
+The calendar has a split ownership model, and it is deliberate.
 
-The workflow is [`.github/workflows/deploy-calendar.yml`](../.github/workflows/deploy-calendar.yml).
-It runs on its own track rather than through the curriculum's MkDocs publish,
-because the calendar is a Cloudflare Worker with a D1 database rather than a
-static site.
+| | Owns |
+| --- | --- |
+| **GitHub** (`main`) | the source of truth for `apps/family-calendar/` |
+| **ChatGPT / Codex** | publishing to the Sites project |
 
-## The short route: host it yourself, no secrets
+Sites cannot auto-deploy from an external GitHub repository, and publishing needs
+a Sites connector that mints short-lived, project-scoped credentials. So code
+lands here through ordinary branches and pull requests, and a release is a
+separate, deliberate step performed by the agent that holds that connector.
 
-If you would rather not depend on a hosting control plane that only someone else
-can operate, this moves the calendar onto your own Cloudflare account in one run.
-It uses your own `wrangler login` session — no API tokens, no repository secrets,
-no GitHub environments.
+## Releasing
+
+Merge to `main` as usual, then send this:
+
+> Publish the latest Family Weekly Calendar from
+> `operations-jacrentals/Soccer-Academy` main, using `apps/family-calendar/`.
+> Pull GitHub first, preserve D1/public access/`.openai/hosting.json`, sync the
+> Sites source, deploy, and verify live.
+
+## Confirming a release actually rolled forward
+
+A publish can report success while the old build is still being served — this has
+happened. Check the deployed site, not the deploy log:
 
 ```bash
-cd apps/family-calendar
-npx wrangler login                          # once, approve in the browser
-node scripts/deploy-to-cloudflare.mjs --import ../../path/to/calendar-export.json
+SITE=https://family-weekly-calendar.operations644647.chatgpt.site
+curl -s "$SITE/" | grep -o planner-app                 # page renders
+curl -s "$SITE/api/calendar" | head -c 120             # events still present
+CSS=$(curl -s "$SITE/" | grep -o '/assets/[^"]*\.css' | head -1)
+curl -s "$SITE$CSS" | grep -c -- --fc-ink              # 0 means the old build
 ```
 
-That creates the D1 database if it is missing, applies migrations, deploys the
-Worker, imports a saved calendar export, and then checks the deployed URL
-actually serves the calendar before reporting success.
+`--fc-ink` and `@container eventcard` exist only in the post-audit build, so they
+are how you tell a real rollout from a stale one. `/api/calendar` should return
+the family's real events — a fresh seed would mean the document was reinitialised
+and something has gone badly wrong.
 
-Useful details:
+## What must never change in a release
 
-- **Re-running is safe.** The database is only created when missing, migrations
-  are tracked, and `--import` refuses to overwrite a calendar that already has
-  events unless you add `--force`.
-- **Take an export first.** `curl <site>/api/calendar > calendar-export.json`
-  against your current deployment captures everything; the importer keeps the
-  stored fields and drops the layout ones the app recomputes.
-- **`--dry-run`** shows the whole plan without deploying anything.
-- The result is a public `*.workers.dev` URL that needs no sign-in, which is
-  what lets two people edit the same calendar from different devices.
+- **D1.** The live `calendar_state` table holds the family's only real schedule.
+  Never reset, reseed, migrate or otherwise alter it. The application reads and
+  writes the same table with the same shape, so no migration is needed.
+- **Public access.** The site is open to anyone with the link and must stay that
+  way — two people use it from different devices with no sign-in. Do not set
+  `CALENDAR_ACCESS_MODE=identified` or `CALENDAR_ALLOWED_EMAILS`; either would
+  require identity headers the host does not send, and would lock both of them
+  out. See the access-mode section of the app README.
+- **`.openai/hosting.json`.** The `DB` binding name and the Sites project id must
+  stay exactly as they are.
 
-The rest of this document covers the GitHub Actions route, which deploys on
-merge but does need Cloudflare credentials stored as environment secrets.
+## Two routes that were deliberately closed
 
-## What replaced the ChatGPT Sites project
+Both create a **divergent deployment** — a second Worker and a second database,
+with the family's edits splitting between two calendars that never reconcile.
 
-The calendar used to be deployed by a ChatGPT Sites project
-(`appgprj_6a79c002d434819188901105e3b76150`) fed from a `git.chatgpt-team.site`
-remote, which is why `apps/family-calendar/.openai/hosting.json` exists. That
-project could not be repointed at GitHub from inside this repository — the source
-a Sites project builds from is a setting in OpenAI's own console.
+- **Deploying to Cloudflare directly.** A workflow and a self-hosting script for
+  this existed briefly and were removed. If you find yourself recreating them,
+  stop.
+- **Handing a Sites credential to another agent.** The connector's temporary
+  credential is not a general handoff mechanism, and a live token should never be
+  pasted into a chat transcript in any case.
 
-Deploying straight to Cloudflare removes the middleman instead. The app was
-already a Cloudflare Worker: `npm run build` emits `dist/server/index.js`, the
-client assets, and a ready `dist/server/wrangler.json`. The workflow fills in the
-environment's real names and deploys that.
+## If a publish fails
 
-Two consequences worth knowing:
+A publish once failed twice with
+`400 Bad Request … /service/siwc/sites/clients/<id>/callbacks`, *after* the
+artifact had built and been saved as version 44.
 
-- **The Sites URL stops being the live calendar** once you point people at the
-  Cloudflare one. Retire the Sites project when you are satisfied with the new
-  deployment; nothing in this repository depends on it any more.
-- **`.openai/hosting.json` stays**, because `vite.config.ts` reads it to decide
-  which local bindings to create for `npm run dev`. It no longer affects deploys.
+That is a platform failure, not an artifact problem. An audit compared the build
+against the archived source of the running release and found `.openai/hosting.json`,
+all three `drizzle/` files, and every build script byte-identical; the artifact
+passed `validate-artifact.sh`; the worker's default export exposed `fetch`; and
+the asset graph and route set matched the live release.
 
-## One-time setup
+So if this recurs, do not re-audit the application. Ask instead for:
 
-### 1. Create the two D1 databases
+1. the underlying error behind the `400` — request or correlation id, not the
+   bare status;
+2. whether the stored artifact can be released without a rebuild;
+3. whether the project's client registration is in a bad state — stale or
+   duplicate callback registrations are the usual cause of a `/callbacks` 400.
 
-Staging and production get separate databases so a staging change can never
-touch the family's real schedule.
+## Local development
 
-```bash
-cd apps/family-calendar
-npx wrangler d1 create wall-ball-calendar
-npx wrangler d1 create wall-ball-calendar-staging
-```
-
-You do not need to record the ids. The workflow resolves them by name at deploy
-time, so there is no id to keep in sync.
-
-### 2. Create a Cloudflare API token
-
-Cloudflare dashboard → **My Profile → API Tokens → Create Token → Custom token**.
-Give it these permissions, all on the account that owns the databases above:
-
-| Scope | Permission |
-| --- | --- |
-| Account → Workers Scripts | Edit |
-| Account → D1 | Edit |
-| Account → Workers R2 Storage | Edit *(only if you later add R2)* |
-
-Your **Account ID** is on the right-hand side of the Cloudflare dashboard
-overview, or from `npx wrangler whoami`.
-
-### 3. Add the environment secrets
-
-**Settings → Environments** on GitHub. Add these as *environment* secrets on
-**both** `staging` and `production`, not as repository secrets, so the two
-environments stay separable:
-
-| Secret | Value |
-| --- | --- |
-| `CLOUDFLARE_API_TOKEN` | the token from step 2 |
-| `CLOUDFLARE_ACCOUNT_ID` | your Cloudflare account id |
-
-The workflow checks for both before doing anything else and fails with a message
-naming what is missing, rather than a wrangler authentication error.
-
-### 4. Set the URL variables
-
-Still under **Settings → Environments**, as environment *variables*:
-
-| Variable | Environment | Value |
-| --- | --- | --- |
-| `STAGING_URL` | `staging` | `https://family-calendar-staging.<subdomain>.workers.dev` |
-| `PRODUCTION_URL` | `production` | `https://family-calendar.<subdomain>.workers.dev` |
-
-The first deploy prints the real URL, so it is fine to deploy once and then fill
-these in. They drive the GitHub deployment link and the post-deploy smoke test;
-without them the smoke test is skipped with a warning rather than failing.
-
-### 5. Decide who can open the calendar
-
-Optional, as environment *variables*. Leaving them unset means any signed-in
-visitor may use the calendar, and everyone shares the existing `family`
-household.
-
-| Variable | Effect |
-| --- | --- |
-| `CALENDAR_ACCESS_MODE` | `public` (default) — anyone with the link, one shared household. `identified` — the host must authenticate visitors. |
-| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Anyone else gets 403. Setting it implies `identified`. |
-| `CALENDAR_HOUSEHOLDS` | JSON object mapping email to household id, for more than one family. |
-| `CALENDAR_DEFAULT_HOUSEHOLD` | Household for anyone not named above. Defaults to `family`. |
-| `CALENDAR_WORKER_NAME` | Overrides the Worker name. Defaults to `family-calendar`. |
-| `CALENDAR_D1_NAME` | Overrides the database name. Defaults to `wall-ball-calendar`. |
-
-Non-production environments get `-staging` appended to the Worker and database
-names automatically, so you only set the base name.
-
-## What a deploy does
-
-1. Fails early if the Cloudflare secrets are absent.
-2. Runs lint and the full test suite — a failing test does not deploy.
-3. Resolves the Worker and database names for the environment.
-4. Resolves the real D1 id by name, failing with the `wrangler d1 create`
-   command if the database does not exist.
-5. Builds, then rewrites `dist/server/wrangler.json` via
-   [`scripts/prepare-deploy-config.mjs`](../apps/family-calendar/scripts/prepare-deploy-config.mjs).
-6. Validates the packaged artifact and dry-runs the deploy.
-7. Applies any pending D1 migrations with `--remote`.
-8. Deploys.
-9. Fetches the URL and checks the response actually contains the calendar, so a
-   green job means a working page rather than a successful upload.
-
-## Promoting to production
-
-Publish a GitHub release. The `production` environment has required reviewers, so
-the job pauses for approval before it deploys — the gate described in
-[`environments.md`](environments.md).
-
-To redeploy or roll back without a release, use **Actions → Deploy Family
-Calendar → Run workflow** and choose `production`.
-
-## Running the config step locally
-
-The config rewrite is a committed script rather than an inline expression, so you
-can check what CI will produce:
-
-```bash
-cd apps/family-calendar
-npm run build
-CALENDAR_WORKER=family-calendar-staging \
-CALENDAR_D1_NAME=wall-ball-calendar-staging \
-CALENDAR_D1_ID=00000000-0000-4000-8000-000000000000 \
-ALLOW_PLACEHOLDER_D1=1 \
-  npm run deploy:config
-npx wrangler deploy -c dist/server/wrangler.json --dry-run
-```
-
-## Known limits
-
-- **Local D1 does not run on every machine.** On Windows, workerd fails to open
-  its sqlite store, so `npm run db:migrate` and two-device sync cannot be
-  verified locally. The deployed environments are the first place shared
-  persistence is genuinely exercised.
-- **The calendar is still mounted nowhere in WALL BALL.** This workflow deploys
-  the standalone app. The `family-calendar` flag in `flags/flags.json` gates the
-  eventual combined route and is read by no code yet, as
-  [`family-calendar-handoff.md`](family-calendar-handoff.md) records.
+`npm run dev` serves the app. Local D1 does not start on every machine — on
+Windows, workerd fails to open its sqlite store — so the calendar falls back to
+device-local storage and says so in the header. Shared persistence is only
+genuinely exercised on the deployed site.

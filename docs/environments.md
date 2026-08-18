@@ -40,10 +40,9 @@ merge commits, and enable **Automatically delete head branches**.
 
 ## 3. Deploy secrets
 
-The calendar has a real deploy target: see
-[`calendar-deploy.md`](calendar-deploy.md) for the Cloudflare secrets and the
-one-time D1 setup it needs. The curriculum publishes to GitHub Pages using the
-workflow's own `GITHUB_TOKEN` and needs no secrets of its own.
+The calendar is released separately and needs no secrets here — see
+[`calendar-deploy.md`](calendar-deploy.md). The curriculum publishes to GitHub
+Pages using the workflow's own `GITHUB_TOKEN` and needs no secrets of its own.
 
 For any further target you add, When you pick a target, add its credentials as **Environment secrets** on
 the matching environment (not repo-wide), so staging and production stay
