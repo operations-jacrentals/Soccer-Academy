@@ -53,13 +53,26 @@ signed-in identity as headers; `app/calendar-access.ts` turns that identity into
 an authorization decision and a storage key. Unidentified requests get 401 and
 requests outside the allowlist get 403.
 
+**Access mode.** The calendar defaults to `public`: anyone with the link can
+open and edit it, and everyone shares one household. That is deliberate, because
+it is how this calendar has always been deployed and because its host injects no
+identity headers — defaulting to `identified` there would return 401 to every
+visitor rather than protecting anything.
+
+The cost is real and worth stating plainly: anyone who has the URL can read the
+family's week, including which child is where and when. Treat the link as the
+secret. Set `CALENDAR_ACCESS_MODE=identified` (or set an allowlist, which implies
+it) on any host that authenticates visitors, and the allowlist and per-household
+routing start working.
+
 In development there are no platform identity headers, so the route falls back
 to a local development identity. That branch sits behind `import.meta.env.DEV`,
 which Vite replaces at build time, so it does not exist in a production bundle.
 
 | Variable | Effect |
 | --- | --- |
-| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Unset means any signed-in visitor. |
+| `CALENDAR_ACCESS_MODE` | `public` (default) or `identified`. See below. |
+| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Setting it implies `identified`. |
 | `CALENDAR_HOUSEHOLDS` | JSON object mapping email to household id, for more than one family. |
 | `CALENDAR_DEFAULT_HOUSEHOLD` | Household for anyone not named above. Defaults to `family`, the existing row. |
 | `CALENDAR_DEV_EMAIL` | Development identity only. Ignored in production builds. |

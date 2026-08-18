@@ -95,7 +95,8 @@ household.
 
 | Variable | Effect |
 | --- | --- |
-| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Anyone else gets 403. |
+| `CALENDAR_ACCESS_MODE` | `public` (default) — anyone with the link, one shared household. `identified` — the host must authenticate visitors. |
+| `CALENDAR_ALLOWED_EMAILS` | Comma-separated allowlist. Anyone else gets 403. Setting it implies `identified`. |
 | `CALENDAR_HOUSEHOLDS` | JSON object mapping email to household id, for more than one family. |
 | `CALENDAR_DEFAULT_HOUSEHOLD` | Household for anyone not named above. Defaults to `family`. |
 | `CALENDAR_WORKER_NAME` | Overrides the Worker name. Defaults to `family-calendar`. |
