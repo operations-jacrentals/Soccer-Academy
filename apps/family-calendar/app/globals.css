@@ -520,7 +520,6 @@
 .event-rail-start { top: 7px; }
 .event-rail-end { bottom: 7px; }
 .event--single-clock:not(.event-tools-open) .event-time-rail { display: grid; place-items: center; }
-.event--single-clock:not(.event-tools-open) .event-rail-start { position: static; }
 .event--single-clock:not(.event-tools-open) .event-rail-end,
 .event--single-clock:not(.event-tools-open) .event-rail-connector { display: none; }
 .event-time-handle,
@@ -1113,11 +1112,11 @@
 
 .event--micro .event-core { --event-time-rail: 62px; border-radius: 10px; }
 .event--micro .event-time-rail { display: grid; place-items: center; }
-.event--micro .event-rail-start { position: static; width: calc(100% - 8px); min-height: 18px; padding: 0 3px; border-radius: 7px; font-size: 11px; line-height: 1; }
+.event--micro .event-rail-start { width: calc(100% - 8px); min-height: 18px; padding: 0 3px; border-radius: 7px; font-size: 11px; line-height: 1; }
 .event--micro .event-content { inset: 0 7px 0 10px; display: flex; align-items: center; }
 .event--micro .event-content strong { font-size: 16px; line-height: 1; }
 .event--compact .event-time-rail { display: grid; place-items: center; }
-.event--compact .event-rail-start { position: static; width: calc(100% - 10px); min-height: 23px; font-size: 13px; }
+.event--compact .event-rail-start { width: calc(100% - 10px); min-height: 23px; font-size: 13px; }
 .event--compact .event-content { inset: 0 7px 0 10px; display: flex; align-items: center; }
 .event--compact .event-content strong { font-size: 19px; line-height: 1; }
 .event--micro .event-content strong,
@@ -1921,4 +1920,24 @@
     overflow-wrap: break-word;
   }
   .calendar-event .event-core .event-main .event-content { inset: 1px 4px 1px 5px; }
+}
+
+/* ---------------------------------------------------------------------------
+   One home for the start time.
+
+   The start clock used to sit at top: 7px on cards over 60 minutes but was
+   vertically centred on shorter ones, because those set the pill to
+   `position: static` inside a centring grid. Sibling cards in a single
+   overlapped hour therefore put the same field in three different places and
+   read as three different components.
+
+   The pill is now absolutely positioned at every duration, so `top` alone
+   decides its home. Short cards only shift that home enough to fit inside the
+   card, rather than relocating it.
+   --------------------------------------------------------------------------- */
+@container eventcard (max-height: 46px) {
+  .calendar-event .event-core .event-rail-start { top: 3px; }
+}
+@container eventcard (max-height: 26px) {
+  .calendar-event .event-core .event-rail-start { top: 1px; min-height: 0; height: calc(100% - 3px); }
 }

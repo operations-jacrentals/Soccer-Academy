@@ -99,3 +99,17 @@ test("the week grid signals that it continues past the viewport", () => {
   assert.match(css, /\.calendar-scroll\.view-week\s*\{[\s\S]{0,240}mask-image:\s*linear-gradient\(90deg/,
     "a hard clip mid-title reads as breakage rather than as scrollable content");
 });
+
+test("the start clock keeps one home at every duration", () => {
+  // It used to sit at top: 7px above 60 minutes but was centred below it, via
+  // `position: static` inside a centring grid — the same field in three places.
+  assert.doesNotMatch(css, /\.event--single-clock[^{]*\.event-rail-start\s*\{[^}]*position:\s*static/,
+    "a short card must not relocate the start clock");
+  assert.doesNotMatch(css, /\.event--micro \.event-rail-start\s*\{[^}]*position:\s*static/);
+  assert.doesNotMatch(css, /\.event--compact \.event-rail-start\s*\{[^}]*position:\s*static/);
+  assert.match(css, /\.event-rail-start\s*\{\s*top:\s*7px;\s*\}/,
+    "one home, expressed as a single top offset");
+  // Short cards may shift that home enough to fit, but not move it elsewhere.
+  const shortCard = atRuleBlock(css, "@container eventcard (max-height: 46px)");
+  assert.match(shortCard, /\.event-rail-start\s*\{\s*top:\s*3px;\s*\}/);
+});
