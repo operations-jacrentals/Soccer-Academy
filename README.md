@@ -24,8 +24,8 @@ Start here:
 - [`flags/README.md`](flags/README.md) — feature flag lifecycle & conventions.
 - [`docs/environments.md`](docs/environments.md) — GitHub setup (branch
   protection, environments, approval gate).
-- [`docs/calendar-deploy.md`](docs/calendar-deploy.md) — how the calendar ships
-  to Cloudflare, and the one-time secrets it needs.
+- [`docs/calendar-deploy.md`](docs/calendar-deploy.md) — how the calendar is
+  released, and what must never change in a release.
 
 ## Applications
 
