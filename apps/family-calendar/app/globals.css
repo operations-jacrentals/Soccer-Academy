@@ -439,6 +439,12 @@
   position: absolute;
   z-index: 4;
   min-height: 18px;
+  /* Card content adapts to the size this card actually got, rather than to the
+     mode it is in or how many lanes the hour was split into. `size` rather than
+     `inline-size` because the rules at the end of this file query height too,
+     and a card always carries an explicit inline height. */
+  container-type: size;
+  container-name: eventcard;
   overflow: visible;
   color: var(--event-ink);
   border: 0;
@@ -448,7 +454,6 @@
   user-select: none;
   touch-action: manipulation;
   transition: filter .14s ease, transform .16s ease, opacity .16s ease, left .18s ease, width .18s ease;
-  container-type: inline-size;
 }
 .calendar-event.event-tools-open { z-index: 28; }
 .event-core {
@@ -459,7 +464,9 @@
   min-height: 1px;
   overflow: hidden;
   display: grid;
-  grid-template-columns: var(--event-time-rail, 74px) minmax(0, 1fr);
+  /* The rail is capped as a share of the card so it can never crowd the name
+     out entirely; the container queries below take over on genuinely narrow cards. */
+  grid-template-columns: min(var(--event-time-rail, 74px), 42%) minmax(0, 1fr);
   color: var(--event-ink);
   border: var(--event-stroke) solid var(--event-outline);
   border-radius: 14px;
@@ -1816,3 +1823,102 @@
   line-height: 1.35;
 }
 .sync-warning-dot { flex: 0 0 auto; color: var(--fc-danger); font-size: 9px; line-height: 1; }
+
+/* ---------------------------------------------------------------------------
+   Width-driven card economy.
+
+   The roster reservation and the clock rail used to be decided by Compact mode
+   and by lane count. A card squeezed by a four-way overlap in the default
+   density therefore kept a full-size rail and an 84px roster reservation it had
+   no room for, which left its name computing to zero width — Compact ended up
+   more legible than the default, which is backwards.
+
+   These rules key off the card's real inline size, so the same economy applies
+   in every mode and at every lane count. Selectors are deliberately written to
+   (0,3,0)/(0,4,0) and placed last in the file so they win against the mode
+   rules above on order rather than needing !important.
+   --------------------------------------------------------------------------- */
+
+/* Room for a clock and a name, but not for a roster or a note. */
+@container eventcard (max-width: 250px) {
+  .calendar-event .event-core .event-roster { display: none; }
+  .calendar-event .event-core .event-note { display: none; }
+  .calendar-event .event-core .event-main .event-content { inset: 5px 7px 5px 8px; }
+  .calendar-event .event-core .event-content strong { font-size: 17px; letter-spacing: -.035em; }
+}
+
+/* Not enough room for both. The name wins: a start time stays recoverable from
+   the card's position on the grid, from the editor and from the spoken label,
+   whereas the name is recoverable from nowhere. */
+@container eventcard (max-width: 170px) {
+  /* Removing the rail must also collapse the grid to a single column, or the
+     remaining child takes over the rail's narrow track and the wide track sits
+     empty — which is how the name ended up 24px wide on a 91px card. */
+  .calendar-event .event-core { grid-template-columns: minmax(0, 1fr); }
+  .calendar-event .event-core .event-time-rail { display: none; }
+  .calendar-event .event-core .event-main .event-content { inset: 3px 6px 3px 7px; }
+  .calendar-event .event-core .event-content strong {
+    /* `break-word` rather than `anywhere`: `anywhere` lets the min-content
+       contribution fall to one character, which collapses the block to a
+       column and wraps the name a letter at a time. */
+    display: block;
+    width: 100%;
+    font-size: 15px;
+    letter-spacing: -.03em;
+    line-height: 1.08;
+    white-space: normal;
+    overflow-wrap: break-word;
+    overflow: hidden;
+  }
+}
+
+/* Four lanes on a 320px screen leave a card about 74px wide. Step the type down
+   so a usable prefix of the name survives; below this the honest fix is to stop
+   tiling four lanes at all, which is a layout decision rather than a type one. */
+@container eventcard (max-width: 110px) {
+  .calendar-event .event-core .event-content strong { font-size: 12.5px; letter-spacing: -.02em; }
+}
+
+/* Height-driven, independent of width: a 15-minute card is about 18px tall and
+   cannot hold 17px type. Keep the name inside the box it has. */
+@container eventcard (max-height: 30px) {
+  .calendar-event .event-core .event-content strong {
+    font-size: 12.5px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
+@container eventcard (max-height: 44px) {
+  .calendar-event .event-core .event-content strong { line-height: 1.02; }
+}
+
+/* A short card cannot hold two lines, so keep those to one. */
+@container eventcard (max-width: 170px) and (max-height: 40px) {
+  .calendar-event .event-core .event-content strong {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+/* The week grid scrolls horizontally on a phone, but a hard clip mid-title reads
+   as breakage. Fade the inline edge exactly as .summary-strip already does, so
+   the same cue means the same thing in both places. */
+@media (max-width: 620px) {
+  .calendar-scroll.view-week {
+    -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 22px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 0 calc(100% - 22px), transparent 100%);
+  }
+}
+
+/* Both short and narrow — four lanes on a 320px phone. Neither axis alone has
+   room, so allow two small lines rather than truncating to four characters. */
+@container eventcard (max-width: 110px) and (max-height: 40px) {
+  .calendar-event .event-core .event-content strong {
+    font-size: 11px;
+    line-height: 1.04;
+    letter-spacing: -.015em;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .calendar-event .event-core .event-main .event-content { inset: 1px 4px 1px 5px; }
+}
