@@ -1158,21 +1158,24 @@
   position: absolute;
   inset: 0;
   z-index: 24;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 14px;
   pointer-events: none;
 }
+/* Centered on the card and straddling its top/bottom edge -- half sits on
+   this card, half reaches into the neighbor's space, so the button reads as
+   sitting on the seam between the two events rather than tucked inside one. */
 .event-edge-tools {
   position: absolute;
-  right: 2px;
+  left: 50%;
   width: 30px;
   height: min(22px, 100%);
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   pointer-events: none;
 }
-.event-edge-tools--start { top: 0; }
-.event-edge-tools--end { bottom: 0; }
+.event-edge-tools--start { top: 0; transform: translate(-50%, -50%); }
+.event-edge-tools--end { bottom: 0; transform: translate(-50%, 50%); }
 .event-edge-tools button {
   position: relative;
   height: 100%;
