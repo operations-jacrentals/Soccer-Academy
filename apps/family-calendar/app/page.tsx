@@ -2360,14 +2360,6 @@ export default function Home() {
             <span className="range-full">Monday–{visibleDays[visibleDays.length - 1]}{rangeLabel ? ` · ${rangeLabel}` : ""}</span>
             <span className="range-compact">{rangeLabelCompact}</span>
           </p>
-          {(syncState === "offline" || syncState === "signed-out") && (
-            <p className="sync-warning" role="status">
-              <span aria-hidden="true">●</span>
-              {syncState === "signed-out"
-                ? "Not signed in — changes are saved on this device only"
-                : "Not syncing — changes are saved on this device only"}
-            </p>
-          )}
           <button
             className="header-add-button"
             type="button"
@@ -2396,6 +2388,17 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {(syncState === "offline" || syncState === "signed-out") && (
+        <p className="sync-warning" role="status">
+          <span className="sync-warning-dot" aria-hidden="true">●</span>
+          <span>
+            {syncState === "signed-out"
+              ? "Not signed in — changes are saved on this device only"
+              : "Not syncing — changes are saved on this device only"}
+          </span>
+        </p>
+      )}
 
       <section className="summary-row">
         <div className="summary-strip" role="group" aria-label="Filter calendar by keyword. Totals include all visible days.">

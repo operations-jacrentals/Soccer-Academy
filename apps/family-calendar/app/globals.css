@@ -1794,16 +1794,25 @@
 }
 
 /* Shown whenever this device is not reaching the shared calendar, so nobody
-   plans a week believing it has been shared when it has not. */
+   plans a week believing it has been shared when it has not. It occupies its
+   own full-width row rather than the header control cluster: the header hides
+   its date range below 620px, and a second item in that row would overlap the
+   brand instead of wrapping. */
 .sync-warning {
-  margin: 4px 0 0;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto 8px;
+  padding: 7px 11px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   color: #ffb168;
+  border: 1px solid color-mix(in srgb, #ffb168 26%, var(--fc-border));
+  border-radius: var(--fc-radius-sm);
+  background: color-mix(in srgb, #ffb168 9%, var(--fc-surface));
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .01em;
-  line-height: 1.3;
+  line-height: 1.35;
 }
-.sync-warning > span { color: var(--fc-danger); font-size: 9px; line-height: 1; }
+.sync-warning-dot { flex: 0 0 auto; color: var(--fc-danger); font-size: 9px; line-height: 1; }
