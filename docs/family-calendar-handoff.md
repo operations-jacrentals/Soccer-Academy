@@ -73,3 +73,7 @@ npm test
 
 Before enabling the combined route, perform a phone-width pass in both normal
 and Compact modes and verify a second browser receives saved changes.
+
+For a perception-first review, invoke `/vibe`. For interaction, responsive,
+gesture, accessibility, or persistence coverage, invoke `/audit`. Both portable
+skills are vendored under `.claude/skills/` and described in `CLAUDE.md`.
