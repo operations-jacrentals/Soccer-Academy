@@ -551,10 +551,14 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   // neighbouring event into a different time slot. That makes adjacent cards
   // overlap and changes the visual schedule while merely hovering/tapping.
   assert.doesNotMatch(cssSource, /\.calendar-event\.event-tools-neighbor\s*\{[^}]*transform:\s*translateY/);
-  assert.match(cssSource, /\.event-edge-tools-set\s*\{[\s\S]*?overflow:\s*hidden/);
+  // Visible, not hidden: the + button is centered on the card and straddles
+  // its top/bottom edge, half reaching into the neighbor's space, so it must
+  // not be clipped to this card's own bounds.
+  assert.match(cssSource, /\.event-edge-tools-set\s*\{[\s\S]*?overflow:\s*visible/);
   assert.match(cssSource, /\.event-edge-tools \{[\s\S]*?pointer-events:\s*none/);
-  assert.match(cssSource, /\.event-edge-tools--start\s*\{ top: 0; \}/);
-  assert.match(cssSource, /\.event-edge-tools--end\s*\{ bottom: 0; \}/);
+  assert.match(cssSource, /\.event-edge-tools \{[\s\S]*?left:\s*50%;[\s\S]*?justify-content:\s*center;/);
+  assert.match(cssSource, /\.event-edge-tools--start\s*\{ top: 0; transform: translate\(-50%, -50%\); \}/);
+  assert.match(cssSource, /\.event-edge-tools--end\s*\{ bottom: 0; transform: translate\(-50%, 50%\); \}/);
   assert.match(cssSource, /\.event-edge-tools button \{[\s\S]*?pointer-events:\s*auto/);
   assert.match(cssSource, /\.event-tools-open \.event-time-rail \{[\s\S]*?pointer-events:\s*auto/);
   assert.match(cssSource, /\.event-time-handle,\s*\.event-departure-button \{[\s\S]*?touch-action:\s*none/);
