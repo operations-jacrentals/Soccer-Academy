@@ -55,6 +55,15 @@ when the combined shell reads it before mounting the route.
 7. Enable the flag in production only after the shared deployment has been
    compared against the standalone reference build.
 
+## Deployment
+
+Merging a change under `apps/family-calendar/` deploys staging; publishing a
+release promotes it to production behind the reviewer gate. Soccer-Academy is the
+source of truth — the old ChatGPT Sites project is superseded rather than
+repointed, because a Sites project's source is configured in OpenAI's console
+rather than in this repository. See
+[`calendar-deploy.md`](calendar-deploy.md).
+
 ## Required infrastructure
 
 - Node.js `>=22.13.0`

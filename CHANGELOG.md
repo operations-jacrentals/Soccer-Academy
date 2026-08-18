@@ -10,6 +10,10 @@ heading when you cut a release for production.
 ## [Unreleased]
 
 ### Added
+- Cloudflare deploy workflow for `apps/family-calendar`: staging on merge,
+  production on release behind the reviewer gate, with D1 migrations applied and
+  a post-deploy check that the page actually serves. Supersedes the ChatGPT Sites
+  project; see `docs/calendar-deploy.md`.
 - Standalone `apps/family-calendar` handoff with shared D1 persistence,
   interaction tests, a production-dark feature flag, and a staged WALL BALL
   integration guide.
