@@ -142,7 +142,7 @@ test("backup validation rejects malformed data before it can replace a calendar"
     end: 600,
     color: "#287a82",
     bullets: ["Keep me"],
-    people: ["Jack"],
+    people: ["Sam"],
     town: false,
     kind: "fixed",
     tag: "#sentinel",
@@ -176,7 +176,7 @@ test("summary filters toggle cleanly and match the displayed keyword totals", as
   assert.equal(matchesSummaryFilter({ title: "Class 1" }, "class"), true);
   assert.equal(matchesSummaryFilter({ title: "Music class" }, "class"), true);
   assert.equal(matchesSummaryFilter({ title: "Classical music" }, "class"), false);
-  assert.equal(matchesSummaryFilter({ title: "Gulf Coast soccer" }, "soccer"), true);
+  assert.equal(matchesSummaryFilter({ title: "Soccer academy" }, "soccer"), true);
   assert.equal(matchesSummaryFilter({ title: "Drive lesson" }, "drive"), false);
   assert.equal(matchesSummaryFilter({ title: "Class 1", driveBefore: 15 }, "drive"), true);
   assert.equal(toggleSummaryFilter(null, "class"), "class");
@@ -205,7 +205,7 @@ test("linked event changes remain relative, atomic, and respect note-sync scope"
     end: 600,
     color: "#287a82",
     bullets: ["Original"],
-    people: ["Jack"],
+    people: ["Sam"],
     town: false,
     kind: "fixed",
     tag: "#class",
@@ -217,7 +217,7 @@ test("linked event changes remain relative, atomic, and respect note-sync scope"
   const tuesday = { ...base, id: "tue", day: 1, start: 600, end: 660, bullets: ["Tuesday note"] };
   const events = [monday, tuesday];
 
-  const moved = { ...monday, day: 1, start: 555, end: 615, title: "Class block", color: "#3c6fb0", people: ["Jack", "Blue"] };
+  const moved = { ...monday, day: 1, start: 555, end: 615, title: "Class block", color: "#3c6fb0", people: ["Sam", "Alex"] };
   assert.equal(taggedChangeError(events, monday, moved), "");
   const movedGroup = applyTaggedChange(events, monday, moved);
   assert.deepEqual(movedGroup.map(({ day, start, end }) => ({ day, start, end })), [
@@ -225,7 +225,7 @@ test("linked event changes remain relative, atomic, and respect note-sync scope"
     { day: 2, start: 615, end: 675 },
   ]);
   assert.deepEqual(movedGroup[1].bullets, ["Tuesday note"]);
-  assert.deepEqual(movedGroup[1].people, ["Jack", "Blue"]);
+  assert.deepEqual(movedGroup[1].people, ["Sam", "Alex"]);
 
   const notesOn = { ...monday, syncNotes: true, bullets: ["Shared note"] };
   assert.deepEqual(applyTaggedChange(events, monday, notesOn)[1].bullets, ["Shared note"]);

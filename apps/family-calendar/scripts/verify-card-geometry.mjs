@@ -41,14 +41,14 @@ const OVERLAP_FIXTURE = (() => {
     id, title, day: 4, start, end, color, bullets: [], people, town: false, kind: "fixed",
   });
   return [
-    at("geo-2a", "Piano lesson", 540, 600, "#77558f", ["Lelemeca"]),
-    at("geo-2b", "Dentist", 570, 630, "#b45d49", ["Jack"]),
-    at("geo-3a", "Albion soccer", 660, 750, "#3c6fb0", ["Jack", "Blue"]),
-    at("geo-3b", "Gulf Coast soccer", 675, 735, "#287a82", ["Blue"]),
-    at("geo-3c", "Dance", 690, 720, "#ad5f78", ["Lelemeca"]),
-    at("geo-4a", "Agility training", 840, 960, "#b45d49", ["Jack", "Blue"]),
-    at("geo-4b", "Boy Scouts troop meeting", 855, 945, "#6e7745", ["Jack"]),
-    at("geo-4c", "Music class", 870, 930, "#77558f", ["Lelemeca"]),
+    at("geo-2a", "Piano lesson", 540, 600, "#77558f", ["Robin"]),
+    at("geo-2b", "Dentist", 570, 630, "#b45d49", ["Sam"]),
+    at("geo-3a", "Soccer club", 660, 750, "#3c6fb0", ["Sam", "Alex"]),
+    at("geo-3b", "Soccer academy", 675, 735, "#287a82", ["Alex"]),
+    at("geo-3c", "Dance", 690, 720, "#ad5f78", ["Robin"]),
+    at("geo-4a", "Agility training", 840, 960, "#b45d49", ["Sam", "Alex"]),
+    at("geo-4b", "Scouts troop meeting", 855, 945, "#6e7745", ["Sam"]),
+    at("geo-4c", "Music class", 870, 930, "#77558f", ["Robin"]),
     at("geo-4d", "Church group", 885, 915, "#5f8462", ["Bob"]),
   ];
 })();
