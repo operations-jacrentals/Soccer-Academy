@@ -122,12 +122,14 @@ test("event artwork remains packaged while cards use bright WALL BALL surfaces a
   assert.match(css, /\.event-core \{[\s\S]*?linear-gradient\(145deg, var\(--event-surface-high\), var\(--event-surface\) 54%, var\(--event-surface-low\)\)/);
   assert.match(css, /\.calendar-event \{[\s\S]*?--event-stroke: 2px;/);
   assert.match(css, /\.event-core \{[\s\S]*?border: var\(--event-stroke\) solid var\(--event-outline\);/);
-  assert.match(css, /\.drive-segment[\s\S]*?border-inline: var\(--event-stroke\) dotted color-mix[\s\S]*?linear-gradient\(90deg, #789da4, #a9c4c3 56%, #c5d7d1\)/);
-  assert.match(css, /\.drive-before[\s\S]*?border-top: var\(--event-stroke\) dotted var\(--event-outline\);/);
-  assert.match(css, /\.drive-after[\s\S]*?border-bottom: var\(--event-stroke\) dotted var\(--event-outline\);/);
-  assert.match(css, /\.drive-before[\s\S]*?border-radius: 12px 12px 0 0;/);
-  assert.match(css, /\.drive-after[\s\S]*?border-radius: 0 0 12px 12px;/);
-  assert.match(css, /\.ghost-drive[^{]*\{[^}]*linear-gradient\(90deg, #789da4, #a9c4c3 56%, #c5d7d1\)/);
+  assert.match(css, /\.drive-segment \{[\s\S]*?repeating-linear-gradient\(\s*135deg,[\s\S]*?var\(--fc-accent\)[\s\S]*?var\(--event-dark, var\(--fc-app-bg\)\)/);
+  assert.doesNotMatch(css, /\.drive-segment \{[^}]*border-inline:\s*var\(--event-stroke\) dotted/);
+  assert.doesNotMatch(css, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
+  assert.doesNotMatch(css, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
+  assert.match(css, /\.drive-before \{[\s\S]*?border-radius: 12px 12px 0 0;/);
+  assert.match(css, /\.drive-after \{[\s\S]*?border-radius: 0 0 12px 12px;/);
+  assert.match(css, /\.ghost-drive \{[\s\S]*?repeating-linear-gradient\(\s*135deg,[\s\S]*?var\(--fc-accent\)/);
+  assert.doesNotMatch(css, /\.ghost-drive \{[^}]*border-inline:\s*var\(--event-stroke\) dotted/);
   assert.match(css, /\.ghost-before[\s\S]*?border-radius: 12px 12px 0 0;/);
   assert.match(css, /\.ghost-after[\s\S]*?border-radius: 0 0 12px 12px;/);
 });
@@ -336,7 +338,7 @@ test("desktop cards combine the unboxed roster with WALL BALL surface and clock 
   assert.match(cssSource, /\.event-main\.has-artwork::before,[\s\S]*?display: none;[\s\S]*?background-image: none;[\s\S]*?opacity: 0/);
 });
 
-test("back-to-back events share one visible boundary time without changing their schedule", async () => {
+test("every card shows its start clock; the end clock is pinned unless a neighbor immediately follows, then it waits for hover", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(pageSource, /function sharedTimeBoundaries\(dayEvents: LaidOutEvent\[\]\)/);
@@ -345,21 +347,23 @@ test("back-to-back events share one visible boundary time without changing their
   assert.match(pageSource, /activityMinutes\(previous\) >= 45/);
   assert.match(pageSource, /previous\.laneCount === 1/);
   assert.match(pageSource, /const sharedTimeBoundariesByDay = useMemo\(\(\) => layouts\.map\(sharedTimeBoundaries\), \[layouts\]\);/);
-  assert.match(pageSource, /event--shared-start-time/);
-  assert.match(pageSource, /event--shared-end-time/);
-  assert.match(pageSource, /className="event-shared-time"/);
-  assert.match(pageSource, /sharedTimeBoundaryTokens\(sharedBoundary\.color, event\.color\)/);
-  // Static rail labels are intentionally hidden while their direct-edit
-  // counterparts are revealed, so a shared boundary is never duplicated.
-  assert.match(pageSource, /!toolsVisible && sharedBoundary && <span className="event-shared-time"/);
-  assert.match(pageSource, /!toolsVisible && !sharesStartTime && <span className="event-rail-time event-rail-start">/);
-  assert.match(pageSource, /!toolsVisible && !sharesEndTime && duration >= 45 && <span className="event-rail-time event-rail-end">/);
+  assert.match(pageSource, /const hasNeighborBelow = sharedTimeBoundariesByDay\[dayIndex\]\?\.outgoing\.has\(event\.id\) \?\? false;/);
+  // The old gradient-pill "shared boundary" design and its connector line are gone.
+  assert.doesNotMatch(pageSource, /event--shared-start-time|event--shared-end-time/);
+  assert.doesNotMatch(pageSource, /className="event-shared-time"/);
+  assert.doesNotMatch(pageSource, /sharedTimeBoundaryTokens/);
+  assert.doesNotMatch(cssSource, /\.event-shared-time\b/);
+  assert.doesNotMatch(cssSource, /\.event-rail-connector\b/);
+  // The start clock always renders; the end clock always renders too, but
+  // picks up a peek modifier -- hidden at rest, revealed on hover/focus --
+  // exactly when a neighbor immediately follows it.
+  assert.match(pageSource, /!toolsVisible && <span className="event-rail-time event-rail-start">\{shortTime\(activityStart\(event\)\)\}<\/span>/);
+  assert.match(pageSource, /className=\{`event-rail-time event-rail-end\$\{hasNeighborBelow \? " event-rail-end--peek" : ""\}`\}/);
   assert.match(pageSource, /toolsVisible && toolEdges\.map\(\(edge\) => \{/);
-  assert.match(cssSource, /\.event-shared-time \{[\s\S]*?linear-gradient\(180deg, var\(--shared-time-from\), var\(--shared-time-to\)\)/);
-  assert.match(cssSource, /\.event-shared-time \{[\s\S]*?-webkit-text-stroke: 1\.25px rgba\(3, 8, 10, \.92\);[\s\S]*?drop-shadow\(0 1px 1px rgba\(3, 8, 10, \.92\)\)/);
-  assert.match(cssSource, /@media \(forced-colors: active\) \{[\s\S]*?\.event-shared-time \{[\s\S]*?-webkit-text-fill-color: CanvasText;/);
-  assert.match(cssSource, /\.event--shared-start-time \.event-rail-connector \{ top: 7px; \}/);
-  assert.match(cssSource, /\.event--shared-end-time \.event-rail-connector \{ bottom: 7px; \}/);
+  assert.match(cssSource, /\.event-rail-end--peek \{[\s\S]*?opacity:\s*0;[\s\S]*?pointer-events:\s*none;/);
+  assert.match(cssSource, /\.calendar-event:hover \.event-rail-end--peek,\s*\.calendar-event:focus-within \.event-rail-end--peek \{[\s\S]*?opacity:\s*1;/);
+  // No transition is declared for the peek reveal, so hover is instant.
+  assert.doesNotMatch(cssSource, /\.event-rail-end--peek[\s\S]{0,200}transition/);
 });
 
 test("mobile Day is a compact, single-day state rather than a partial Week view", async () => {
@@ -410,7 +414,7 @@ test("Compact is a persistent density mode, while the old visible shared-status 
   assert.match(pageSource, /setAnnouncement\(next \? "Compact layout on" : "Compact layout off"\)/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-core \{/);
   assert.match(cssSource, /\.planner-app\.is-compact \.calendar-scroll\.view-day \.event-content \{/);
-  assert.match(cssSource, /\.planner-app\.is-compact \.event-rail-end,[\s\S]*?display: none/);
+  assert.match(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ display: none; \}/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-roster,[\s\S]*?\.planner-app\.is-compact \.event-note \{ display: none; \}/);
   assert.match(cssSource, /\.compact-toggle\.selected \{/);
 
@@ -480,7 +484,8 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(pageSource, /function scheduleEventToolsOpen/);
   assert.match(pageSource, /function scheduleEventToolsOpen\(event: CalendarEvent, card: HTMLElement/);
   assert.match(pageSource, /const eventToolsHoverIdRef = useRef<string \| null>\(null\)/);
-  assert.match(pageSource, /\}, 360\);/);
+  // Hover opens tools instantly -- no wait before a hover promise is kept.
+  assert.match(pageSource, /eventToolsOpenTimerRef\.current = window\.setTimeout\(\(\) => \{[\s\S]*?\}, 0\);/);
   assert.match(pageSource, /eventToolsHoverIdRef\.current === event\.id && !interactionRef\.current\) openEventTools\(event, card, false(?:, preferredEdge)?\)/);
   assert.match(pageSource, /function scheduleEventToolsClose\(eventId: string\)/);
   const closeToolsStart = pageSource.indexOf("function scheduleEventToolsClose(");
@@ -516,13 +521,17 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(pageSource, /aria-controls=\{hourPickerOpen \? "calendar-hour-picker" : undefined\}/);
   assert.match(pageSource, /title=\{`Click to choose a time, or drag to make \$\{event\.title\} \$\{direction\}`\}/);
   assert.match(pageSource, /className="event-time-clock-value"/);
-  assert.match(pageSource, /className="event-time-clock-grip" aria-hidden="true">↕<\/i>/);
+  // The up/down grip arrow is gone -- the departure button never drags.
+  assert.doesNotMatch(pageSource, /event-time-clock-grip/);
   assert.match(pageSource, /className=\{`event-departure-button event-departure-button--\$\{edge\}`\}/);
-  assert.match(pageSource, /aria-label=\{`Add travel time \$\{position\} \$\{event\.title\}`\}/);
-  assert.match(pageSource, /title=\{`Drag or click to add travel time \$\{position\}`\}/);
+  assert.match(pageSource, /aria-label=\{`Add 15 minutes of travel time \$\{position\} \$\{event\.title\}`\}/);
+  assert.match(pageSource, /title=\{`Add 15 minutes of travel time \$\{position\}`\}/);
+  assert.doesNotMatch(pageSource, /Drag or click to add travel time/);
   assert.match(pageSource, /aria-label=\{`Add an event \$\{edge === "start" \? "before" : "after"\} \$\{event\.title\}`\}/);
   assert.match(pageSource, /className="event-edge-add"/);
-  assert.match(pageSource, /className="event-departure-glyph"/);
+  assert.match(pageSource, /className="event-departure-glyph" aria-hidden="true">/);
+  assert.match(pageSource, /<i className="event-departure-car" \/>/);
+  assert.match(pageSource, /<i className="event-departure-plus" \/>/);
   assert.doesNotMatch(pageSource, /className="event-edge-extend"/);
   assert.doesNotMatch(pageSource, /className="event-edge-drive"/);
   assert.doesNotMatch(pageSource, /↝/);
@@ -530,7 +539,8 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(pageSource, /tentativeEnd: end === interaction\.origin\.end \? interaction\.origin\.tentativeEnd : false/);
   assert.match(pageSource, /onPointerDown=\{\(pointerEvent\) => beginInteraction\(pointerEvent, event, mode, "event", true\)\}/);
   assert.match(pageSource, /onPointerMove=\{moveInteraction\}[\s\S]*?onPointerUp=\{endInteraction\}[\s\S]*?onPointerCancel=\{cancelInteraction\}/);
-  assert.match(pageSource, /onPointerDown=\{\(pointerEvent\) => beginInteraction\(pointerEvent, event, mode, "drive", true\)\}/);
+  // The departure button never drags -- click only, no pointer-capture wiring.
+  assert.doesNotMatch(pageSource, /beginInteraction\(pointerEvent, event, mode, "drive"/);
   assert.match(pageSource, /onClick=\{\(clickEvent\) => openHourPicker\(clickEvent, event, edge\)\}/);
   assert.match(pageSource, /onClick=\{\(clickEvent\) => handleEventToolClick\(clickEvent, event, edge, "drive"\)\}/);
   assert.match(pageSource, /<div className="event-time-rail" aria-hidden=\{!toolsVisible\}>/);
@@ -549,7 +559,8 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(cssSource, /\.event-tools-open \.event-time-rail \{[\s\S]*?pointer-events:\s*auto/);
   assert.match(cssSource, /\.event-time-handle,\s*\.event-departure-button \{[\s\S]*?touch-action:\s*none/);
   assert.match(cssSource, /\.event-time-handle \{[\s\S]*?cursor:\s*ns-resize/);
-  assert.match(cssSource, /\.event-departure-button \{[\s\S]*?cursor:\s*ns-resize/);
+  assert.match(cssSource, /\.event-departure-button \{[\s\S]*?cursor:\s*pointer/);
+  assert.doesNotMatch(cssSource, /\.event-departure-button \{[^}]*cursor:\s*ns-resize/);
   assert.match(cssSource, /\.event-time-handle\.is-hour-picker-open \{/);
   assert.match(cssSource, /\.event-tools-single-edge \.event-time-handle,\s*\.event-tools-single-edge \.event-departure-button \{[\s\S]*?top:\s*2px;[\s\S]*?bottom:\s*2px;[\s\S]*?height:\s*auto/);
   assert.doesNotMatch(cssSource, /\.event-edge-tools \.event-edge-extend\b/);
@@ -560,9 +571,9 @@ test("time clocks drag to resize, choose exact 15-minute times, and sit beside D
   assert.match(cssSource, /\.calendar-event\.has-drive-before \.event-time-rail \{ box-shadow: none; \}/);
   assert.match(cssSource, /\.calendar-event\.has-drive-after \.event-core \{[\s\S]*?border-bottom-width: 0;/);
   assert.match(cssSource, /\.calendar-event:hover,[\s\S]*?--event-outline: color-mix\(in srgb, var\(--event-dark\) 72%, #1c3338\);/);
-  assert.match(cssSource, /\.drive-before \{[\s\S]*?border-top: var\(--event-stroke\) dotted var\(--event-outline\);/);
-  assert.match(cssSource, /\.drive-after \{[\s\S]*?border-bottom: var\(--event-stroke\) dotted var\(--event-outline\);/);
-  assert.match(cssSource, /\.drive-segment \{[\s\S]*?border-inline: var\(--event-stroke\) dotted color-mix\(in srgb, var\(--event-dark\) 72%, #29454b\);/);
+  assert.doesNotMatch(cssSource, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
+  assert.doesNotMatch(cssSource, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
+  assert.doesNotMatch(cssSource, /\.drive-segment \{[^}]*border-inline:/);
   assert.match(cssSource, /\.drag-ghost\.has-drive-before \.ghost-core \{[^}]*border-top-width: 0;/);
   assert.match(cssSource, /\.drag-ghost\.has-drive-after \.ghost-core \{[^}]*border-bottom-width: 0;/);
   assert.doesNotMatch(cssSource, /\.calendar-event\.event-tools-neighbor\s*\{[^}]*transform:\s*translateY/);
@@ -607,15 +618,43 @@ test("the clock picker offers only valid 15-minute choices and preserves travel 
   assert.match(cssSource, /\.calendar-hour-picker-options \{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
 });
 
-test("travel bands name Leave and Arrive while retaining aligned dotted event seams", async () => {
+test("travel bands name Leave and Arrive, Leave carries a clickable address, and neither has a dotted seam", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(pageSource, /driveBefore\(event\) > 0 && \([\s\S]*?className="drive-segment drive-before"[\s\S]*?className="drive-segment-label">Leave<\/span>[\s\S]*?<strong>\{shortTime\(event\.start\)\}<\/strong>[\s\S]*?className="drive-segment-route" aria-hidden="true">→<\/span>/);
-  assert.match(pageSource, /driveAfter\(event\) > 0 && \([\s\S]*?className="drive-segment drive-after"[\s\S]*?className="drive-segment-label">Arrive<\/span>[\s\S]*?<strong>\{shortTime\(event\.end\)\}<\/strong>[\s\S]*?className="drive-segment-route" aria-hidden="true">→<\/span>/);
-  assert.match(cssSource, /\.drive-segment \{[\s\S]*?grid-template-columns:\s*auto auto minmax\(10px, 1fr\)[\s\S]*?border-inline:\s*var\(--event-stroke\) dotted color-mix[\s\S]*?linear-gradient\(90deg, #789da4, #a9c4c3 56%, #c5d7d1\)/);
-  assert.match(cssSource, /\.drive-before \{[\s\S]*?border-top:\s*var\(--event-stroke\) dotted var\(--event-outline\)/);
-  assert.match(cssSource, /\.drive-after \{[\s\S]*?border-bottom:\s*var\(--event-stroke\) dotted var\(--event-outline\)/);
+  assert.match(pageSource, /driveBefore\(event\) > 0 && \([\s\S]*?className="drive-segment drive-before"[\s\S]*?className="drive-segment-label">Leave<\/span>[\s\S]*?<strong>\{shortTime\(event\.start\)\}<\/strong>/);
+  assert.match(pageSource, /driveAfter\(event\) > 0 && \([\s\S]*?className="drive-segment drive-after"[\s\S]*?className="drive-segment-label">Arrive<\/span>[\s\S]*?<strong>\{shortTime\(event\.end\)\}<\/strong>/);
+  // The old arrow glyph is gone from both bands.
+  assert.doesNotMatch(pageSource, /drive-segment-route/);
+  assert.doesNotMatch(pageSource, /className="drive-segment-route" aria-hidden="true">→<\/span>/);
+
+  // Leave carries a clickable address: real value, or an "Add Address"
+  // invite when unset -- Arrive gets neither, since arriving needs no map.
+  const leaveStart = pageSource.indexOf('className="drive-segment drive-before"');
+  const leaveEnd = pageSource.indexOf("driveAfter(event) > 0", leaveStart);
+  const leaveBlock = pageSource.slice(leaveStart, leaveEnd);
+  assert.match(leaveBlock, /className=\{`drive-segment-address\$\{\(event\.address \?\? ""\)\.trim\(\) \? "" : " drive-segment-address--empty"\}`\}/);
+  assert.match(leaveBlock, /onClick=\{\(clickEvent\) => handleAddressClick\(clickEvent, event\)\}/);
+  assert.match(leaveBlock, /\{\(event\.address \?\? ""\)\.trim\(\) \|\| "Add Address"\}/);
+  const arriveStart = pageSource.indexOf('className="drive-segment drive-after"');
+  const arriveBlock = pageSource.slice(arriveStart, arriveStart + 300);
+  assert.doesNotMatch(arriveBlock, /drive-segment-address/);
+
+  // Address preview: click opens a map popup; clicking again (the popup
+  // already open for this event) hands off to the device's map app instead.
+  assert.match(pageSource, /function handleAddressClick\(/);
+  assert.match(pageSource, /if \(addressPreview\?\.eventId === event\.id\) \{[\s\S]*?window\.location\.href = mapsNavigationUrl\(address\);/);
+  assert.match(pageSource, /function mapsEmbedUrl\(address: string\)/);
+  assert.match(pageSource, /function mapsNavigationUrl\(address: string\)/);
+  assert.match(pageSource, /className="calendar-address-preview"/);
+
+  assert.match(cssSource, /\.drive-segment \{[\s\S]*?grid-template-columns:\s*auto auto minmax\(10px, 1fr\)/);
+  assert.match(cssSource, /\.drive-segment \{[\s\S]*?repeating-linear-gradient\(/);
+  assert.doesNotMatch(cssSource, /\.drive-segment \{[^}]*border-inline:/);
+  assert.doesNotMatch(cssSource, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
+  assert.doesNotMatch(cssSource, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
+  assert.match(cssSource, /\.drive-segment-address \{/);
+  assert.match(cssSource, /\.drive-segment-address--empty \{/);
 });
 
 test("overlap focus expands only events with directly intersecting time intervals", async () => {

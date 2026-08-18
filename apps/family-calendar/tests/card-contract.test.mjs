@@ -75,7 +75,12 @@ test("width-driven rules outrank the mode rules they override", () => {
 });
 
 test("no !important was needed to win the cascade", () => {
-  const containerRules = css.slice(css.indexOf("@container eventcard"));
+  // Anchored to the width-tier block specifically (not a bare "@container
+  // eventcard" match): other, unrelated container queries can legitimately
+  // sit earlier in the file, and a bare match would sweep in CSS that has
+  // nothing to do with this cascade -- e.g. the sitewide prefers-reduced-motion
+  // override, which legitimately needs !important.
+  const containerRules = css.slice(css.indexOf("@container eventcard (max-width: 250px)"));
   assert.doesNotMatch(containerRules, /!important/,
     "the override should win on specificity and order, not by force");
 });
@@ -84,7 +89,7 @@ test("the name is never dropped in favour of the roster or the note", () => {
   const block = atRuleBlock(css, "@container eventcard (max-width: 250px)");
   assert.match(block, /\.event-roster\s*\{\s*display:\s*none;\s*\}/);
   assert.match(block, /\.event-note\s*\{\s*display:\s*none;\s*\}/);
-  const containerRules = css.slice(css.indexOf("@container eventcard"));
+  const containerRules = css.slice(css.indexOf("@container eventcard (max-width: 250px)"));
   assert.doesNotMatch(containerRules, /\.event-content strong\s*\{[^}]*display:\s*none/,
     "the name must survive every density step");
 });
