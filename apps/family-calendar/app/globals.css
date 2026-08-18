@@ -1901,8 +1901,10 @@
 }
 
 /* Compact is a deliberately different planning density—not a shy font-size
-   reduction. It shortens the actual clock scale, removes quiet card interior,
-   and keeps a single title/time cue until a card is actively focused. */
+   reduction. It shortens the actual clock scale and removes quiet card
+   interior. The end clock follows the same pinned/peek rule as the default
+   density: pinned when nothing follows immediately below, hover/focus-only
+   otherwise -- Compact stays dense, it just isn't a different design. */
 .planner-app.is-compact .event-core {
   --event-time-rail: 44px;
   --event-stroke: 1px;
@@ -1915,7 +1917,7 @@
 .planner-app.is-compact .event-rail-time { font-size: 11px; }
 .planner-app.is-compact .event-rail-time { left: 3px; width: calc(100% - 6px); min-height: 18px; padding-inline: 2px; border-radius: 6px; }
 .planner-app.is-compact .event-rail-start { top: 3px; }
-.planner-app.is-compact .event-rail-end { display: none; }
+.planner-app.is-compact .event-rail-end { bottom: 3px; }
 .planner-app.is-compact .event-content { inset: 1px 6px 1px 6px; }
 .planner-app.is-compact .event--no-roster .event-content { right: 6px; }
 .planner-app.is-compact .event-content strong { font-size: 14px; font-weight: 950; line-height: 1; }
