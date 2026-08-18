@@ -18,6 +18,17 @@ export type CalendarEvent = {
   driveAfter?: number;
 };
 
+/**
+ * Every field of an event except its id, which is the key rather than a value.
+ * Shared by the patch builder and the API so the two cannot drift apart.
+ */
+export const EVENT_FIELDS = [
+  "title", "day", "start", "end", "color", "bullets", "people",
+  "town", "kind", "tentativeEnd", "tag", "syncNotes", "driveBefore", "driveAfter",
+] as const;
+
+export type EventField = (typeof EVENT_FIELDS)[number];
+
 export const CALENDAR_START_MINUTES = 4 * 60;
 export const CALENDAR_END_MINUTES = 22 * 60;
 export const CALENDAR_SNAP_MINUTES = 15;

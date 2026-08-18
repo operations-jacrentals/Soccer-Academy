@@ -27,13 +27,23 @@ import {
   CALENDAR_START_MINUTES,
   driveAfter,
   driveBefore,
+  EVENT_FIELDS,
   isCalendarEvent,
   normalizeTag,
   removeTaggedEvents,
   taggedChangeError,
   tagScope,
   type CalendarEvent,
+  type EventField,
 } from "./calendar-events";
+import {
+  todayColumn,
+  weekDates,
+  weekRangeLabel,
+  weekRangeLabelCompact,
+  WEEK_DAYS,
+  type WeekDate,
+} from "./calendar-week";
 import { PwaInstallControl } from "./pwa-install";
 
 type LaidOutEvent = CalendarEvent & { lane: number; laneCount: number };
@@ -66,6 +76,12 @@ type DeleteChoice = {
 };
 
 type ViewMode = "week" | "day";
+
+/**
+ * Whether this device is reaching the shared calendar. "offline" and
+ * "signed-out" both mean edits are only on this device, and both are shown.
+ */
+type SyncState = "connecting" | "synced" | "offline" | "signed-out";
 
 type ResizeSurface = {
   kind: "keyboard";
@@ -135,9 +151,8 @@ type AutoScrollPointer = {
   clientY: number;
 };
 
-const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const ALL_DATES = ["AUG 10", "AUG 11", "AUG 12", "AUG 13", "AUG 14", "AUG 15"];
-const ALL_DATE_VALUES = ["2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14", "2026-08-15"];
+const ALL_DAYS = WEEK_DAYS;
+
 // Friday is deliberately kept in the calendar even though it is a weekend-style
 // family day. The homeschool routine itself only belongs on Monday–Thursday.
 const DEFAULT_DAY_COUNT = 5;
@@ -149,6 +164,8 @@ const DESKTOP_HOUR_HEIGHT = 88;
 const TOUCH_HOUR_HEIGHT = 88;
 const PHONE_HOUR_HEIGHT = 72;
 const SNAP_MINUTES = CALENDAR_SNAP_MINUTES;
+/** Must match `.calendar-event { min-height }` in globals.css. */
+const EVENT_MIN_HEIGHT = 18;
 const STORAGE_KEY = "family-weekly-calendar:v1";
 const SETTINGS_KEY = "family-weekly-calendar:settings:v1";
 
@@ -159,9 +176,15 @@ type SharedCalendar = {
   updatedAt: string | null;
 };
 
+type CalendarFieldUpdate = {
+  id: string;
+  fields: Partial<Record<EventField, CalendarEvent[EventField]>>;
+};
+
 type CalendarPatch = {
   upserts: CalendarEvent[];
   removeIds: string[];
+  updates: CalendarFieldUpdate[];
 };
 
 function cloneCalendarEvent(event: CalendarEvent): CalendarEvent {
@@ -172,21 +195,45 @@ function sameCalendarEvent(left: CalendarEvent, right: CalendarEvent) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+function changedFields(prior: CalendarEvent, next: CalendarEvent) {
+  const fields: CalendarFieldUpdate["fields"] = {};
+  for (const field of EVENT_FIELDS) {
+    if (JSON.stringify(prior[field]) === JSON.stringify(next[field])) continue;
+    const value = next[field];
+    fields[field] = Array.isArray(value) ? ([...value] as CalendarEvent[EventField]) : value;
+  }
+  return fields;
+}
+
+/**
+ * Describe a change as narrowly as it can be described: brand new events are
+ * sent whole, existing events are sent as only the fields that moved. Two
+ * people editing different fields of the same event then merge on the server
+ * instead of overwriting each other.
+ */
 function calendarPatch(previous: CalendarEvent[], next: CalendarEvent[]): CalendarPatch {
   const previousById = new Map(previous.map((event) => [event.id, event]));
   const nextById = new Map(next.map((event) => [event.id, event]));
-  const upserts = next
-    .filter((event) => {
-      const prior = previousById.get(event.id);
-      return !prior || !sameCalendarEvent(prior, event);
-    })
-    .map(cloneCalendarEvent);
+  const upserts: CalendarEvent[] = [];
+  const updates: CalendarFieldUpdate[] = [];
+
+  for (const event of next) {
+    const prior = previousById.get(event.id);
+    if (!prior) {
+      upserts.push(cloneCalendarEvent(event));
+      continue;
+    }
+    if (sameCalendarEvent(prior, event)) continue;
+    const fields = changedFields(prior, event);
+    if (Object.keys(fields).length > 0) updates.push({ id: event.id, fields });
+  }
+
   const removeIds = previous.filter((event) => !nextById.has(event.id)).map((event) => event.id);
-  return { upserts, removeIds };
+  return { upserts, removeIds, updates };
 }
 
 function isEmptyPatch(patch: CalendarPatch) {
-  return patch.upserts.length === 0 && patch.removeIds.length === 0;
+  return patch.upserts.length === 0 && patch.removeIds.length === 0 && patch.updates.length === 0;
 }
 
 function isSharedCalendar(value: unknown): value is SharedCalendar {
@@ -200,6 +247,21 @@ function isSharedCalendar(value: unknown): value is SharedCalendar {
     (calendar.updatedAt === null || typeof calendar.updatedAt === "string");
 }
 
+class SharedCalendarError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "SharedCalendarError";
+    this.status = status;
+  }
+
+  /** 401 and 403 will not resolve by retrying; every other failure might. */
+  get needsSignIn() {
+    return this.status === 401 || this.status === 403;
+  }
+}
+
 async function sharedCalendarRequest(body?: { type: "bootstrap" | "replace"; events: CalendarEvent[] } | { type: "patch"; patch: CalendarPatch }) {
   const response = await fetch("/api/calendar", body
     ? {
@@ -207,14 +269,18 @@ async function sharedCalendarRequest(body?: { type: "bootstrap" | "replace"; eve
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
         cache: "no-store",
+        credentials: "same-origin",
       }
-    : { cache: "no-store" });
-  const payload = await response.json() as unknown;
+    : { cache: "no-store", credentials: "same-origin" });
+  const payload = await response.json().catch(() => null) as unknown;
   if (!response.ok) {
     const error = payload && typeof payload === "object" && "error" in payload ? (payload as { error?: unknown }).error : null;
-    throw new Error(typeof error === "string" ? error : "The shared calendar could not be reached.");
+    throw new SharedCalendarError(
+      typeof error === "string" ? error : "The shared calendar could not be reached.",
+      response.status,
+    );
   }
-  if (!isSharedCalendar(payload)) throw new Error("The shared calendar sent an invalid response.");
+  if (!isSharedCalendar(payload)) throw new SharedCalendarError("The shared calendar sent an invalid response.", 502);
   return payload;
 }
 
@@ -504,8 +570,8 @@ function eventColorTokens(color: string, before = 0, after = 0): CSSProperties {
       "--event-bright": "#f4f8f7",
       "--event-title-color": "#071216",
       "--event-time-color": "#f4f8f7",
-      "--drive-before": `calc(var(--hour-height) * ${before / 60})`,
-      "--drive-after": `calc(var(--hour-height) * ${after / 60})`,
+      "--drive-before": `calc(var(--fc-hour-height) * ${before / 60})`,
+      "--drive-after": `calc(var(--fc-hour-height) * ${after / 60})`,
     } as CSSProperties;
   }
   const red = Number.parseInt(match[1].slice(0, 2), 16);
@@ -563,8 +629,8 @@ function eventColorTokens(color: string, before = 0, after = 0): CSSProperties {
     "--event-bright": surfaceHigh,
     "--event-title-color": ink,
     "--event-time-color": surfaceHigh,
-    "--drive-before": `calc(var(--hour-height) * ${before / 60})`,
-    "--drive-after": `calc(var(--hour-height) * ${after / 60})`,
+    "--drive-before": `calc(var(--fc-hour-height) * ${before / 60})`,
+    "--drive-after": `calc(var(--fc-hour-height) * ${after / 60})`,
   } as CSSProperties;
 }
 
@@ -724,6 +790,10 @@ export default function Home() {
   const [compactMode, setCompactMode] = useState(false);
   const [activeFilter, setActiveFilter] = useState<SummaryFilter | null>(null);
   const [todayIndex, setTodayIndex] = useState(-1);
+  // Dates depend on the viewer's clock and time zone, so they stay empty until
+  // after hydration. Server and first client render therefore agree exactly.
+  const [week, setWeek] = useState<WeekDate[]>([]);
+  const [syncState, setSyncState] = useState<SyncState>("connecting");
   const [personEntry, setPersonEntry] = useState("");
   const [deleteChoice, setDeleteChoice] = useState<DeleteChoice | null>(null);
   const [pendingDriveChoice, setPendingDriveChoice] = useState<PendingDriveChoice | null>(null);
@@ -790,17 +860,28 @@ export default function Home() {
     ? Math.max(36, Math.round(baseHourHeight * 0.48))
     : baseHourHeight;
   const visibleDays = useMemo(() => ALL_DAYS.slice(0, dayCount), [dayCount]);
-  const visibleDates = useMemo(() => ALL_DATES.slice(0, dayCount), [dayCount]);
+  const visibleDates = useMemo(() => week.slice(0, dayCount).map((date) => date.short), [dayCount, week]);
+  const rangeLabel = useMemo(() => weekRangeLabel(week, dayCount), [dayCount, week]);
+  const rangeLabelCompact = useMemo(() => weekRangeLabelCompact(week, dayCount), [dayCount, week]);
 
-  const applySharedEvents = useCallback((next: CalendarEvent[], displayDayCount: number, announce = "") => {
+  /**
+   * `resetHistory` is only true when the shared calendar first loads. A later
+   * update from someone else must not throw away the undo steps this device
+   * has built up.
+   */
+  const applySharedEvents = useCallback((next: CalendarEvent[], displayDayCount: number, announce = "", resetHistory = true) => {
     const calendar = next.map(cloneCalendarEvent);
     eventsRef.current = calendar;
     setEvents(calendar);
     const displayRange = calendarDisplayRange(calendar, displayDayCount, START_MINUTES, END_MINUTES);
     setDisplayStartMinutes((current) => Math.min(current, displayRange.start));
     setDisplayEndMinutes((current) => Math.max(current, displayRange.end));
-    setHistory([]);
+    if (resetHistory) setHistory([]);
     if (announce) setAnnouncement(announce);
+  }, []);
+
+  const noteSyncFailure = useCallback((error: unknown) => {
+    setSyncState(error instanceof SharedCalendarError && error.needsSignIn ? "signed-out" : "offline");
   }, []);
 
   const flushPendingChanges = useCallback(() => {
@@ -814,15 +895,17 @@ export default function Home() {
           sharedRevisionRef.current = shared.revision;
           pendingPatchesRef.current.shift();
         }
-      } catch {
+        setSyncState("synced");
+      } catch (error) {
         // The pending patch is deliberately retained for the next refresh.
+        noteSyncFailure(error);
       } finally {
         syncingRef.current = false;
       }
     })();
     syncIdleRef.current = task;
     return task;
-  }, []);
+  }, [noteSyncFailure]);
 
   const queueSharedPatch = useCallback((previous: CalendarEvent[], next: CalendarEvent[]) => {
     const patch = calendarPatch(previous, next);
@@ -848,13 +931,15 @@ export default function Home() {
         if (pendingPatchesRef.current.length === 0) applySharedEvents(shared.events, displayDayCount);
         if (pendingPatchesRef.current.length > 0) void flushPendingChanges();
       }
-    } catch {
+      setSyncState("synced");
+    } catch (error) {
       // Events remain available from the device-local copy until a later
       // refresh can reconnect.
+      noteSyncFailure(error);
     } finally {
       connectingRef.current = false;
     }
-  }, [applySharedEvents, flushPendingChanges]);
+  }, [applySharedEvents, flushPendingChanges, noteSyncFailure]);
 
   const restoreSharedCalendar = useCallback(async (restoredEvents: CalendarEvent[]) => {
     restoringRef.current = true;
@@ -867,13 +952,15 @@ export default function Home() {
       sharedReadyRef.current = true;
       applySharedEvents(shared.events, dayCount, "Shared calendar restored");
       setActionNotice("Shared calendar restored");
+      setSyncState("synced");
     } catch (error) {
       pendingPatchesRef.current = pendingBeforeRestore;
+      noteSyncFailure(error);
       throw error instanceof Error ? error : new Error("The shared calendar could not be restored.");
     } finally {
       restoringRef.current = false;
     }
-  }, [applySharedEvents, dayCount]);
+  }, [applySharedEvents, dayCount, noteSyncFailure]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -892,8 +979,9 @@ export default function Home() {
         const settings = parseSettings(localStorage.getItem(SETTINGS_KEY));
         loadedDayCount = settings?.dayCount ?? DEFAULT_DAY_COUNT;
         const now = new Date();
-        const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-        const nextTodayIndex = ALL_DATE_VALUES.indexOf(localDate);
+        const currentWeek = weekDates(now);
+        const nextTodayIndex = todayColumn(currentWeek, now);
+        setWeek(currentWeek);
         setTodayIndex(nextTodayIndex);
         if (settings) {
           restoredDayRef.current = settings.activeDay;
@@ -1136,6 +1224,13 @@ export default function Home() {
 
     const refreshSharedCalendar = async () => {
       if (cancelled || document.visibilityState === "hidden" || interactionActiveRef.current) return;
+      // The plan repeats weekly, so the dates behind it have to roll over on
+      // their own rather than waiting for a reload.
+      const now = new Date();
+      const currentWeek = weekDates(now);
+      setWeek((current) => (current[0]?.value === currentWeek[0].value ? current : currentWeek));
+      setTodayIndex(todayColumn(currentWeek, now));
+
       if (!sharedReadyRef.current) {
         await connectSharedCalendar(dayCount);
         return;
@@ -1153,10 +1248,12 @@ export default function Home() {
         }
         if (shared.revision !== sharedRevisionRef.current) {
           sharedRevisionRef.current = shared.revision;
-          applySharedEvents(shared.events, dayCount, "Calendar updated from the shared schedule");
+          applySharedEvents(shared.events, dayCount, "Calendar updated from the shared schedule", false);
         }
-      } catch {
+        setSyncState("synced");
+      } catch (error) {
         // A later visibility or polling refresh will retry the shared copy.
+        noteSyncFailure(error);
       }
     };
 
@@ -1174,7 +1271,7 @@ export default function Home() {
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [applySharedEvents, connectSharedCalendar, dayCount, flushPendingChanges, hydrated]);
+  }, [applySharedEvents, connectSharedCalendar, dayCount, flushPendingChanges, hydrated, noteSyncFailure]);
 
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -2233,7 +2330,7 @@ export default function Home() {
     <>
     <main
       className={`planner-app${compactMode ? " is-compact" : ""}`}
-      style={{ "--hour-height": `${hourHeight}px` } as CSSProperties}
+      style={{ "--fc-hour-height": `${hourHeight}px` } as CSSProperties}
       aria-hidden={editorOpen || undefined}
       inert={editorOpen || undefined}
       onPointerDownCapture={(event) => {
@@ -2260,9 +2357,17 @@ export default function Home() {
         </div>
         <div className="header-view-controls">
           <p className="header-date-range">
-            <span className="range-full">Monday–{visibleDays[visibleDays.length - 1]} · August 10–{9 + dayCount}, 2026</span>
-            <span className="range-compact">Aug 10–{9 + dayCount}</span>
+            <span className="range-full">Monday–{visibleDays[visibleDays.length - 1]}{rangeLabel ? ` · ${rangeLabel}` : ""}</span>
+            <span className="range-compact">{rangeLabelCompact}</span>
           </p>
+          {(syncState === "offline" || syncState === "signed-out") && (
+            <p className="sync-warning" role="status">
+              <span aria-hidden="true">●</span>
+              {syncState === "signed-out"
+                ? "Not signed in — changes are saved on this device only"
+                : "Not syncing — changes are saved on this device only"}
+            </p>
+          )}
           <button
             className="header-add-button"
             type="button"
@@ -2490,11 +2595,21 @@ export default function Home() {
                           : isOverlapPeer
                             ? `calc(${peerShare}% - 6px)`
                             : normalWidth;
+                        // Below EVENT_MIN_HEIGHT a card is held open taller than its own
+                        // slot, so in Compact it reaches into the event below it. The
+                        // card painted last wins the tap, which would hand a short
+                        // event's taps to its neighbour. Lifting only the cards that
+                        // actually overflow — most in Compact, none at full size —
+                        // keeps every card clickable inside its own bounds. States with
+                        // their own stacking keep the z-index the stylesheet gives them.
+                        const overflowsSlot = height < EVENT_MIN_HEIGHT;
+                        const managedStacking = overflowsSlot && !toolsVisible && !isOverlapFocus && !isOverlapPeer && activeId !== event.id;
                         const style = {
                           top: `${top}px`,
                           height: `${height}px`,
                           left: overlapLeft,
                           width: overlapWidth,
+                          ...(managedStacking ? { zIndex: 4 + clamp(Math.ceil(EVENT_MIN_HEIGHT - height), 1, 8) } : {}),
                           ...eventColorTokens(event.color, driveBefore(event), driveAfter(event)),
                           ...eventArtworkTokens(artwork),
                         } as CSSProperties;
