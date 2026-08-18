@@ -414,7 +414,10 @@ test("Compact is a persistent density mode, while the old visible shared-status 
   assert.match(pageSource, /setAnnouncement\(next \? "Compact layout on" : "Compact layout off"\)/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-core \{/);
   assert.match(cssSource, /\.planner-app\.is-compact \.calendar-scroll\.view-day \.event-content \{/);
-  assert.match(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ display: none; \}/);
+  // Compact follows the same pinned/peek end-clock rule as the default
+  // density -- it stays dense, it just isn't a different clock design.
+  assert.match(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ bottom: 3px; \}/);
+  assert.doesNotMatch(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ display: none; \}/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-roster,[\s\S]*?\.planner-app\.is-compact \.event-note \{ display: none; \}/);
   assert.match(cssSource, /\.compact-toggle\.selected \{/);
 
