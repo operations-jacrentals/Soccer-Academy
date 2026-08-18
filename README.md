@@ -24,3 +24,9 @@ Start here:
 - [`flags/README.md`](flags/README.md) — feature flag lifecycle & conventions.
 - [`docs/environments.md`](docs/environments.md) — GitHub setup (branch
   protection, environments, approval gate).
+
+## Applications
+
+- [`apps/family-calendar`](apps/family-calendar) — the editable family schedule
+  being prepared for integration with WALL BALL. See the
+  [handoff and merge guide](docs/family-calendar-handoff.md).

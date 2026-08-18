@@ -28,30 +28,21 @@ jobs:
         run: python scripts/validate-flags.py
 
   build-test:
-    name: Build & test
+    name: Build & test family calendar
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      # ---------------------------------------------------------------------
-      # TODO: replace the placeholder below with your stack's real steps.
-      #
-      # Node / TypeScript:
-      #   - uses: actions/setup-node@v4
-      #     with: { node-version: "20", cache: "npm" }
-      #   - run: npm ci
-      #   - run: npm run lint
-      #   - run: npm test
-      #   - run: npm run build
-      #
-      # Python:
-      #   - uses: actions/setup-python@v5
-      #     with: { python-version: "3.x" }
-      #   - run: pip install -r requirements.txt
-      #   - run: ruff check .
-      #   - run: pytest
-      # ---------------------------------------------------------------------
-      - name: Placeholder
-        run: |
-          echo "No build/test steps defined yet."
-          echo "Add lint/test/build for your stack — see CONTRIBUTING.md."
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/family-calendar/package-lock.json
+      - name: Install calendar dependencies
+        working-directory: apps/family-calendar
+        run: npm ci
+      - name: Lint calendar
+        working-directory: apps/family-calendar
+        run: npm run lint
+      - name: Build and test calendar
+        working-directory: apps/family-calendar
+        run: npm test
