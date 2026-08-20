@@ -123,12 +123,12 @@ test("event artwork remains packaged while cards use bright WALL BALL surfaces a
   assert.doesNotMatch(css, /\.drive-segment \{[^}]*border-inline:\s*var\(--event-stroke\) dotted/);
   assert.doesNotMatch(css, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
   assert.doesNotMatch(css, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
-  assert.match(css, /\.drive-before \{[\s\S]*?border-radius: 12px 12px 0 0;/);
-  assert.match(css, /\.drive-after \{[\s\S]*?border-radius: 0 0 12px 12px;/);
+  assert.match(css, /\.drive-before \{[\s\S]*?border-radius: var\(--event-stack-radius\) var\(--event-stack-radius\) 0 0;/);
+  assert.match(css, /\.drive-after \{[\s\S]*?border-radius: 0 0 var\(--event-stack-radius\) var\(--event-stack-radius\);/);
   assert.match(css, /\.ghost-drive \{[\s\S]*?repeating-linear-gradient\(\s*135deg,[\s\S]*?var\(--fc-accent\)/);
   assert.doesNotMatch(css, /\.ghost-drive \{[^}]*border-inline:\s*var\(--event-stroke\) dotted/);
-  assert.match(css, /\.ghost-before[\s\S]*?border-radius: 12px 12px 0 0;/);
-  assert.match(css, /\.ghost-after[\s\S]*?border-radius: 0 0 12px 12px;/);
+  assert.match(css, /\.ghost-before[\s\S]*?border-radius: var\(--event-stack-radius\) var\(--event-stack-radius\) 0 0;/);
+  assert.match(css, /\.ghost-after[\s\S]*?border-radius: 0 0 var\(--event-stack-radius\) var\(--event-stack-radius\);/);
 });
 
 test("summary filters toggle cleanly and match the displayed keyword totals", async () => {
@@ -208,7 +208,7 @@ test("new events open in a compact name-first window and reveal details only on 
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(pageSource, /const \[newEventDetailsOpen, setNewEventDetailsOpen\] = useState\(false\)/);
   assert.match(pageSource, /const quickAddOpen = Boolean\(draft && isNew && !newEventDetailsOpen\)/);
-  assert.match(pageSource, /const editorOpen = Boolean\(\(draft && !quickAddOpen\) \|\| deleteChoice \|\| pendingDriveChoice\)/);
+  assert.match(pageSource, /const editorOpen = Boolean\(\(draft && !quickAddOpen\) \|\| deleteChoice\)/);
   assert.match(pageSource, /const usedColors = new Set\(events\.map\(\(event\) => event\.color\)\)/);
   assert.match(pageSource, /COLORS\.find\(\(color\) => !usedColors\.has\(color\.value\)\)/);
   assert.match(pageSource, /setNewEventDetailsOpen\(false\);[\s\S]*?setPersonEntry\(""\);/);
@@ -322,6 +322,7 @@ test("phone header keeps full-size, labeled controls without hiding the filters"
   assert.match(narrowPhoneHeader, /\.header-add-button \{ min-width: 44px;/);
   assert.match(narrowPhoneHeader, /\.compact-toggle \{ min-width: 44px;/);
   assert.match(narrowPhoneHeader, /\.view-toggle button \{ min-width: 44px;/);
+  assert.match(narrowPhoneHeader, /\.view-day \.day-date,\s*\.view-week \.day-heading:last-of-type \.day-date \{ display: none; \}/);
   assert.doesNotMatch(narrowPhoneHeader, /min-width: (?:40|42)px/);
 });
 
@@ -336,9 +337,9 @@ test("every card shows its start clock while its end clock waits for hover or fo
   assert.doesNotMatch(cssSource, /\.event-rail-connector\b/);
   // The start clock always renders. Every end clock uses the same hidden-at-rest
   // modifier, regardless of whether another event follows it.
-  assert.match(pageSource, /!toolsVisible && <span className="event-rail-time event-rail-start">\{shortTime\(activityStart\(event\)\)\}<\/span>/);
+  assert.match(pageSource, /<div className="event-time-rail" aria-hidden="true">[\s\S]*?<span className="event-rail-time event-rail-start">\{shortTime\(activityStart\(event\)\)\}<\/span>/);
   assert.match(pageSource, /className="event-rail-time event-rail-end event-rail-end--peek"/);
-  assert.match(pageSource, /toolsVisible && toolEdges\.map\(\(edge\) => \{/);
+  assert.doesNotMatch(pageSource, /eventToolsId|event-time-handle|event-departure-button|calendar-hour-picker/);
   assert.match(cssSource, /\.event-rail-end--peek \{[\s\S]*?opacity:\s*0;[\s\S]*?pointer-events:\s*none;/);
   assert.match(cssSource, /\.calendar-event:hover \.event-rail-end--peek,\s*\.calendar-event:focus-within \.event-rail-end--peek \{[\s\S]*?opacity:\s*1;/);
   // No transition is declared for the peek reveal, so hover is instant.
@@ -348,10 +349,11 @@ test("every card shows its start clock while its end clock waits for hover or fo
 test("overlapped cards keep the same single start-time rail as regular cards", async () => {
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(cssSource, /\.event--narrow \.event-core \{ --event-time-rail: 48px;/);
-  assert.doesNotMatch(cssSource, /\.event--narrow:not\(\.event-tools-open\) \.event-core \{[\s\S]{0,180}grid-template-rows:/);
-  assert.match(cssSource, /\.calendar-event:not\(\.event--narrow\):not\(\.event-tools-open\) \.event-core \{ grid-template-rows:/);
-  assert.match(cssSource, /\.calendar-event\.event--narrow:not\(\.event-tools-open\) \.event-time-rail \{ display: none; \}/);
+  assert.match(cssSource, /\.calendar-event\.event--micro,\s*\.calendar-event\.event--narrow \{ --event-stack-radius: 10px; \}/);
+  assert.match(cssSource, /\.event--narrow \.event-core \{ --event-time-rail: 48px; \}/);
+  assert.doesNotMatch(cssSource, /\.event--narrow \.event-core \{[\s\S]{0,180}grid-template-rows:/);
+  assert.match(cssSource, /\.calendar-event:not\(\.event--narrow\) \.event-core \{ grid-template-rows:/);
+  assert.match(cssSource, /\.calendar-event\.event--narrow \.event-time-rail \{ display: none; \}/);
 });
 
 test("mobile Day is a compact, single-day state rather than a partial Week view", async () => {
@@ -381,8 +383,8 @@ test("mobile Day is a compact, single-day state rather than a partial Week view"
   assert.doesNotMatch(cssSource, /scroll-snap-stop:\s*normal/);
   assert.match(cssSource, /\.view-day \.filter-empty-state \{[\s\S]*?position:\s*sticky/);
 
-  assert.match(cssSource, /\.calendar-scroll\.view-day \{ touch-action:\s*auto; -webkit-overflow-scrolling:\s*touch;/);
-  assert.doesNotMatch(cssSource, /touch-action:\s*pan-y/);
+  assert.match(cssSource, /\.calendar-scroll\.view-day \{ touch-action:\s*pan-y; -webkit-overflow-scrolling:\s*touch;/);
+  assert.match(cssSource, /\.calendar-scroll\.view-day \.calendar-event \{ touch-action:\s*auto;/);
 });
 
 test("Compact is a persistent density mode, while the old visible shared-status chip is gone", async () => {
@@ -439,178 +441,75 @@ test("Week fits every visible day at a normal desktop width without a navigation
   assert.match(pageSource, /onClick=\{extendWeek\}/);
   assert.match(pageSource, /onClick=\{shortenWeek\}/);
   assert.match(cssSource, /\.week-range-controls \{[\s\S]*?grid-template-rows:\s*repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(cssSource, /\.view-week \.day-heading:last-of-type \{ padding-right: 48px; \}/);
+  assert.match(cssSource, /\.view-week \.day-heading:last-of-type \{ padding-right: 58px; \}/);
 });
 
-test("touch long-hold arms a real event move instead of opening a Move popup control", async () => {
-  const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const longPressStart = pageSource.indexOf("function beginTouchPress(");
-  const longPressEnd = pageSource.indexOf("function cancelTouchPress(", longPressStart);
-  const longPress = pageSource.slice(longPressStart, longPressEnd);
-
-  assert.ok(longPressStart >= 0 && longPressEnd > longPressStart, "the card long-press handler must be locatable");
-  assert.match(longPress, /card\.setPointerCapture\(pointerEvent\.pointerId\)/);
-  assert.match(longPress, /window\.setTimeout\(\(\) => \{[\s\S]*?beginInteraction\(pointerEvent, event, "move", "event", true, card\)/);
-  assert.doesNotMatch(longPress, /openEditor\(/);
-  assert.match(pageSource, /pointerEvent\.pointerType === "touch" \|\| pointerEvent\.pointerType === "pen"\) \{\s*beginTouchPress\(pointerEvent, event\);/);
-  assert.match(pageSource, /Math\.hypot\(pointerEvent\.clientX - press\.startX, pointerEvent\.clientY - press\.startY\) > 10\) \{[\s\S]*?cancelTouchPress\(pointerEvent\);/);
-  // Direct movement must not turn every ordinary vertical swipe that starts
-  // on a card into a dead gesture. Coarse cards own the pointer for a hold,
-  // then explicitly pass early vertical intent through to the calendar.
-  assert.match(pageSource, /type TouchCardScroll = \{[\s\S]*?pointerId: number;[\s\S]*?lastY: number;/);
-  assert.match(pageSource, /function scrollFromTouchedCard\([\s\S]*?scrollRef\.current\?\.scrollBy\(\{ top: offset, behavior: "auto" \}\)/);
-  assert.match(pageSource, /if \(scrollFromTouchedCard\(pointerEvent\)\) return;/);
-  assert.match(pageSource, /Math\.abs\(deltaY\) > Math\.abs\(deltaX\)/);
-  assert.match(pageSource, /interactionRef\.current\?\.pointerId === pointerEvent\.pointerId\) moveInteraction\(pointerEvent\)/);
-  assert.match(pageSource, /interactionRef\.current\?\.pointerId === pointerEvent\.pointerId\) \{\s*endInteraction\(pointerEvent\);/);
-  assert.doesNotMatch(pageSource, /className="event-edge-move"/);
-  assert.doesNotMatch(pageSource, /aria-label=\{`Move \$\{event\.title\}`\}/);
-});
-
-test("time clocks drag to resize, choose exact 15-minute times, and sit beside Departure", async () => {
+test("touch cards preserve native scrolling and open the editor with one tap", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(pageSource, /const \[eventToolsId, setEventToolsId\] = useState<string \| null>\(null\)/);
-  assert.match(pageSource, /className="event-edge-tools-set"/);
-  assert.match(pageSource, /function scheduleEventToolsOpen/);
-  assert.match(pageSource, /function scheduleEventToolsOpen\(event: CalendarEvent, card: HTMLElement/);
-  assert.match(pageSource, /const eventToolsHoverIdRef = useRef<string \| null>\(null\)/);
-  // Hover opens tools instantly -- no wait before a hover promise is kept.
-  assert.match(pageSource, /eventToolsOpenTimerRef\.current = window\.setTimeout\(\(\) => \{[\s\S]*?\}, 0\);/);
-  assert.match(pageSource, /eventToolsHoverIdRef\.current === event\.id && !interactionRef\.current\) openEventTools\(event, card, false(?:, preferredEdge)?\)/);
-  assert.match(pageSource, /function scheduleEventToolsClose\(eventId: string\)/);
-  const closeToolsStart = pageSource.indexOf("function scheduleEventToolsClose(");
-  const closeToolsEnd = pageSource.indexOf("function beginTouchPress(", closeToolsStart);
-  const closeTools = pageSource.slice(closeToolsStart, closeToolsEnd);
-  assert.ok(closeToolsStart >= 0 && closeToolsEnd > closeToolsStart, "tool-close safety must be locatable");
-  assert.match(closeTools, /document\.activeElement\?\.closest<HTMLElement>\("\.calendar-event"\)/);
-  assert.match(closeTools, /const isFocusedTool = focusedCard\?\.dataset\.eventId === eventId;/);
-  assert.match(closeTools, /!interactionRef\.current && !isFocusedTool && eventToolsHoverIdRef\.current !== eventId/);
-  assert.match(pageSource, /function handleEventToolClick\(/);
-  assert.match(pageSource, /handleEventToolClick\(clickEvent, event, edge, "drive"\)/);
-  assert.match(pageSource, /onMouseEnter=\{\(mouseEvent\) => \{[\s\S]*?scheduleEventToolsOpen\(event, mouseEvent\.currentTarget/);
-  assert.match(pageSource, /if \(eventToolsId === event\.id\) \{[\s\S]*?clearTimeout\(eventToolsCloseTimerRef\.current\)/);
-  assert.doesNotMatch(pageSource, /const edgeZone = Math\.min\(18, Math\.max\(10, rect\.height \/ 3\)\)/);
-  assert.doesNotMatch(pageSource, /title="Click to edit/);
-  assert.doesNotMatch(pageSource, /className="drag-readout"/);
-  assert.doesNotMatch(pageSource, /neighborShift|event-tools-neighbor/);
-  assert.match(pageSource, /const minimumForBothEdges = window\.matchMedia\("\(any-pointer: coarse\)"\)\.matches \? 52 : 44;/);
-  assert.match(pageSource, /const coreHeight = card\.querySelector<HTMLElement>\("\.event-core"\)\?\.getBoundingClientRect\(\)\.height \?\? card\.getBoundingClientRect\(\)\.height;/);
-  assert.match(pageSource, /const showBothEdges = coreHeight >= minimumForBothEdges;/);
-  assert.match(pageSource, /const selectedEdges = showBothEdges\s*\? \{ start: true, end: true \}\s*:\s*\{ start: preferredEdge !== "end", end: preferredEdge === "end" \}/);
-  // Short cards get just the closest edge rather than overlapping start and
-  // end controls. Normal cards expose the same direct controls at both ends.
-  assert.match(pageSource, /toolsVisible && toolEdges\.length === 1 \? "event-tools-single-edge"/);
-  assert.match(pageSource, /toolsVisible && toolEdges\.map\(\(edge\) => \{/);
-  assert.match(pageSource, /data-event-id=\{event\.id\}/);
-  assert.doesNotMatch(pageSource, /className="event-edge-move"/);
-  assert.doesNotMatch(pageSource, /aria-label=\{`Move \$\{event\.title\}`\}/);
-  assert.match(pageSource, /className=\{`event-time-handle event-time-handle--\$\{edge\}\$\{hourPickerOpen \? " is-hour-picker-open" : ""\}`\}/);
-  assert.match(pageSource, /aria-label=\{`Set or drag \$\{edge\} time of \$\{event\.title\}, \$\{formatTime\(time\)\}`\}/);
-  assert.match(pageSource, /aria-haspopup="dialog"/);
-  assert.match(pageSource, /aria-expanded=\{hourPickerOpen\}/);
-  assert.match(pageSource, /aria-controls=\{hourPickerOpen \? "calendar-hour-picker" : undefined\}/);
-  assert.match(pageSource, /title=\{`Click to choose a time, or drag to make \$\{event\.title\} \$\{direction\}`\}/);
-  assert.match(pageSource, /className="event-time-clock-value"/);
-  // The up/down grip arrow is gone -- the departure button never drags.
-  assert.doesNotMatch(pageSource, /event-time-clock-grip/);
-  assert.match(pageSource, /className=\{`event-departure-button event-departure-button--\$\{edge\}`\}/);
-  assert.match(pageSource, /aria-label=\{`Add 15 minutes of travel time \$\{position\} \$\{event\.title\}`\}/);
-  assert.match(pageSource, /title=\{`Add 15 minutes of travel time \$\{position\}`\}/);
-  assert.doesNotMatch(pageSource, /Drag or click to add travel time/);
-  assert.match(pageSource, /aria-label=\{`Add an event \$\{edge === "start" \? "before" : "after"\} \$\{event\.title\}`\}/);
-  assert.match(pageSource, /className="event-edge-add"/);
-  assert.match(pageSource, /className="event-departure-glyph" aria-hidden="true">/);
-  assert.match(pageSource, /<i className="event-departure-car" \/>/);
-  assert.match(pageSource, /<i className="event-departure-plus" \/>/);
-  assert.doesNotMatch(pageSource, /className="event-edge-extend"/);
-  assert.doesNotMatch(pageSource, /className="event-edge-drive"/);
-  assert.doesNotMatch(pageSource, /↝/);
-  assert.match(pageSource, /function handleAddAdjacentToolClick\([\s\S]*?const before = event\.start - SNAP_MINUTES;[\s\S]*?openNew\(event\.day, start, clickEvent\.currentTarget, \{[\s\S]*?\}, SNAP_MINUTES\)/);
-  assert.match(pageSource, /tentativeEnd: end === interaction\.origin\.end \? interaction\.origin\.tentativeEnd : false/);
-  assert.match(pageSource, /onPointerDown=\{\(pointerEvent\) => beginInteraction\(pointerEvent, event, mode, "event", true\)\}/);
-  assert.match(pageSource, /onPointerMove=\{moveInteraction\}[\s\S]*?onPointerUp=\{endInteraction\}[\s\S]*?onPointerCancel=\{cancelInteraction\}/);
-  // The departure button never drags -- click only, no pointer-capture wiring.
-  assert.doesNotMatch(pageSource, /beginInteraction\(pointerEvent, event, mode, "drive"/);
-  assert.match(pageSource, /onClick=\{\(clickEvent\) => openHourPicker\(clickEvent, event, edge\)\}/);
-  assert.match(pageSource, /onClick=\{\(clickEvent\) => handleEventToolClick\(clickEvent, event, edge, "drive"\)\}/);
-  assert.match(pageSource, /<div className="event-time-rail" aria-hidden=\{!toolsVisible\}>/);
-  assert.match(pageSource, /interaction\.extensionType === "event" && expanded/);
-  assert.match(pageSource, /const changed = finalEvent \? hasScheduleChange\(interaction\.origin, finalEvent\) : false/);
-  assert.doesNotMatch(pageSource, /touchSurface|openTouchSurface|resizeSurface\.kind === "pointer"/);
-  // Revealed controls must not solve their clearance problem by translating a
-  // neighbouring event into a different time slot. That makes adjacent cards
-  // overlap and changes the visual schedule while merely hovering/tapping.
-  assert.doesNotMatch(cssSource, /\.calendar-event\.event-tools-neighbor\s*\{[^}]*transform:\s*translateY/);
-  // Visible, not hidden: the + button is centered on the card and straddles
-  // its top/bottom edge, half reaching into the neighbor's space, so it must
-  // not be clipped to this card's own bounds.
-  assert.match(cssSource, /\.event-edge-tools-set\s*\{[\s\S]*?overflow:\s*visible/);
-  assert.match(cssSource, /\.event-edge-tools \{[\s\S]*?pointer-events:\s*none/);
-  assert.match(cssSource, /\.event-edge-tools \{[\s\S]*?left:\s*50%;[\s\S]*?justify-content:\s*center;/);
-  assert.match(cssSource, /\.event-edge-tools--start\s*\{ top: 0; transform: translate\(-50%, -50%\); \}/);
-  assert.match(cssSource, /\.event-edge-tools--end\s*\{ bottom: 0; transform: translate\(-50%, 50%\); \}/);
-  assert.match(cssSource, /\.event-edge-tools button \{[\s\S]*?pointer-events:\s*auto/);
-  assert.match(cssSource, /\.event-tools-open \.event-time-rail \{[\s\S]*?pointer-events:\s*auto/);
-  assert.match(cssSource, /\.event-time-handle,\s*\.event-departure-button \{[\s\S]*?touch-action:\s*none/);
-  assert.match(cssSource, /\.event-time-handle \{[\s\S]*?cursor:\s*ns-resize/);
-  assert.match(cssSource, /\.event-departure-button \{[\s\S]*?cursor:\s*pointer/);
-  assert.doesNotMatch(cssSource, /\.event-departure-button \{[^}]*cursor:\s*ns-resize/);
-  assert.match(cssSource, /\.event-time-handle\.is-hour-picker-open \{/);
-  assert.match(cssSource, /\.event-tools-single-edge \.event-time-handle,\s*\.event-tools-single-edge \.event-departure-button \{[\s\S]*?top:\s*2px;[\s\S]*?bottom:\s*2px;[\s\S]*?height:\s*auto/);
-  assert.doesNotMatch(cssSource, /\.event-edge-tools \.event-edge-extend\b/);
-  assert.doesNotMatch(cssSource, /\.event-edge-tools \.event-edge-drive\b/);
-  assert.match(pageSource, /\$\{driveBefore\(event\) > 0 \? "has-drive-before" : ""\}/);
-  assert.match(pageSource, /\$\{driveAfter\(event\) > 0 \? "has-drive-after" : ""\}/);
-  assert.match(cssSource, /\.calendar-event\.has-drive-before \.event-core \{[\s\S]*?border-top-width: 0;/);
-  assert.match(cssSource, /\.calendar-event\.has-drive-before \.event-time-rail \{ box-shadow: none; \}/);
-  assert.match(cssSource, /\.calendar-event\.has-drive-after \.event-core \{[\s\S]*?border-bottom-width: 0;/);
-  assert.match(cssSource, /\.calendar-event:hover,[\s\S]*?--event-outline: color-mix\(in srgb, var\(--event-dark\) 72%, #1c3338\);/);
-  assert.doesNotMatch(cssSource, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
-  assert.doesNotMatch(cssSource, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
-  assert.doesNotMatch(cssSource, /\.drive-segment \{[^}]*border-inline:/);
-  assert.match(cssSource, /\.drag-ghost\.has-drive-before \.ghost-core \{[^}]*border-top-width: 0;/);
-  assert.match(cssSource, /\.drag-ghost\.has-drive-after \.ghost-core \{[^}]*border-bottom-width: 0;/);
-  assert.doesNotMatch(cssSource, /\.calendar-event\.event-tools-neighbor\s*\{[^}]*transform:\s*translateY/);
+
+  assert.doesNotMatch(pageSource, /beginTouchPress|TouchCardScroll|scrollFromTouchedCard|endTouchedCardScroll/);
+  assert.match(pageSource, /if \(pointerEvent\.pointerType === "touch" \|\| pointerEvent\.pointerType === "pen"\) return;/);
+  assert.match(pageSource, /onClick=\{\(clickEvent\) => \{[\s\S]*?openEditor\(event, clickEvent\.currentTarget\);/);
+  assert.match(cssSource, /\.calendar-scroll\.view-day \{ touch-action:\s*pan-y;/);
+  assert.match(cssSource, /\.calendar-scroll\.view-day \.calendar-event \{ touch-action:\s*auto;/);
+  assert.doesNotMatch(cssSource, /\.calendar-event \{ touch-action:\s*none/);
+});
+
+test("cards stay visually stable while the editor owns time and Drive Time changes", async () => {
+  const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.doesNotMatch(pageSource, /eventToolsId|scheduleEventTools|event-time-handle|event-departure|calendar-hour-picker|event-edge-add/);
+  assert.doesNotMatch(cssSource, /event-tools-open|event-time-handle|event-departure|event-edge-tools|calendar-hour-picker/);
+  assert.match(pageSource, /className="drive-time-editor"/);
+  assert.match(pageSource, /function addDraftDrive\(edge: "start" \| "end"\)/);
+  assert.match(pageSource, /\+15 min before/);
+  assert.match(pageSource, /\+15 min after/);
+  assert.match(pageSource, /onClick=\{\(\) => addDraftDrive\("start"\)\}/);
+  assert.match(pageSource, /onClick=\{\(\) => addDraftDrive\("end"\)\}/);
+  assert.match(cssSource, /\.drive-time-controls \.button \{[\s\S]*?min-height:\s*54px/);
+  assert.doesNotMatch(cssSource, /--event-time-rail:\s*(?:78|88)px/);
   assert.match(pageSource, /className="column-earlier-hour-control"/);
 });
 
-test("the clock picker offers only valid 15-minute choices and preserves travel bands", async () => {
+test("the editor offers valid 15-minute start and end choices with labelled Drive Time", async () => {
+  const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(pageSource, /const timeOptions = Array\.from\([\s\S]*?\(END_MINUTES - START_MINUTES\) \/ SNAP_MINUTES \+ 1[\s\S]*?START_MINUTES \+ index \* SNAP_MINUTES/);
+  assert.match(pageSource, /value=\{activityStart\(draft\)\}[\s\S]*?time >= START_MINUTES \+ driveBefore\(draft\) && time < activityEnd\(draft\)/);
+  assert.match(pageSource, /value=\{activityEnd\(draft\)\}[\s\S]*?time > activityStart\(draft\) && time <= END_MINUTES - driveAfter\(draft\)/);
+  assert.match(pageSource, /<span>Drive Time<\/span>[\s\S]*?Travel sits outside the event and is excluded from its hours/);
+  assert.match(pageSource, /start: draft\.start - SNAP_MINUTES, driveBefore: driveBefore\(draft\) \+ SNAP_MINUTES/);
+  assert.match(pageSource, /end: draft\.end \+ SNAP_MINUTES, driveAfter: driveAfter\(draft\) \+ SNAP_MINUTES/);
+  assert.doesNotMatch(pageSource, /HourPicker|hourPicker|calendar-hour-picker/);
+});
+
+test("delete always asks for confirmation and keyboard adjustments have a visible exit", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(pageSource, /type HourPicker = \{[\s\S]*?eventId: string;[\s\S]*?edge: "start" \| "end";[\s\S]*?anchor: HourPickerAnchor;/);
-  assert.match(pageSource, /const \[hourPicker, setHourPicker\] = useState<HourPicker \| null>\(null\)/);
-  assert.match(pageSource, /const timeOptions = Array\.from\([\s\S]*?\(END_MINUTES - START_MINUTES\) \/ SNAP_MINUTES \+ 1[\s\S]*?START_MINUTES \+ index \* SNAP_MINUTES/);
-  assert.match(pageSource, /const hourPickerTimeOptions = hourPicker && hourPickerEvent[\s\S]*?time >= START_MINUTES \+ driveBefore\(hourPickerEvent\) && time < activityEnd\(hourPickerEvent\)[\s\S]*?time > activityStart\(hourPickerEvent\) && time <= END_MINUTES - driveAfter\(hourPickerEvent\)/);
+  const deleteStart = pageSource.indexOf("function deleteDraft()");
+  const deleteEnd = pageSource.indexOf("function confirmDelete(", deleteStart);
+  const deleteDraft = pageSource.slice(deleteStart, deleteEnd);
+  assert.ok(deleteStart >= 0 && deleteEnd > deleteStart, "delete confirmation entry point must be locatable");
+  assert.match(deleteDraft, /const matches = tag \? events\.filter\(\(event\) => normalizeTag\(event\.tag\) === tag\) : \[persisted\];/);
+  assert.match(deleteDraft, /setDeleteChoice\(\{ event: persisted, matchingIds: matches\.map\(\(event\) => event\.id\) \}\);/);
+  assert.doesNotMatch(deleteDraft, /commit\(/);
+  assert.match(pageSource, /<h2 id="delete-choice-title">\{linked \? "Delete linked event" : "Delete event\?"\}<\/h2>/);
+  assert.match(pageSource, /<button className="resize-surface-close"[\s\S]*?>Done<\/button>/);
+  assert.match(cssSource, /\.resize-surface-close \{[\s\S]*?min-width:\s*44px;[\s\S]*?min-height:\s*44px/);
+});
 
-  const openPickerStart = pageSource.indexOf("function openHourPicker(");
-  const openPickerEnd = pageSource.indexOf("function chooseHourPickerTime(", openPickerStart);
-  const openPicker = pageSource.slice(openPickerStart, openPickerEnd);
-  assert.ok(openPickerStart >= 0 && openPickerEnd > openPickerStart, "hour picker opener must be locatable");
-  assert.match(openPicker, /clickEvent\.stopPropagation\(\)/);
-  assert.match(openPicker, /if \(interactionRef\.current\?\.origin\.id === event\.id\) return;/);
-  assert.match(openPicker, /const rect = clickEvent\.currentTarget\.getBoundingClientRect\(\)/);
-  assert.match(openPicker, /keepEventToolsOpen\(event\.id\)/);
-  assert.match(openPicker, /setHourPicker\(\{[\s\S]*?eventId: event\.id,[\s\S]*?edge,[\s\S]*?anchor:/);
-
-  const choosePickerStart = pageSource.indexOf("function chooseHourPickerTime(");
-  const choosePickerEnd = pageSource.indexOf("function handleEventToolClick(", choosePickerStart);
-  const choosePicker = pageSource.slice(choosePickerStart, choosePickerEnd);
-  assert.ok(choosePickerStart >= 0 && choosePickerEnd > choosePickerStart, "hour picker selection must be locatable");
-  assert.match(choosePicker, /const currentTime = edge === "start" \? activityStart\(event\) : activityEnd\(event\)/);
-  assert.match(choosePicker, /if \(time === currentTime\) \{[\s\S]*?closeHourPicker\(\);/);
-  assert.match(choosePicker, /start: time - driveBefore\(event\)/);
-  assert.match(choosePicker, /end: time \+ driveAfter\(event\), tentativeEnd: false/);
-  assert.match(choosePicker, /commitTaggedUpdate\(event, updated, `set \$\{edge\} time to \$\{formatTime\(time\)\}`\)/);
-  assert.match(choosePicker, /if \(changed\) closeHourPicker\(\);/);
-
-  assert.match(pageSource, /id="calendar-hour-picker"[\s\S]*?role="dialog"[\s\S]*?aria-label=\{`Set \$\{hourPicker\.edge\} time for \$\{hourPickerEvent\.title\}`\}/);
-  assert.match(pageSource, /className="calendar-hour-picker-options" role="listbox" aria-label=\{`Available \$\{hourPicker\.edge\} times`\}/);
-  assert.match(pageSource, /role="option"[\s\S]*?aria-selected=\{selected\}[\s\S]*?data-hour-picker-current=\{selected \|\| undefined\}[\s\S]*?onClick=\{\(\) => chooseHourPickerTime\(hourPickerEvent, hourPicker\.edge, time\)\}/);
-  assert.match(pageSource, /target\?\.closest\("\.calendar-hour-picker, \.event-time-handle"\)/);
-  assert.match(cssSource, /\.calendar-hour-picker \{[\s\S]*?position:\s*fixed;[\s\S]*?z-index:\s*120/);
-  assert.match(cssSource, /\.calendar-hour-picker-options \{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+test("phone chrome keeps calendar targets at 44px", async () => {
+  const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(cssSource, /\.day-navigation button \{ width: 44px; min-width: 44px; height: 44px; \}/);
+  assert.match(cssSource, /\.column-earlier-hour-control \{[\s\S]*?width: 44px;[\s\S]*?height: 44px;/);
+  assert.match(cssSource, /\.week-range-controls button \{ min-width: 44px; min-height: 44px; \}/);
+  assert.match(pageSource, /className="week-range-label" aria-hidden="true">Day<\/span>/);
+  assert.doesNotMatch(pageSource, /title=\{dayCount < ALL_DAYS\.length/);
+  assert.doesNotMatch(pageSource, /title=\{compactMode/);
 });
 
 test("travel bands name Leave and Arrive, Leave carries a clickable address, and neither has a dotted seam", async () => {
@@ -648,29 +547,24 @@ test("travel bands name Leave and Arrive, Leave carries a clickable address, and
   assert.doesNotMatch(cssSource, /\.drive-segment \{[^}]*border-inline:/);
   assert.doesNotMatch(cssSource, /\.drive-before \{[^}]*border-top:\s*var\(--event-stroke\) dotted/);
   assert.doesNotMatch(cssSource, /\.drive-after \{[^}]*border-bottom:\s*var\(--event-stroke\) dotted/);
+  assert.match(cssSource, /\.drive-before \{[\s\S]*?border-radius: var\(--event-stack-radius\) var\(--event-stack-radius\) 0 0;/);
+  assert.match(cssSource, /\.drive-after \{[\s\S]*?border-radius: 0 0 var\(--event-stack-radius\) var\(--event-stack-radius\);/);
+  assert.match(cssSource, /\.event-core \{[\s\S]*?border-radius: var\(--event-stack-radius\);/);
   assert.match(cssSource, /\.drive-segment-address \{/);
   assert.match(cssSource, /\.drive-segment-address--empty \{/);
 });
 
-test("overlap focus expands only events with directly intersecting time intervals", async () => {
+test("overlapped cards stay in their assigned lanes while hover only reveals the end clock", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(pageSource, /const \[overlapHoverId, setOverlapHoverId\] = useState<string \| null>\(null\)/);
-  assert.match(pageSource, /const overlapFocusId = overlapHoverId \?\? eventToolsId;/);
-  assert.match(pageSource, /const overlapFocusEvent = overlapFocusId[\s\S]*?dayLayout\.find\(\(event\) => event\.id === overlapFocusId\)/);
-  assert.match(pageSource, /const overlapPeers = overlapFocusEvent[\s\S]*?event\.id !== overlapFocusEvent\.id[\s\S]*?event\.start < overlapFocusEvent\.end[\s\S]*?event\.end > overlapFocusEvent\.start/);
-  assert.match(pageSource, /const hasOverlapFocus = Boolean\(overlapFocusEvent && overlapPeers\.length\)/);
-  assert.match(pageSource, /const isOverlapFocus = hasOverlapFocus && overlapFocusEvent\?\.id === event\.id;/);
-  assert.match(pageSource, /const isOverlapPeer = overlapPeerIndex !== undefined;/);
-  assert.match(pageSource, /const narrow = event\.laneCount > 1 && !isOverlapFocus;/);
-  assert.match(pageSource, /\$\{isOverlapFocus \? "is-overlap-focus" : ""\}[\s\S]*?\$\{isOverlapPeer \? "is-overlap-peer" : ""\}/);
-  assert.match(pageSource, /onMouseEnter=\{\(mouseEvent\) => \{[\s\S]*?setOverlapHoverId\(event\.id\);/);
-  assert.match(pageSource, /onMouseLeave=\{\(\) => \{[\s\S]*?setOverlapHoverId\(\(current\) => current === event\.id \? null : current\);/);
-  assert.match(pageSource, /onFocus=\{\(\) => setOverlapHoverId\(event\.id\)\}/);
-  assert.match(cssSource, /\.calendar-event\.is-overlap-focus \{[\s\S]*?z-index:\s*32/);
-  assert.match(cssSource, /\.calendar-event\.is-overlap-peer \{[\s\S]*?opacity:\s*\.68/);
-  assert.match(cssSource, /\.calendar-event\.is-overlap-peer \.event-content,[\s\S]*?\.calendar-event\.is-overlap-peer \.event-roster \{[\s\S]*?opacity:\s*0/);
+  assert.match(pageSource, /const normalLeft = `calc\(\$\{\(event\.lane \/ event\.laneCount\) \* 100\}% \+ 3px\)`;/);
+  assert.match(pageSource, /const normalWidth = `calc\(\$\{100 \/ event\.laneCount\}% - 6px\)`;/);
+  assert.match(pageSource, /left: normalLeft,[\s\S]*?width: normalWidth,/);
+  assert.match(pageSource, /const narrow = event\.laneCount > 1;/);
+  assert.doesNotMatch(pageSource, /overlapHoverId|isOverlapFocus|isOverlapPeer/);
+  assert.doesNotMatch(cssSource, /\.calendar-event\.is-overlap-/);
+  assert.match(cssSource, /\.calendar-event:hover \.event-rail-end--peek,[\s\S]*?opacity:\s*1;/);
 });
 
 test("drag previews use the post-drop lane and surface occupied-time conflicts", async () => {
