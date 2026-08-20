@@ -86,9 +86,13 @@ test("no !important was needed to win the cascade", () => {
 });
 
 test("the name is never dropped in favour of the roster or the note", () => {
-  const block = atRuleBlock(css, "@container eventcard (max-width: 250px)");
-  assert.match(block, /\.event-roster\s*\{\s*display:\s*none;\s*\}/);
-  assert.match(block, /\.event-note\s*\{\s*display:\s*none;\s*\}/);
+  // People chips wrap under the name, so what decides whether they fit is the
+  // card's height, not its width -- a narrow-but-tall card has room and a short
+  // wide one does not. The name still outlasts both.
+  const rosterBlock = atRuleBlock(css, "@container eventcard (max-height: 60px)");
+  assert.match(rosterBlock, /\.event-roster\s*\{\s*display:\s*none;\s*\}/);
+  const noteBlock = atRuleBlock(css, "@container eventcard (max-height: 44px)");
+  assert.match(noteBlock, /\.event-note\s*\{\s*display:\s*none;\s*\}/);
   const containerRules = css.slice(css.indexOf("@container eventcard (max-width: 250px)"));
   assert.doesNotMatch(containerRules, /\.event-content strong\s*\{[^}]*display:\s*none/,
     "the name must survive every density step");

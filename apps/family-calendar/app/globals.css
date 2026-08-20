@@ -29,6 +29,9 @@
   --fc-shadow-surface: 0 12px 30px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .025);
   --fc-shadow-deep: 0 24px 64px rgba(0, 0, 0, .4);
   --fc-motion-fast: 150ms;
+  /* Every header control resolves to this outer height. They used to be 38,
+     44 and 48 tall, all centred on the same line but visibly ragged. */
+  --fc-control-h: 44px;
   --fc-hour-height: 104px;
 }
 
@@ -65,7 +68,7 @@
    collapse to; see the max-width: 620px block below. */
 .filters-toggle {
   display: none;
-  min-height: 38px;
+  min-height: var(--fc-control-h);
   padding: 0 10px;
   align-items: center;
   justify-content: center;
@@ -126,7 +129,7 @@
 .header-date-range { margin: 0; color: var(--fc-muted); font-size: 11px; font-weight: 650; white-space: nowrap; }
 .range-compact { display: none; }
 .header-add-button {
-  min-height: 38px;
+  min-height: var(--fc-control-h);
   padding: 0 11px;
   display: inline-flex;
   align-items: center;
@@ -147,7 +150,7 @@
 .header-add-button:hover { border-color: var(--fc-accent); background: color-mix(in srgb, var(--fc-accent) 14%, var(--fc-surface-raised)); }
 .header-add-button:active { transform: translateY(1px); }
 .compact-toggle {
-  min-height: 38px;
+  min-height: var(--fc-control-h);
   padding: 0 10px;
   display: inline-flex;
   align-items: center;
@@ -206,10 +209,10 @@
 .button-danger:hover:not(:disabled) { border-color: rgba(255, 116, 104, .7); background: rgba(255, 116, 104, .13); }
 .button-danger.solid { color: #170706; border-color: #ff948b; background: #ff8177; }
 
-.view-toggle { display: inline-flex; padding: 4px; border: 1px solid var(--fc-border); border-radius: 14px; background: #071014; box-shadow: 0 7px 18px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .035); }
+.view-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--fc-border); border-radius: 14px; background: #071014; box-shadow: 0 7px 18px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .035); }
 .view-toggle button {
   min-width: 62px;
-  height: 38px;
+  height: calc(var(--fc-control-h) - 8px);
   padding: 0 12px;
   color: #98a5a5;
   border: 0;
@@ -237,7 +240,7 @@
 }
 .summary-strip::-webkit-scrollbar { display: none; }
 .summary-strip .summary-filter {
-  min-height: 38px;
+  min-height: var(--fc-control-h);
   flex: 0 0 auto;
   padding: 0 11px;
   display: flex;
@@ -1074,9 +1077,31 @@
   height: var(--drive-after);
   border-radius: 0 0 12px 12px;
 }
-.event-content { position: absolute; inset: 7px 104px 5px 10px; z-index: 3; min-width: 0; overflow: hidden; pointer-events: none; }
-.event--no-roster .event-content { right: 9px; }
+/* A single centred stack: name, note, then people chips. Nothing is reserved
+   on the right any more, so the name gets the whole width and stays centred
+   at every card size. */
+.event-content {
+  position: absolute;
+  inset: 7px 10px 5px 10px;
+  z-index: 3;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* When the stack does outgrow the card, overflow past the bottom rather
+     than past both edges -- centred overflow clips the top of the name. */
+  justify-content: safe center;
+  gap: 3px;
+  text-align: center;
+  pointer-events: none;
+}
 .event-content strong {
+  width: 100%;
+  /* Never let flex compress the name below its own line box: the note and the
+     people chips give way first, and they are already dropped by height. */
+  flex: 0 0 auto;
   display: block;
   overflow: hidden;
   color: var(--event-title-color, var(--event-accent));
@@ -1093,8 +1118,9 @@
 .event--standard.event--long-title .event-content strong,
 .event--detailed.event--long-title .event-content strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .event-note {
+  width: 100%;
   display: block;
-  margin-top: 2px;
+  margin-top: 0;
   overflow: hidden;
   color: color-mix(in srgb, var(--event-ink) 78%, transparent);
   font-size: 10px;
@@ -1104,56 +1130,54 @@
   text-overflow: ellipsis;
 }
 .event-roster {
-  position: absolute;
-  top: 9px;
-  right: 5px;
+  position: static;
   z-index: 3;
-  width: 92px;
-  display: grid;
-  grid-auto-rows: 18px;
-  align-content: start;
-  gap: 5px;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   overflow: hidden;
   pointer-events: none;
 }
+/* Dark pill on a bright card, matching the clock pills, so the two read as
+   one chip family rather than two unrelated treatments. */
 .person-signature {
   min-width: 0;
-  min-height: 18px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 3px;
+  max-width: 100%;
+  padding: 1px 6px 1px 5px;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  color: color-mix(in srgb, var(--event-ink) 88%, transparent);
-  background: transparent;
-  font-size: 11px;
+  gap: 4px;
+  color: var(--event-bright, #eaf6f4);
+  border: 1px solid rgba(115, 151, 158, .32);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0c2630, #07181f);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28);
+  font-size: 10px;
   font-weight: 900;
-  line-height: 1.15;
-  text-align: right;
-  text-shadow: 0 1px rgba(255, 255, 255, .18);
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: none;
 }
 .person-signature > span {
-  grid-column: 1;
-  grid-row: 1;
+  min-width: 0;
   overflow: hidden;
-  text-align: right;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .person-signature::before {
   content: "";
-  grid-column: 2;
-  grid-row: 1;
-  width: 3px;
-  height: 14px;
-  border-radius: 2px;
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
   background: var(--person-color, #718287);
-  box-shadow: 0 0 0 1px rgba(7, 18, 22, .3), 0 1px 3px rgba(0, 0, 0, .18);
+  box-shadow: none;
 }
-.person-signature-overflow { color: color-mix(in srgb, var(--event-ink) 62%, transparent); }
-.person-signature-overflow::before { background: #718287; box-shadow: none; }
-.event--short-roster .event-roster { top: 6px; grid-auto-rows: 16px; gap: 3px; }
-.event--short-roster .person-signature { min-height: 16px; font-size: 10px; }
+.person-signature-overflow { color: color-mix(in srgb, var(--event-bright, #eaf6f4) 66%, transparent); }
+.person-signature-overflow::before { background: #718287; }
 .event-edge-tools-set {
   position: absolute;
   inset: 0;
@@ -1231,43 +1255,38 @@
 .event--narrow .event-core { --event-time-rail: 48px; border-radius: 10px; }
 .event--narrow .event-rail-time { font-size: 12px; letter-spacing: -.02em; }
 /* A narrow (multi-lane) card trades the side rail for a slim top row: both
-   times read together at a glance, and name/notes/roster get the full width
+   times read together at a glance, and name/note/people get the full width
    below instead of squeezing beside a tall, skinny rail column. Guarded off
    the tools-open state, which still needs the wider column for its resize
    handles -- that combination is rare enough not to warrant its own layout.
-   Scoped out of Compact for now: that density has its own, much smaller
-   sizing tuned for the old column rail, and deserves its own verified pass
-   rather than inheriting an untested interaction.
 
-   Also scoped to min-width: 171px, one pixel past the container query below
-   that drops the rail entirely on the most extreme cards. That query exists
-   specifically so the name is never squeezed out; this rule has higher
-   specificity than a bare width query, so without this guard it would win
-   and silently defeat that safety net on a card too narrow for even a
-   single-row clock pair, exactly reproducing the "name cut off" class of bug
-   scripts/verify-card-geometry.mjs exists to catch. */
-@container eventcard (min-width: 171px) {
-  .planner-app:not(.is-compact) .event--narrow:not(.event-tools-open) .event-core {
+   This applies at every width and in Compact too. It used to be fenced above
+   171px because, as a column layout, it fought the safety net below that
+   drops the rail on the most extreme cards. As a row it no longer competes:
+   a row spends height, not the width the name needs. */
+@container eventcard (min-height: 34px) {
+  .event--narrow:not(.event-tools-open) .event-core {
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(0, 1fr);
   }
-  .planner-app:not(.is-compact) .event--narrow:not(.event-tools-open) .event-time-rail {
-    min-height: 20px;
+  .event--narrow:not(.event-tools-open) .event-time-rail {
+    min-height: 18px;
     padding: 3px 6px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
   }
-  .planner-app:not(.is-compact) .event--narrow:not(.event-tools-open) .event-rail-time {
+  .event--narrow:not(.event-tools-open) .event-rail-time {
     position: static;
     width: auto;
+    height: auto;
     min-height: 0;
     padding: 1px 7px;
   }
   /* This row already has a clear home for both times side by side, so the
      end clock doesn't need to wait for hover the way a stacked pill does. */
-  .planner-app:not(.is-compact) .calendar-event.event--narrow:not(.event-tools-open) .event-rail-end--peek { opacity: 1; }
+  .calendar-event.event--narrow:not(.event-tools-open) .event-rail-end--peek { opacity: 1; }
 }
 .event--narrow .event-time-handle {
   right: 19px;
@@ -1288,12 +1307,7 @@
   text-align: center;
 }
 .event--narrow .event-content strong { font-size: 18px; line-height: 1.1; }
-.event--narrow .event-note { display: none; }
-.event--narrow .event-roster { inset-block: 4px; right: 1px; width: 3px; gap: 2px; }
-.event--narrow .person-signature { width: 3px; height: auto; min-height: 5px; flex: 1; display: block; }
-.event--narrow .person-signature { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-.event--narrow .person-signature > span { display: none; }
-.event--narrow .person-signature::before { display: block; width: 3px; height: 100%; }
+.event--narrow .person-signature { padding: 1px 5px 1px 4px; font-size: 9px; }
 .event--narrow.event--compact .event-content { inset: 3px 5px; }
 .drag-ghost { --event-outline: color-mix(in srgb, var(--event-dark) 76%, #14262c); --event-stroke: 2px; position: absolute; z-index: 60; overflow: visible; color: var(--event-ink); transform: scale(1.012); pointer-events: none; }
 .ghost-core {
@@ -1447,34 +1461,7 @@
   .event--detailed:not(.event--narrow) .event-content { inset: 7px 10px 5px 8px; }
   .event--standard:not(.event--narrow) .event-content strong,
   .event--detailed:not(.event--narrow) .event-content strong { font-size: 20px; }
-  .event--standard:not(.event--narrow) .event-note,
-  .event--detailed:not(.event--narrow) .event-note { display: none; }
-  .event--standard:not(.event--narrow) .event-roster,
-  .event--detailed:not(.event--narrow) .event-roster { inset-block: 7px; right: 3px; width: 4px; display: flex; flex-direction: column; gap: 3px; }
-  .event--standard:not(.event--narrow) .person-signature,
-  .event--detailed:not(.event--narrow) .person-signature { width: 4px; min-height: 4px; flex: 1; display: block; }
-  .event--standard:not(.event--narrow) .person-signature > span,
-  .event--detailed:not(.event--narrow) .person-signature > span { display: none; }
-  .event--standard:not(.event--narrow) .person-signature::before,
-  .event--detailed:not(.event--narrow) .person-signature::before { display: block; width: 4px; height: 100%; }
 }
-
-@container (min-width: 281px) and (max-width: 340px) {
-  .event--standard:not(.event--narrow) .event-content,
-  .event--detailed:not(.event--narrow) .event-content { right: 100px; }
-  .event--standard:not(.event--narrow) .event-roster,
-  .event--detailed:not(.event--narrow) .event-roster { right: 5px; width: 86px; gap: 3px; }
-}
-
-@container (min-width: 600px) {
-  .event--standard:not(.event--narrow) .event-content,
-  .event--detailed:not(.event--narrow) .event-content { right: max(110px, calc(100% - 352px)); }
-  .event--standard:not(.event--narrow) .event-roster,
-  .event--detailed:not(.event--narrow) .event-roster { right: max(7px, calc(100% - 466px)); }
-}
-
-.event--no-roster.event--standard:not(.event--narrow) .event-content,
-.event--no-roster.event--detailed:not(.event--narrow) .event-content { right: 9px; }
 
 .editor-overlay { position: fixed; inset: 0; z-index: 100; display: flex; justify-content: flex-end; background: rgba(2, 6, 8, .85); backdrop-filter: blur(6px); animation: fade-in .16s ease-out; }
 .event-editor {
@@ -1757,7 +1744,7 @@
   }
   .planner-header h1 { font-size: 22px; }
   .header-date-range { font-size: 10px; }
-  .view-toggle button { min-width: 58px; height: 44px; }
+  .view-toggle button { min-width: 58px; }
   .calendar-section { min-height: 0; flex: 1 1 auto; display: flex; }
   .calendar-shell { min-height: 0; width: 100%; flex: 1 1 auto; }
   .calendar-scroll { height: auto; min-height: 0; max-height: none; }
@@ -1807,13 +1794,10 @@
   .calendar-scroll.view-day .event-core { --event-time-rail: 76px; }
   .calendar-scroll.view-day .event--narrow .event-core { --event-time-rail: 48px; }
   .calendar-scroll.view-day .event-rail-time { font-size: 15px; }
-  .calendar-scroll.view-day .event-content { inset: 7px 84px 5px 10px; }
-  .calendar-scroll.view-day .event--no-roster .event-content { right: 8px; }
+  .calendar-scroll.view-day .event-content { inset: 7px 10px 5px 10px; }
   .calendar-scroll.view-day .event-content strong { font-size: 22px; line-height: 1.02; }
   .calendar-scroll.view-day .event-note { margin-top: 1px; font-size: 9px; }
-  .calendar-scroll.view-day .event-roster { top: 6px; right: 4px; width: 74px; grid-auto-rows: 15px; gap: 3px; }
-  .calendar-scroll.view-day .person-signature { min-height: 15px; gap: 4px; font-size: 9px; }
-  .calendar-scroll.view-day .person-signature::before { height: 12px; }
+  .calendar-scroll.view-day .person-signature { gap: 4px; font-size: 9px; }
   .event--compact:not(.event--narrow) .event-content { align-items: center; }
   .event--compact:not(.event--narrow) .event-content strong {
     display: -webkit-box;
@@ -1918,15 +1902,12 @@
 .planner-app.is-compact .event-rail-time { left: 3px; width: calc(100% - 6px); min-height: 18px; padding-inline: 2px; border-radius: 6px; }
 .planner-app.is-compact .event-rail-start { top: 3px; }
 .planner-app.is-compact .event-rail-end { bottom: 3px; }
-.planner-app.is-compact .event-content { inset: 1px 6px 1px 6px; }
-.planner-app.is-compact .event--no-roster .event-content { right: 6px; }
+.planner-app.is-compact .event-content { inset: 1px 6px 1px 6px; gap: 2px; }
 .planner-app.is-compact .event-content strong { font-size: 14px; font-weight: 950; line-height: 1; }
 .planner-app.is-compact .event-note { margin-top: 0; font-size: 8px; }
-.planner-app.is-compact .event-roster { top: 3px; right: 3px; width: 64px; grid-auto-rows: 12px; gap: 1px; }
-.planner-app.is-compact .person-signature { min-height: 12px; gap: 3px; font-size: 8px; }
-.planner-app.is-compact .person-signature::before { height: 9px; }
-.planner-app.is-compact .event--short-roster .event-roster { top: 3px; grid-auto-rows: 11px; gap: 1px; }
-.planner-app.is-compact .event--short-roster .person-signature { min-height: 11px; font-size: 8px; }
+.planner-app.is-compact .event-roster { gap: 2px; }
+.planner-app.is-compact .person-signature { padding: 0 4px 0 3px; gap: 3px; font-size: 8px; }
+.planner-app.is-compact .person-signature::before { width: 4px; height: 4px; }
 .planner-app.is-compact .event--compact .event-content { inset-inline: 6px; }
 .planner-app.is-compact .event--compact .event-content strong { font-size: 13px; }
 .planner-app.is-compact .event--micro .event-content strong { font-size: 12px; }
@@ -1942,19 +1923,15 @@
    full roster and note detail without spending timeline height on it. */
 .planner-app.is-compact .event-roster,
 .planner-app.is-compact .event-note { display: none; }
-.planner-app.is-compact .event-content { right: 6px; }
 
 .planner-app.is-compact .calendar-scroll.view-day .event-core { --event-time-rail: 46px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-tools-open .event-core { --event-time-rail: 78px; }
 .planner-app.is-compact .calendar-scroll.view-day .event--narrow .event-core { --event-time-rail: 36px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-rail-time { font-size: 11px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-content { inset: 1px 6px; }
-.planner-app.is-compact .calendar-scroll.view-day .event--no-roster .event-content { right: 6px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-content strong { font-size: 15px; line-height: 1; }
 .planner-app.is-compact .calendar-scroll.view-day .event-note { margin-top: 0; font-size: 8px; }
-.planner-app.is-compact .calendar-scroll.view-day .event-roster { top: 3px; right: 3px; width: 56px; grid-auto-rows: 11px; gap: 1px; }
-.planner-app.is-compact .calendar-scroll.view-day .person-signature { min-height: 11px; gap: 3px; font-size: 8px; }
-.planner-app.is-compact .calendar-scroll.view-day .person-signature::before { height: 8px; }
+.planner-app.is-compact .calendar-scroll.view-day .person-signature { gap: 3px; font-size: 8px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -2011,22 +1988,35 @@
    rules above on order rather than needing !important.
    --------------------------------------------------------------------------- */
 
-/* Room for a clock and a name, but not for a roster or a note. */
 @container eventcard (max-width: 250px) {
-  .calendar-event .event-core .event-roster { display: none; }
-  .calendar-event .event-core .event-note { display: none; }
   .calendar-event .event-core .event-main .event-content { inset: 5px 7px 5px 8px; }
   .calendar-event .event-core .event-content strong { font-size: 17px; letter-spacing: -.035em; }
+}
+
+/* People and notes are dropped by available height, not width: the chips wrap
+   under the name, so a narrow-but-tall card has room for them and a short wide
+   one does not. The name always outlasts both. */
+@container eventcard (max-height: 60px) {
+  .calendar-event .event-core .event-roster { display: none; }
+}
+@container eventcard (max-height: 44px) {
+  .calendar-event .event-core .event-note { display: none; }
+  /* The width tiers set a 5px top/bottom inset, which on a 14px-tall card
+     leaves a 4px box for a 13px line -- the name renders and is then clipped
+     by overflow. Below this height the padding is what has to give. */
+  .calendar-event .event-core .event-main .event-content { inset-block: 0; }
 }
 
 /* Not enough room for both. The name wins: a start time stays recoverable from
    the card's position on the grid, from the editor and from the spoken label,
    whereas the name is recoverable from nowhere. */
 @container eventcard (max-width: 170px) {
-  /* Removing the rail must also collapse the grid to a single column, or the
-     remaining child takes over the rail's narrow track and the wide track sits
-     empty — which is how the name ended up 24px wide on a 91px card. */
+  /* Collapsing to one column matters either way: the remaining child would
+     otherwise take over the rail's narrow track and leave the wide track
+     empty — which is how the name once ended up 24px wide on a 91px card. */
   .calendar-event .event-core { grid-template-columns: minmax(0, 1fr); }
+  /* Too narrow for a side rail. Whether the clock survives at all is decided
+     by height in the block below; with none to spare the name still wins. */
   .calendar-event .event-core .event-time-rail { display: none; }
   .calendar-event .event-core .event-main .event-content { inset: 3px 6px 3px 7px; }
   .calendar-event .event-core .event-content strong {
@@ -2079,6 +2069,30 @@
   .calendar-scroll.view-week {
     -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 22px), transparent 100%);
     mask-image: linear-gradient(90deg, #000 0 calc(100% - 22px), transparent 100%);
+  }
+}
+
+/* Enough height for a clock row and a name, so the clock comes back as a row
+   rather than disappearing: a row spends height, not the width the name needs.
+   Tools-open still drops it -- its resize handles need the tall rail, and at
+   this width there is nowhere for them to go. */
+@container eventcard (max-width: 170px) and (min-height: 34px) {
+  .calendar-event:not(.event-tools-open) .event-core { grid-template-rows: auto minmax(0, 1fr); }
+  .calendar-event:not(.event-tools-open) .event-core .event-time-rail {
+    min-height: 16px;
+    padding: 2px 4px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .calendar-event:not(.event-tools-open) .event-core .event-rail-time {
+    position: static;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    padding: 0 5px;
+    font-size: 11px;
   }
 }
 

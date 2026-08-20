@@ -718,7 +718,9 @@ function layoutEvents(dayEvents: CalendarEvent[]): LaidOutEvent[] {
 
 // An event has a "neighbor below" when the next event in the same lane track
 // starts exactly as this one ends -- its end clock can then wait for hover,
-// since the neighbor's own start clock already says where this one ends.
+// since the thing directly beneath already prints that same time. That is the
+// neighbour's start clock when it drives nowhere, and its "Leave" band when it
+// does; both read event.start, so neither case needs the time stated twice.
 function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
   const outgoing = new Set<string>();
   const previousByTrack = new Map<string, LaidOutEvent>();
@@ -732,7 +734,10 @@ function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
         previous.laneCount === 1 &&
         event.laneCount === 1 &&
         previous.end === event.start &&
-        activityEnd(previous) === activityStart(event) &&
+        // Only when nothing of this card's own sits below its end clock: a
+        // trailing "Arrive" band would show a different time, so the clock
+        // still earns its place.
+        driveAfter(previous) === 0 &&
         activityMinutes(previous) >= 45 &&
         !previous.tentativeEnd
       ) {
@@ -2716,10 +2721,12 @@ export default function Home() {
                         const toolsVisible = toolsOpen && toolEdges.length > 0;
                         // Keep the roster to the Figma master’s three vertical rows.
                         // Extra people are summarized rather than creating a second column.
-                        const peopleLimit = narrow ? 1 : event.people.length > 3 ? 2 : 3;
+                        // Chips wrap under the name rather than filling a fixed column,
+                        // so a narrow card no longer has to drop people to fit.
+                        const peopleLimit = event.people.length > 3 ? 2 : 3;
                         const visiblePeople = event.people.slice(0, peopleLimit);
                         const hiddenPeople = Math.max(0, event.people.length - peopleLimit);
-                        const showRoster = duration >= 45 && visiblePeople.length > 0;
+                        const showRoster = visiblePeople.length > 0;
                         const longTitle = event.title.length >= 16;
                         const normalLeft = `calc(${(event.lane / event.laneCount) * 100}% + 3px)`;
                         const normalWidth = `calc(${100 / event.laneCount}% - 6px)`;
@@ -2971,18 +2978,23 @@ export default function Home() {
                               </div>
                               <div className={`event-main ${artwork ? "has-artwork" : ""}`}>
                                 {artwork && <span className="event-artwork-wash" aria-hidden="true" />}
+                                {/* One centred stack. The roster used to sit in its own
+                                    reserved right-hand column, which pushed the name off
+                                    centre and shrank to unreadable colour bars on a narrow
+                                    card; as chips under the name it stays legible and the
+                                    name gets the full width. */}
                                 <div className="event-content">
                                   <strong>{event.title}</strong>
-                                  {duration >= 45 && event.bullets.length > 0 && <span className="event-note">• {event.bullets[0]}</span>}
+                                  {event.bullets.length > 0 && <span className="event-note">• {event.bullets[0]}</span>}
+                                  {showRoster && (
+                                    <span className="event-roster" aria-hidden="true">
+                                      {visiblePeople.map((person) => (
+                                        <span className="person-signature" key={person} style={personColorTokens(person)}><span>{person}</span></span>
+                                      ))}
+                                      {hiddenPeople > 0 && <span className="person-signature person-signature-overflow"><span>+{hiddenPeople}</span></span>}
+                                    </span>
+                                  )}
                                 </div>
-                                {showRoster && (
-                                  <span className="event-roster" aria-hidden="true">
-                                    {visiblePeople.map((person) => (
-                                      <span className="person-signature" key={person} style={personColorTokens(person)}><span>{person}</span></span>
-                                    ))}
-                                    {hiddenPeople > 0 && <span className="person-signature person-signature-overflow"><span>+{hiddenPeople}</span></span>}
-                                  </span>
-                                )}
                               </div>
                             </div>
                             {driveAfter(event) > 0 && (
