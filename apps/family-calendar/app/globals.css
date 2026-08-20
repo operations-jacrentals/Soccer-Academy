@@ -507,9 +507,9 @@
   color: var(--event-ink);
   border: var(--event-stroke) solid var(--event-outline);
   border-radius: 14px;
-  background:
-    radial-gradient(circle at 94% -18%, rgba(255, 255, 255, .34), transparent 38%),
-    linear-gradient(145deg, var(--event-surface-high), var(--event-surface) 54%, var(--event-surface-low));
+  /* One surface owns the whole event. The time rail is an overlay for clocks,
+     never a second panel or a differently shaded half of the card. */
+  background: var(--event-surface);
   box-shadow: 0 6px 15px rgba(0, 0, 0, .3), inset 0 1px rgba(255, 255, 255, .5), inset 0 -2px rgba(4, 17, 21, .16);
   transition: border-color .14s ease, box-shadow .14s ease, background .14s ease, --event-time-rail .18s ease;
 }
@@ -556,10 +556,8 @@
 }
 .event-rail-start { top: 7px; }
 .event-rail-end { bottom: 7px; }
-/* Pinned (no card follows immediately below, so nothing else states this
-   time) stays visible at rest. The rest wait for a hover or keyboard focus —
-   instant, no transition — since the next card's own start clock already
-   says where this one ends. */
+/* End time is supporting detail: it appears only while the card is hovered or
+   keyboard-focused. The reveal is instant so it does not shift the card. */
 .event-rail-end--peek {
   opacity: 0;
   pointer-events: none;
@@ -1282,9 +1280,6 @@
     min-height: 0;
     padding: 1px 7px;
   }
-  /* This row already has a clear home for both times side by side, so the
-     end clock doesn't need to wait for hover the way a stacked pill does. */
-  .calendar-event.event--narrow:not(.event-tools-open) .event-rail-end--peek { opacity: 1; }
 }
 .event--narrow .event-time-handle {
   right: 19px;

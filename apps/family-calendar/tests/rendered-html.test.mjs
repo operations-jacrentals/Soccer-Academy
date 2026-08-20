@@ -116,7 +116,7 @@ test("event artwork remains packaged while cards use bright WALL BALL surfaces a
   assert.match(css, /\.event-main\.has-artwork::before,[\s\S]*?display:\s*none;[\s\S]*?background-image:\s*none;[\s\S]*?pointer-events:\s*none/);
   assert.match(pageSource, /"--event-surface-high": surfaceHigh/);
   assert.match(pageSource, /"--event-title-color": ink/);
-  assert.match(css, /\.event-core \{[\s\S]*?linear-gradient\(145deg, var\(--event-surface-high\), var\(--event-surface\) 54%, var\(--event-surface-low\)\)/);
+  assert.match(css, /\.event-core \{[\s\S]*?background:\s*var\(--event-surface\)/);
   assert.match(css, /\.calendar-event \{[\s\S]*?--event-stroke: 2px;/);
   assert.match(css, /\.event-core \{[\s\S]*?border: var\(--event-stroke\) solid var\(--event-outline\);/);
   assert.match(css, /\.drive-segment \{[\s\S]*?repeating-linear-gradient\(\s*135deg,[\s\S]*?var\(--fc-accent\)[\s\S]*?var\(--event-dark, var\(--fc-app-bg\)\)/);
@@ -302,32 +302,19 @@ test("desktop cards combine the unboxed roster with WALL BALL surface and clock 
   assert.match(cssSource, /\.event-main\.has-artwork::before,[\s\S]*?display: none;[\s\S]*?background-image: none;[\s\S]*?opacity: 0/);
 });
 
-test("every card shows its start clock; the end clock is pinned unless a neighbor immediately follows, then it waits for hover", async () => {
+test("every card shows its start clock while its end clock waits for hover or focus", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(pageSource, /function sharedTimeBoundaries\(dayEvents: LaidOutEvent\[\]\)/);
-  assert.match(pageSource, /previous\.end === event\.start/);
-  // Whatever sits directly below prints the same time either way: the next
-  // card's Leave band reads event.start when it drives, and its start clock
-  // reads the same when it does not. So suppression keys off the shared seam
-  // plus this card having no trailing Arrive band of its own.
-  assert.match(pageSource, /driveAfter\(previous\) === 0/);
-  assert.doesNotMatch(pageSource, /activityEnd\(previous\) === activityStart\(event\)/);
-  assert.match(pageSource, /activityMinutes\(previous\) >= 45/);
-  assert.match(pageSource, /previous\.laneCount === 1/);
-  assert.match(pageSource, /const sharedTimeBoundariesByDay = useMemo\(\(\) => layouts\.map\(sharedTimeBoundaries\), \[layouts\]\);/);
-  assert.match(pageSource, /const hasNeighborBelow = sharedTimeBoundariesByDay\[dayIndex\]\?\.outgoing\.has\(event\.id\) \?\? false;/);
-  // The old gradient-pill "shared boundary" design and its connector line are gone.
+  // The old shared-boundary status design and its connector line are gone.
   assert.doesNotMatch(pageSource, /event--shared-start-time|event--shared-end-time/);
   assert.doesNotMatch(pageSource, /className="event-shared-time"/);
   assert.doesNotMatch(pageSource, /sharedTimeBoundaryTokens/);
   assert.doesNotMatch(cssSource, /\.event-shared-time\b/);
   assert.doesNotMatch(cssSource, /\.event-rail-connector\b/);
-  // The start clock always renders; the end clock always renders too, but
-  // picks up a peek modifier -- hidden at rest, revealed on hover/focus --
-  // exactly when a neighbor immediately follows it.
+  // The start clock always renders. Every end clock uses the same hidden-at-rest
+  // modifier, regardless of whether another event follows it.
   assert.match(pageSource, /!toolsVisible && <span className="event-rail-time event-rail-start">\{shortTime\(activityStart\(event\)\)\}<\/span>/);
-  assert.match(pageSource, /className=\{`event-rail-time event-rail-end\$\{hasNeighborBelow \? " event-rail-end--peek" : ""\}`\}/);
+  assert.match(pageSource, /className="event-rail-time event-rail-end event-rail-end--peek"/);
   assert.match(pageSource, /toolsVisible && toolEdges\.map\(\(edge\) => \{/);
   assert.match(cssSource, /\.event-rail-end--peek \{[\s\S]*?opacity:\s*0;[\s\S]*?pointer-events:\s*none;/);
   assert.match(cssSource, /\.calendar-event:hover \.event-rail-end--peek,\s*\.calendar-event:focus-within \.event-rail-end--peek \{[\s\S]*?opacity:\s*1;/);
@@ -383,8 +370,8 @@ test("Compact is a persistent density mode, while the old visible shared-status 
   assert.match(pageSource, /setAnnouncement\(next \? "Compact layout on" : "Compact layout off"\)/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-core \{/);
   assert.match(cssSource, /\.planner-app\.is-compact \.calendar-scroll\.view-day \.event-content \{/);
-  // Compact follows the same pinned/peek end-clock rule as the default
-  // density -- it stays dense, it just isn't a different clock design.
+  // Compact retains the shared end-time hover/focus behavior while preserving
+  // its denser clock placement.
   assert.match(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ bottom: 3px; \}/);
   assert.doesNotMatch(cssSource, /\.planner-app\.is-compact \.event-rail-end \{ display: none; \}/);
   assert.match(cssSource, /\.planner-app\.is-compact \.event-roster,[\s\S]*?\.planner-app\.is-compact \.event-note \{ display: none; \}/);

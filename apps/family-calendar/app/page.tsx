@@ -715,38 +715,6 @@ function layoutEvents(dayEvents: CalendarEvent[]): LaidOutEvent[] {
   return result;
 }
 
-// An event has a "neighbor below" when the next event in the same lane track
-// starts exactly as this one ends -- its end clock can then wait for hover,
-// since the thing directly beneath already prints that same time. That is the
-// neighbour's start clock when it drives nowhere, and its "Leave" band when it
-// does; both read event.start, so neither case needs the time stated twice.
-function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
-  const outgoing = new Set<string>();
-  const previousByTrack = new Map<string, LaidOutEvent>();
-  [...dayEvents]
-    .sort((a, b) => a.start - b.start || a.end - b.end || a.id.localeCompare(b.id))
-    .forEach((event) => {
-      const track = `${event.lane}:${event.laneCount}`;
-      const previous = previousByTrack.get(track);
-      if (
-        previous &&
-        previous.laneCount === 1 &&
-        event.laneCount === 1 &&
-        previous.end === event.start &&
-        // Only when nothing of this card's own sits below its end clock: a
-        // trailing "Arrive" band would show a different time, so the clock
-        // still earns its place.
-        driveAfter(previous) === 0 &&
-        activityMinutes(previous) >= 45 &&
-        !previous.tentativeEnd
-      ) {
-        outgoing.add(previous.id);
-      }
-      previousByTrack.set(track, event);
-    });
-  return { outgoing };
-}
-
 function makeId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
@@ -1417,7 +1385,6 @@ export default function Home() {
   const previewConflictCount = preview
     ? previewEvents.filter((event) => event.id !== preview.id && event.day === preview.day && event.start < preview.end && event.end > preview.start).length
     : 0;
-  const sharedTimeBoundariesByDay = useMemo(() => layouts.map(sharedTimeBoundaries), [layouts]);
   // A mouse hover should immediately own the overlap treatment, even during
   // the brief delay before its time tools mount. On touch there is no hover,
   // so the intentionally opened tool card provides the same focus signal.
@@ -2680,11 +2647,9 @@ export default function Home() {
                         const top = ((event.start - visualStartMinutes) / 60) * hourHeight;
                         const height = ((event.end - event.start) / 60) * hourHeight;
                         const duration = activityMinutes(event);
-                        // A card always shows its own start clock. The end clock is only
-                        // pinned when nothing follows immediately below it — otherwise the
-                        // next card's start clock already says where this one ends, and the
-                        // end clock stays quiet until the card is hovered.
-                        const hasNeighborBelow = sharedTimeBoundariesByDay[dayIndex]?.outgoing.has(event.id) ?? false;
+                        // A card always shows its own start clock. End time is supporting
+                        // detail, so it stays out of the resting card and appears only on
+                        // hover or keyboard focus, regardless of its neighbours.
                         const isOverlapFocus = hasOverlapFocus && overlapFocusEvent?.id === event.id;
                         const overlapPeerIndex = overlapPeerIndexes.get(event.id);
                         const isOverlapPeer = overlapPeerIndex !== undefined;
@@ -2948,7 +2913,7 @@ export default function Home() {
                                 })}
                                 {!toolsVisible && <span className="event-rail-time event-rail-start">{shortTime(activityStart(event))}</span>}
                                 {!toolsVisible && (
-                                  <span className={`event-rail-time event-rail-end${hasNeighborBelow ? " event-rail-end--peek" : ""}`}>
+                                  <span className="event-rail-time event-rail-end event-rail-end--peek">
                                     {shortTime(activityEnd(event))}
                                   </span>
                                 )}
