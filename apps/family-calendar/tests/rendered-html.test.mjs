@@ -323,12 +323,18 @@ test("desktop cards combine the unboxed roster with WALL BALL surface and clock 
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(pageSource, /DESKTOP_HOUR_HEIGHT = 88/);
-  assert.match(pageSource, /const peopleLimit = narrow \? 1 : event\.people\.length > 3 \? 2 : 3/);
-  assert.match(cssSource, /\.event-roster \{[\s\S]*?top: 9px;[\s\S]*?width: 92px;[\s\S]*?grid-auto-rows: 18px/);
-  assert.match(cssSource, /\.person-signature \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\) 3px[\s\S]*?background: transparent;/);
-  assert.match(cssSource, /\.person-signature > span \{[\s\S]*?grid-column: 1;[\s\S]*?text-align: right/);
-  assert.match(cssSource, /\.person-signature::before \{[\s\S]*?grid-column: 2;/);
+  assert.match(pageSource, /const peopleLimit = event\.people\.length > 3 \? 2 : 3/);
+  // Chips wrap under the name, so a narrow card no longer drops people to fit.
+  assert.doesNotMatch(pageSource, /const peopleLimit = narrow \?/);
+  // People are chips under the name now, not a reserved right-hand column.
+  assert.match(cssSource, /\.event-roster \{[\s\S]*?position: static;[\s\S]*?flex-wrap: wrap;[\s\S]*?justify-content: center;/);
+  assert.doesNotMatch(cssSource, /\.event-roster \{[^}]*position: absolute/);
+  assert.match(cssSource, /\.person-signature \{[\s\S]*?display: inline-flex;[\s\S]*?border-radius: 999px;/);
+  assert.match(cssSource, /\.person-signature::before \{[\s\S]*?border-radius: 50%;[\s\S]*?background: var\(--person-color/);
   assert.doesNotMatch(cssSource, /\.person-signature::after/);
+  // The content box centres its stack and reserves nothing on the right.
+  assert.match(cssSource, /\.event-content \{[\s\S]*?flex-direction: column;[\s\S]*?align-items: center;[\s\S]*?justify-content: center;[\s\S]*?text-align: center;/);
+  assert.doesNotMatch(cssSource, /\.event-content \{[^}]*inset: 7px 104px/);
   assert.match(cssSource, /\.event--compact \.event-content strong \{ font-size: 19px; line-height: 1; \}/);
   assert.match(cssSource, /\.event-main,\r?\n\.ghost-main \{[\s\S]*?margin-left: 0/);
   assert.match(cssSource, /\.event-core \{[\s\S]*?radial-gradient\(circle at 94% -18%[\s\S]*?var\(--event-surface-high\)/);
@@ -343,7 +349,12 @@ test("every card shows its start clock; the end clock is pinned unless a neighbo
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(pageSource, /function sharedTimeBoundaries\(dayEvents: LaidOutEvent\[\]\)/);
   assert.match(pageSource, /previous\.end === event\.start/);
-  assert.match(pageSource, /activityEnd\(previous\) === activityStart\(event\)/);
+  // Whatever sits directly below prints the same time either way: the next
+  // card's Leave band reads event.start when it drives, and its start clock
+  // reads the same when it does not. So suppression keys off the shared seam
+  // plus this card having no trailing Arrive band of its own.
+  assert.match(pageSource, /driveAfter\(previous\) === 0/);
+  assert.doesNotMatch(pageSource, /activityEnd\(previous\) === activityStart\(event\)/);
   assert.match(pageSource, /activityMinutes\(previous\) >= 45/);
   assert.match(pageSource, /previous\.laneCount === 1/);
   assert.match(pageSource, /const sharedTimeBoundariesByDay = useMemo\(\(\) => layouts\.map\(sharedTimeBoundaries\), \[layouts\]\);/);
