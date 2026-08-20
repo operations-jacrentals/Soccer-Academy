@@ -322,6 +322,15 @@ test("every card shows its start clock while its end clock waits for hover or fo
   assert.doesNotMatch(cssSource, /\.event-rail-end--peek[\s\S]{0,200}transition/);
 });
 
+test("overlapped cards keep the same single start-time rail as regular cards", async () => {
+  const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(cssSource, /\.event--narrow \.event-core \{ --event-time-rail: 48px;/);
+  assert.doesNotMatch(cssSource, /\.event--narrow:not\(\.event-tools-open\) \.event-core \{[\s\S]{0,180}grid-template-rows:/);
+  assert.match(cssSource, /\.calendar-event:not\(\.event--narrow\):not\(\.event-tools-open\) \.event-core \{ grid-template-rows:/);
+  assert.match(cssSource, /\.calendar-event\.event--narrow:not\(\.event-tools-open\) \.event-time-rail \{ display: none; \}/);
+});
+
 test("mobile Day is a compact, single-day state rather than a partial Week view", async () => {
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
