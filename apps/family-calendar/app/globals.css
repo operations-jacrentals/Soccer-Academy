@@ -1,8 +1,7 @@
 
-/* Registered so the grid track it drives (see .event-core) can ease instead
-   of snapping — otherwise a card whose rail width changes on hover (leaving
-   an overlapping lane) resizes smoothly while its rail pops to the new width
-   mid-glide. */
+/* The clock rail has one stable width for the life of a card. Registering the
+   value keeps the grid calculation predictable across the responsive modes;
+   hover only reveals the end clock and never changes card geometry. */
 @property --event-time-rail {
   syntax: "<length>";
   inherits: true;
@@ -313,7 +312,7 @@
 .view-day .calendar-head { grid-template-columns: minmax(0, 1fr); }
 .day-heading { position: relative; min-width: 0; padding: 8px 14px 12px 16px; display: flex; align-items: center; gap: 10px; border-right: 1px solid var(--fc-border); }
 .day-heading:last-of-type { border-right: 0; }
-.view-week .day-heading:last-of-type { padding-right: 48px; }
+.view-week .day-heading:last-of-type { padding-right: 58px; }
 .day-heading.today { background: var(--fc-accent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fc-accent) 78%, white); }
 .week-range-controls {
   position: absolute;
@@ -321,7 +320,7 @@
   right: 0;
   bottom: 0;
   z-index: 7;
-  width: 36px;
+  width: 52px;
   display: grid;
   grid-template-rows: repeat(2, minmax(0, 1fr));
   border-left: 1px solid var(--fc-border);
@@ -331,19 +330,24 @@
   width: 100%;
   min-width: 0;
   padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   color: var(--fc-accent);
   border: 0;
   background: transparent;
   cursor: pointer;
-  font-size: 18px;
   font-weight: 900;
   line-height: 1;
 }
+.week-range-controls button > span:first-child { font-size: 18px; }
+.week-range-label { font-size: 8px; font-weight: 900; letter-spacing: .055em; text-transform: uppercase; }
 .week-range-controls button + button { border-top: 1px solid var(--fc-border); }
 .week-range-controls button:hover:not(:disabled),
 .week-range-controls button:focus-visible { color: #071006; background: var(--fc-accent); outline-offset: -3px; }
 .week-range-controls button:disabled { color: #506064; cursor: not-allowed; }
-.view-week .day-heading:last-of-type .column-earlier-hour-control { right: 36px; }
+.view-week .day-heading:last-of-type .column-earlier-hour-control { right: 52px; }
 .day-title-line { min-width: 0; flex: 1 1 auto; display: flex; align-items: center; gap: 12px; }
 .day-date { display: block; color: #829092; font-size: 10px; font-weight: 850; letter-spacing: .11em; white-space: nowrap; }
 .day-heading strong { display: block; color: #edf2ef; font-size: 22px; font-weight: 900; letter-spacing: -.035em; line-height: 1; text-transform: uppercase; white-space: nowrap; }
@@ -485,14 +489,14 @@
   overflow: visible;
   color: var(--event-ink);
   border: 0;
-  border-radius: 14px;
+  --event-stack-radius: 14px;
+  border-radius: var(--event-stack-radius);
   background: transparent;
   cursor: grab;
   user-select: none;
   touch-action: manipulation;
-  transition: filter .14s ease, transform .16s ease, opacity .16s ease, left .18s ease, width .18s ease;
+  transition: filter .14s ease, transform .16s ease, opacity .16s ease;
 }
-.calendar-event.event-tools-open { z-index: 28; }
 .event-core {
   position: absolute;
   inset: var(--drive-before) 0 var(--drive-after);
@@ -506,12 +510,12 @@
   grid-template-columns: min(var(--event-time-rail, 74px), 42%) minmax(0, 1fr);
   color: var(--event-ink);
   border: var(--event-stroke) solid var(--event-outline);
-  border-radius: 14px;
-  background:
-    radial-gradient(circle at 94% -18%, rgba(255, 255, 255, .34), transparent 38%),
-    linear-gradient(145deg, var(--event-surface-high), var(--event-surface) 54%, var(--event-surface-low));
+  border-radius: var(--event-stack-radius);
+  /* One surface owns the whole event. The time rail is an overlay for clocks,
+     never a second panel or a differently shaded half of the card. */
+  background: var(--event-surface);
   box-shadow: 0 6px 15px rgba(0, 0, 0, .3), inset 0 1px rgba(255, 255, 255, .5), inset 0 -2px rgba(4, 17, 21, .16);
-  transition: border-color .14s ease, box-shadow .14s ease, background .14s ease, --event-time-rail .18s ease;
+  transition: border-color .14s ease, box-shadow .14s ease, background .14s ease;
 }
 .event-time-rail {
   position: relative;
@@ -523,14 +527,6 @@
   box-shadow: none;
   pointer-events: none;
 }
-.event-tools-open .event-time-rail {
-  /* The hour labels become the resize surface only after the card is
-     intentionally opened. This keeps ordinary scrolling and card movement
-     clear at rest, while the active rail offers direct, local controls. */
-  z-index: 25;
-  pointer-events: auto;
-}
-.event-tools-open .event-core { --event-time-rail: 88px; }
 .event-rail-time {
   position: absolute;
   left: 6px;
@@ -556,10 +552,8 @@
 }
 .event-rail-start { top: 7px; }
 .event-rail-end { bottom: 7px; }
-/* Pinned (no card follows immediately below, so nothing else states this
-   time) stays visible at rest. The rest wait for a hover or keyboard focus —
-   instant, no transition — since the next card's own start clock already
-   says where this one ends. */
+/* End time is supporting detail: it appears only while the card is hovered or
+   keyboard-focused. The reveal is instant so it does not shift the card. */
 .event-rail-end--peek {
   opacity: 0;
   pointer-events: none;
@@ -568,267 +562,6 @@
 .calendar-event:focus-within .event-rail-end--peek {
   opacity: 1;
 }
-.event-time-handle,
-.event-departure-button {
-  position: absolute;
-  z-index: 4;
-  box-sizing: border-box;
-  touch-action: none;
-}
-.event-time-handle {
-  left: 5px;
-  right: 31px;
-  height: min(38px, calc(50% - 4px));
-  min-width: 0;
-  padding: 0 2px 0 4px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 8px;
-  align-items: center;
-  color: var(--event-surface-high, var(--event-bright));
-  border: 1px solid color-mix(in srgb, var(--event-color) 42%, #7f9290);
-  border-radius: 12px;
-  background:
-    linear-gradient(145deg, rgba(29, 47, 54, .72), transparent 44%),
-    linear-gradient(180deg, rgba(5, 17, 23, .98), rgba(7, 23, 30, .98));
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .3), inset 0 1px rgba(255, 255, 255, .11), inset 0 -1px rgba(0, 0, 0, .36);
-  cursor: ns-resize;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -.04em;
-  line-height: 1;
-  text-align: center;
-  text-shadow: 0 0 3px rgba(0, 0, 0, .35);
-}
-.event-time-handle--start { top: 2px; }
-.event-time-handle--end { bottom: 2px; }
-.event-time-clock-value {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: clip;
-}
-.event-departure-button {
-  right: 3px;
-  width: 26px;
-  height: min(36px, calc(50% - 4px));
-  min-width: 0;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  color: var(--event-surface-high, var(--fc-accent));
-  border: 1px solid color-mix(in srgb, var(--event-color) 40%, #6d8586);
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(8, 24, 31, .98), rgba(5, 16, 21, .98));
-  box-shadow: 0 2px 7px rgba(0, 0, 0, .3), inset 0 1px rgba(255, 255, 255, .1), inset 0 -1px rgba(0, 0, 0, .4);
-  /* Click only — it steps travel time by 15 minutes per press. */
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.event-departure-button--start { top: 2px; }
-.event-departure-button--end { bottom: 2px; }
-.event-departure-glyph {
-  position: relative;
-  display: block;
-  width: 15px;
-  height: 13px;
-}
-/* A small car keeps the travel-time control recognizable without a separate
-   visual asset; the plus badge reads as "add", matching the click-to-add
-   behavior rather than the drag affordance a bare glyph would suggest. */
-.event-departure-car {
-  position: absolute;
-  left: 0;
-  bottom: 1px;
-  width: 11px;
-  height: 4px;
-  background: currentColor;
-  border-radius: 2px 2px 1px 1px;
-}
-.event-departure-car::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  bottom: 100%;
-  width: 6px;
-  height: 3px;
-  background: currentColor;
-  border-radius: 2px 2px 0 0;
-}
-.event-departure-car::after {
-  content: "";
-  position: absolute;
-  left: 1px;
-  bottom: -2px;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 6px 0 0 currentColor;
-}
-.event-departure-plus {
-  position: absolute;
-  top: -3px;
-  right: -4px;
-  width: 7px;
-  height: 7px;
-}
-.event-departure-plus::before,
-.event-departure-plus::after {
-  content: "";
-  position: absolute;
-  background: currentColor;
-  border-radius: 1px;
-}
-.event-departure-plus::before { top: 3px; left: 0; width: 7px; height: 1.4px; }
-.event-departure-plus::after { top: 0; left: 3px; width: 1.4px; height: 7px; }
-.event-time-handle:hover,
-.event-time-handle:focus-visible,
-.event-departure-button:hover,
-.event-departure-button:focus-visible {
-  color: #efffe2;
-  border-color: color-mix(in srgb, var(--fc-accent) 70%, #e3ffd1);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--event-color) 34%, #182d36), #091b23 70%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--event-color) 24%, transparent), 0 4px 11px rgba(0, 0, 0, .36), inset 0 1px rgba(255, 255, 255, .13);
-  filter: brightness(1.1);
-  outline-offset: 2px;
-}
-.event-time-handle.is-hour-picker-open {
-  color: #efffe2;
-  border-color: var(--event-accent, var(--fc-accent));
-  background: linear-gradient(145deg, color-mix(in srgb, var(--event-color) 42%, #20363c), #0a2029 72%);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--event-color) 30%, transparent), 0 5px 12px rgba(0, 0, 0, .38), inset 0 1px rgba(255, 255, 255, .15);
-}
-.event-tools-single-edge .event-time-handle,
-.event-tools-single-edge .event-departure-button {
-  top: 2px;
-  bottom: 2px;
-  height: auto;
-}
-/* WALL BALL's editable clock is a small dark, high-contrast surface that owns
-   its gesture. The calendar adapts that grammar for real day times: a tap
-   opens one fitted 15-minute selector while a vertical drag still resizes. */
-.calendar-hour-picker {
-  position: fixed;
-  z-index: 120;
-  width: min(248px, calc(100vw - 16px));
-  overflow: hidden;
-  color: var(--fc-ink);
-  border: 1px solid color-mix(in srgb, var(--event-color, var(--fc-accent)) 42%, #718185);
-  border-radius: 14px;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--event-color, var(--fc-accent)) 12%, transparent), transparent 42%),
-    rgba(7, 20, 26, .98);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, .58), inset 0 1px rgba(255, 255, 255, .09), inset 0 -1px rgba(0, 0, 0, .36);
-  backdrop-filter: blur(14px);
-}
-.calendar-hour-picker-head {
-  min-height: 36px;
-  padding: 0 5px 0 11px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  border-bottom: 1px solid rgba(151, 176, 180, .2);
-}
-.calendar-hour-picker-kicker {
-  color: color-mix(in srgb, var(--event-accent, var(--fc-accent)) 82%, #efffe2);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .11em;
-  text-transform: uppercase;
-}
-.calendar-hour-picker-head button {
-  width: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  padding: 0;
-  color: #b8c9c8;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  cursor: pointer;
-  font-size: 21px;
-  line-height: 1;
-}
-.calendar-hour-picker-head button:hover,
-.calendar-hour-picker-head button:focus-visible { color: #efffe2; background: rgba(208, 244, 235, .11); }
-.calendar-hour-picker-current {
-  min-height: 58px;
-  padding: 7px 10px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 9px;
-  border-bottom: 1px solid rgba(151, 176, 180, .18);
-  background: linear-gradient(90deg, rgba(9, 29, 37, .94), rgba(9, 22, 28, .62));
-}
-.calendar-hour-picker-current > span {
-  min-width: 0;
-  overflow: hidden;
-  color: #c8d7d5;
-  font-size: 11px;
-  font-weight: 800;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.calendar-hour-picker-current > strong {
-  min-width: 83px;
-  min-height: 38px;
-  padding: 0 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--event-accent, var(--fc-accent));
-  border: 1px solid color-mix(in srgb, var(--event-color, var(--fc-accent)) 44%, #7d9292);
-  border-radius: 11px;
-  background: linear-gradient(180deg, #0b2029, #07171e);
-  box-shadow: inset 0 1px rgba(255, 255, 255, .1), inset 0 -1px rgba(0, 0, 0, .42);
-  font-size: 18px;
-  font-weight: 950;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -.035em;
-}
-.calendar-hour-picker-options {
-  max-height: min(46dvh, 306px);
-  padding: 5px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  background: rgba(4, 13, 17, .62);
-  scrollbar-color: rgba(181, 216, 212, .35) transparent;
-}
-.calendar-hour-picker-options button {
-  min-height: 36px;
-  padding: 0 3px;
-  color: #d9e6e3;
-  border: 1px solid rgba(145, 176, 177, .19);
-  border-radius: 8px;
-  background: rgba(19, 39, 46, .74);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 850;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -.02em;
-}
-.calendar-hour-picker-options button:hover,
-.calendar-hour-picker-options button:focus-visible {
-  color: #f4fff2;
-  border-color: color-mix(in srgb, var(--event-color, var(--fc-accent)) 65%, #e4ffe1);
-  background: color-mix(in srgb, var(--event-color, var(--fc-accent)) 38%, #132b33);
-  outline-offset: 1px;
-}
-.calendar-hour-picker-options button.is-current {
-  color: #071006;
-  border-color: var(--event-accent, var(--fc-accent));
-  background: var(--event-accent, var(--fc-accent));
-  box-shadow: inset 0 1px rgba(255, 255, 255, .44);
-}
-
 .calendar-address-preview {
   position: fixed;
   z-index: 120;
@@ -930,9 +663,11 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background:
-    radial-gradient(circle at 100% 0, rgba(255, 255, 255, .26), transparent 38%),
-    linear-gradient(180deg, rgba(255, 255, 255, .11), transparent 46%, rgba(4, 17, 21, .07));
+  /* The core owns the complete card surface. An inner highlight here only
+     covered the content half, which made the time rail read as a second card. */
+  display: none;
+  background: none;
+  opacity: 0;
   pointer-events: none;
 }
 .event-artwork-wash {
@@ -956,31 +691,6 @@
 }
 .calendar-event:hover .event-main.has-artwork::before,
 .calendar-event:focus-visible .event-main.has-artwork::before { transform: none; }
-/* When event times genuinely intersect, give the hovered/selected card room
-   to read. Concurrent peers deliberately keep a slim, visible strip so a
-   mouse can still move between them; unrelated cards never participate. */
-.calendar-event.is-overlap-focus {
-  --event-outline: color-mix(in srgb, var(--event-dark) 66%, #25434a);
-  z-index: 32;
-  filter: brightness(1.03) saturate(1.05);
-}
-.calendar-event.is-overlap-focus .event-core {
-  border-color: var(--event-outline);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--event-surface-high) 28%, transparent), 0 12px 26px rgba(0, 0, 0, .38), inset 0 1px rgba(255, 255, 255, .55), inset 0 -2px rgba(4, 17, 21, .17);
-}
-.calendar-event.is-overlap-peer {
-  z-index: 10;
-  opacity: .68;
-  filter: saturate(.56) brightness(.76);
-}
-.calendar-event.is-overlap-peer .event-content,
-.calendar-event.is-overlap-peer .event-roster {
-  opacity: 0;
-  transform: translateX(4px);
-  transition: opacity .12s ease, transform .16s ease;
-}
-.calendar-event.is-overlap-peer .event-main.has-artwork::before { opacity: .34; }
-.calendar-event.is-overlap-peer .event-core { box-shadow: 0 1px 4px rgba(0, 0, 0, .18), inset 0 1px rgba(255, 255, 255, .04); }
 .calendar-event.is-dragging { z-index: 3; opacity: .18; cursor: grabbing; filter: none; transition: none; }
 .calendar-event.tentative-end .event-core { border-bottom-style: dotted; border-bottom-width: 2px; }
 .calendar-event.has-drive-before .event-core {
@@ -1068,12 +778,12 @@
 .drive-before {
   top: 0;
   height: var(--drive-before);
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--event-stack-radius) var(--event-stack-radius) 0 0;
 }
 .drive-after {
   bottom: 0;
   height: var(--drive-after);
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--event-stack-radius) var(--event-stack-radius);
 }
 /* A single centred stack: name, note, then people chips. Nothing is reserved
    on the right any more, so the name gets the whole width and stays centred
@@ -1176,68 +886,9 @@
 }
 .person-signature-overflow { color: color-mix(in srgb, var(--event-bright, #eaf6f4) 66%, transparent); }
 .person-signature-overflow::before { background: #718287; }
-.event-edge-tools-set {
-  position: absolute;
-  inset: 0;
-  z-index: 24;
-  overflow: visible;
-  border-radius: 14px;
-  pointer-events: none;
-}
-/* Centered on the card and straddling its top/bottom edge -- half sits on
-   this card, half reaches into the neighbor's space, so the button reads as
-   sitting on the seam between the two events rather than tucked inside one. */
-.event-edge-tools {
-  position: absolute;
-  left: 50%;
-  width: 30px;
-  height: min(22px, 100%);
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-.event-edge-tools--start { top: 0; transform: translate(-50%, -50%); }
-.event-edge-tools--end { bottom: 0; transform: translate(-50%, 50%); }
-.event-edge-tools button {
-  position: relative;
-  height: 100%;
-  width: 30px;
-  min-width: 0;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  color: var(--event-surface-high, var(--fc-accent));
-  border: 1px solid rgba(121, 158, 164, .38);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #0d2932, #07181f);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .34), inset 0 1px rgba(255, 255, 255, .12), inset 0 -1px rgba(0, 0, 0, .42);
-  cursor: pointer;
-  touch-action: none;
-  font-size: 19px;
-  font-weight: 950;
-  letter-spacing: 0;
-  line-height: 1;
-  pointer-events: auto;
-}
-.event-edge-tools button > span { position: relative; z-index: 1; line-height: 1; }
-.event-edge-tools button:hover,
-.event-edge-tools button:focus-visible { filter: brightness(1.08); outline-offset: -3px; }
-
-@media (any-pointer: coarse) {
-  /* A card is a deliberate touch target: holding it now begins a direct move.
-     The surrounding grid remains the vertical-scroll surface. */
-  .calendar-event { touch-action: none; -webkit-touch-callout: none; }
-  .event-edge-tools {
-    height: min(24px, 100%);
-  }
-  .event-edge-tools button {
-    min-height: 0;
-    font-size: 17px;
-  }
-  .event-edge-tools .event-edge-add { font-size: 21px; }
-}
-
-.event--micro .event-core { --event-time-rail: 62px; border-radius: 10px; }
+.calendar-event.event--micro,
+.calendar-event.event--narrow { --event-stack-radius: 10px; }
+.event--micro .event-core { --event-time-rail: 62px; }
 .event--micro .event-time-rail { display: grid; place-items: center; }
 .event--micro .event-rail-start { width: calc(100% - 8px); min-height: 18px; padding: 0 3px; border-radius: 7px; font-size: 11px; line-height: 1; }
 .event--micro .event-rail-end { width: calc(100% - 8px); min-height: 18px; padding: 0 3px; border-radius: 7px; font-size: 11px; line-height: 1; }
@@ -1250,64 +901,13 @@
 .event--compact .event-content strong { font-size: 19px; line-height: 1; }
 .event--micro .event-content strong,
 .event--compact .event-content strong { white-space: nowrap; }
-.event--narrow .event-core { --event-time-rail: 48px; border-radius: 10px; }
+.event--narrow .event-core { --event-time-rail: 48px; }
 .event--narrow .event-rail-time { font-size: 12px; letter-spacing: -.02em; }
-/* A narrow (multi-lane) card trades the side rail for a slim top row: both
-   times read together at a glance, and name/note/people get the full width
-   below instead of squeezing beside a tall, skinny rail column. Guarded off
-   the tools-open state, which still needs the wider column for its resize
-   handles -- that combination is rare enough not to warrant its own layout.
-
-   This applies at every width and in Compact too. It used to be fenced above
-   171px because, as a column layout, it fought the safety net below that
-   drops the rail on the most extreme cards. As a row it no longer competes:
-   a row spends height, not the width the name needs. */
-@container eventcard (min-height: 34px) {
-  .event--narrow:not(.event-tools-open) .event-core {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-  }
-  .event--narrow:not(.event-tools-open) .event-time-rail {
-    min-height: 18px;
-    padding: 3px 6px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .event--narrow:not(.event-tools-open) .event-rail-time {
-    position: static;
-    width: auto;
-    height: auto;
-    min-height: 0;
-    padding: 1px 7px;
-  }
-  /* This row already has a clear home for both times side by side, so the
-     end clock doesn't need to wait for hover the way a stacked pill does. */
-  .calendar-event.event--narrow:not(.event-tools-open) .event-rail-end--peek { opacity: 1; }
-}
-.event--narrow .event-time-handle {
-  right: 19px;
-  grid-template-columns: minmax(0, 1fr);
-  padding-inline: 1px;
-  font-size: 11px;
-}
-.event--narrow .event-departure-button { width: 15px; }
-.event--narrow .event-departure-glyph { transform: scale(.82); }
 .event--narrow .event-content { inset: 5px 5px; }
-/* Centered to match the clock pair centered in the row above it. Scoped out
-   of Compact along with the rest of the narrow-card row layout above. */
-.planner-app:not(.is-compact) .event--narrow .event-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
 .event--narrow .event-content strong { font-size: 18px; line-height: 1.1; }
 .event--narrow .person-signature { padding: 1px 5px 1px 4px; font-size: 9px; }
 .event--narrow.event--compact .event-content { inset: 3px 5px; }
-.drag-ghost { --event-outline: color-mix(in srgb, var(--event-dark) 76%, #14262c); --event-stroke: 2px; position: absolute; z-index: 60; overflow: visible; color: var(--event-ink); transform: scale(1.012); pointer-events: none; }
+.drag-ghost { --event-outline: color-mix(in srgb, var(--event-dark) 76%, #14262c); --event-stroke: 2px; --event-stack-radius: 14px; position: absolute; z-index: 60; overflow: visible; color: var(--event-ink); transform: scale(1.012); pointer-events: none; }
 .ghost-core {
   position: absolute;
   inset: var(--drive-before) 0 var(--drive-after);
@@ -1316,7 +916,7 @@
   display: grid;
   grid-template-columns: 74px minmax(0, 1fr);
   border: var(--event-stroke) solid var(--event-outline);
-  border-radius: 14px;
+  border-radius: var(--event-stack-radius);
   background:
     radial-gradient(circle at 94% -18%, rgba(255, 255, 255, .34), transparent 38%),
     linear-gradient(145deg, var(--event-surface-high), var(--event-surface) 54%, var(--event-surface-low));
@@ -1368,8 +968,8 @@
     color-mix(in srgb, var(--event-dark, var(--fc-app-bg)) 90%, #000) 19px
   );
 }
-.ghost-before { top: 0; height: var(--drive-before); border-radius: 12px 12px 0 0; }
-.ghost-after { bottom: 0; height: var(--drive-after); border-radius: 0 0 12px 12px; }
+.ghost-before { top: 0; height: var(--drive-before); border-radius: var(--event-stack-radius) var(--event-stack-radius) 0 0; }
+.ghost-after { bottom: 0; height: var(--drive-after); border-radius: 0 0 var(--event-stack-radius) var(--event-stack-radius); }
 
 .action-toast {
   position: fixed;
@@ -1407,11 +1007,28 @@
   backdrop-filter: blur(12px);
 }
 .resize-surface--keyboard { width: min(384px, calc(100vw - 16px)); }
-.resize-surface-meta { min-height: 29px; padding: 6px 9px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--fc-border); }
+.resize-surface-meta { min-height: 44px; padding: 6px 9px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--fc-border); }
 .resize-event-summary { min-width: 0; display: grid; gap: 2px; }
 .resize-surface-meta .resize-event-summary > span { color: var(--fc-muted); font-size: 10px; font-weight: 750; }
 .resize-surface-meta strong { min-width: 0; overflow: hidden; color: #dce5e1; font-size: 10px; font-weight: 900; letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; }
 .resize-surface-meta span { color: var(--fc-accent); font-size: 10px; font-weight: 800; white-space: nowrap; }
+.resize-surface-close {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  color: #dce5e1;
+  border: 1px solid var(--fc-border-strong);
+  border-radius: 8px;
+  background: #101b1f;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.resize-surface-close:hover,
+.resize-surface-close:focus-visible { color: #071006; border-color: var(--fc-accent); background: var(--fc-accent); }
 .resize-edge-group { background: #0a1114; }
 .resize-edge-preview { min-height: 54px; padding: 8px 10px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; border-bottom: 1px solid var(--fc-border); }
 .resize-edge-preview > span { color: var(--event-accent, var(--fc-accent)); font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
@@ -1445,14 +1062,6 @@
 .keyboard-edge-group + .keyboard-edge-group { border-top: 1px solid var(--fc-border-strong); }
 .keyboard-edge-group .resize-edge-preview { min-height: 45px; }
 .keyboard-resize-actions button { cursor: pointer; line-height: 1.25; }
-
-.drive-choice-preview { min-height: 48px; margin: 14px 0; padding: 0 12px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 9px; color: var(--fc-ink); border: 1px solid var(--fc-border); border-radius: 10px; background: #0b1417; font-size: 12px; font-weight: 900; font-variant-numeric: tabular-nums; }
-.drive-choice-preview i { height: 0; border-top: 2px dotted #78b8c1; }
-.drive-choice-actions .drive-choice-option { min-height: 62px; height: auto; display: grid; align-content: center; gap: 3px; line-height: 1.2; }
-.drive-choice-option strong { font-size: 11px; font-weight: 950; text-transform: uppercase; }
-.drive-choice-option span { font-size: 10px; font-weight: 700; opacity: .75; }
-.drive-choice-actions { display: grid; grid-template-columns: 1fr 1fr; }
-.drive-choice-actions .drive-choice-cancel { grid-column: 1 / -1; }
 
 @container (max-width: 280px) {
   .event--standard:not(.event--narrow) .event-content,
@@ -1583,6 +1192,31 @@
 .field-title input { height: 50px; font-size: 18px; font-weight: 800; letter-spacing: -.015em; }
 .field-row { display: grid; gap: 9px; }
 .field-row.three { grid-template-columns: 1.25fr 1fr 1fr; }
+.drive-time-editor {
+  margin: 0 0 15px;
+  padding: 11px;
+  border: 1px solid var(--fc-border);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .018);
+}
+.drive-time-editor .field-label { display: grid; gap: 3px; margin-bottom: 9px; }
+.drive-time-editor .field-label > span { color: #c4d2cf; }
+.drive-time-editor .field-label small { color: #819092; font-size: 10px; font-weight: 650; letter-spacing: 0; text-transform: none; }
+.drive-time-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.drive-time-controls .button {
+  min-width: 0;
+  min-height: 54px;
+  height: auto;
+  padding: 7px 9px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 3px;
+  text-align: left;
+}
+.drive-time-controls strong { font-size: 11px; font-weight: 900; text-transform: uppercase; }
+.drive-time-controls span { color: #a9bbb8; font-size: 10px; font-weight: 700; line-height: 1.2; }
+.drive-time-controls .button:disabled { color: #71817f; border-color: #2d3b40; background: rgba(255, 255, 255, .012); }
 .people-field,
 .color-field { margin: 0 0 15px; }
 .field-label { margin-bottom: 7px; color: #adb8b5; font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
@@ -1651,16 +1285,16 @@
   .event-grip { display: none; }
 }
 
-@media (max-width: 860px) and (any-pointer: coarse) {
-  .calendar-scroll.view-day { touch-action: auto; -webkit-overflow-scrolling: touch; }
-  .calendar-scroll.view-day .day-column { touch-action: auto; }
-  .calendar-scroll.view-day .calendar-event { touch-action: none; }
+@media (max-width: 860px) {
+  .calendar-scroll.view-day { touch-action: pan-y; -webkit-overflow-scrolling: touch; }
+  .calendar-scroll.view-day .day-column { touch-action: pan-y; }
+  .calendar-scroll.view-day .calendar-event { touch-action: auto; -webkit-touch-callout: none; }
   .calendar-head { height: 44px; }
   .day-heading { height: 44px; align-self: start; padding-top: 8px; padding-bottom: 8px; }
   .day-heading.has-earlier-control { padding-right: 52px; padding-bottom: 8px; }
   .view-day .day-heading.has-earlier-control .day-navigation { margin-right: 44px; }
   .day-navigation { gap: 2px; }
-  .day-navigation button { width: 34px; min-width: 34px; height: 34px; }
+  .day-navigation button { width: 44px; min-width: 44px; height: 44px; }
   .day-navigation > span { min-width: 33px; font-size: 8px; }
   .view-day .filter-empty-state { top: 56px; }
   .column-earlier-hour-control {
@@ -1685,7 +1319,19 @@
   .column-earlier-hour-control > span:first-child { position: relative; z-index: 1; color: inherit; font-size: 22px; }
   .column-earlier-hour-control > span:last-child { display: none; }
   .column-earlier-hour-control:focus-visible { outline-offset: -4px; }
-  .view-week .day-heading:last-of-type .column-earlier-hour-control { right: 36px; }
+  /* Keep both range controls as real 44px targets instead of two 22px halves
+     of a phone-height heading. Their short visible label removes the need for
+     a browser-native tooltip to explain the plus/minus. */
+  .week-range-controls {
+    width: 88px;
+    height: 44px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .week-range-controls button { min-width: 44px; min-height: 44px; }
+  .week-range-controls button + button { border-top: 0; border-left: 1px solid var(--fc-border); }
+  .view-week .day-heading:last-of-type { padding-right: 140px; }
+  .view-week .day-heading:last-of-type .column-earlier-hour-control { right: 92px; }
 }
 
 @media (max-width: 860px) {
@@ -1716,36 +1362,58 @@
   .brand-lockup { gap: 6px; }
   .brand-mark { width: 4px; height: 32px; }
   .planner-header .eyebrow { margin-bottom: 2px; font-size: 8px; letter-spacing: .13em; }
-  .planner-header { min-height: 58px; margin-bottom: 5px; padding-bottom: 6px; }
+  .planner-header {
+    min-height: 58px;
+    margin-bottom: 5px;
+    padding-bottom: 6px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+  }
   .planner-header h1 { font-size: 17px; letter-spacing: -.045em; white-space: nowrap; }
   .header-date-range { display: none; }
-  .header-view-controls { gap: 5px; }
+  .header-view-controls {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+    gap: 5px;
+  }
   .header-add-button { min-width: 44px; min-height: 44px; padding: 0 9px; }
-  .header-add-button > span:last-child { display: none; }
+  .header-add-button > span:last-child { display: inline; }
   .compact-toggle { min-width: 44px; min-height: 44px; padding: 0 9px; }
-  .compact-toggle-label { display: none; }
-  /* The filter chips and totals collapse behind one toggle, so the header
-     stays a single row unless the family actually wants to see them. */
-  .planner-header { gap: 6px; padding-inline: 0; }
-  .view-toggle button { min-width: 46px; padding-inline: 4px; }
-  .filters-toggle { display: inline-flex; min-width: 44px; min-height: 44px; padding: 0 9px; order: 1; }
-  .filters-toggle > span:last-child { display: none; }
+  .compact-toggle-label { display: inline; }
+  /* Phone controls use a calm, readable second row. The chip totals still
+     collapse behind one explicit filter button until someone opens them. */
+  .view-toggle { min-height: 46px; padding: 0; }
+  .view-toggle button { min-width: 44px; min-height: 44px; height: 44px; padding-inline: 4px; }
+  .filters-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 9px;
+    order: unset;
+  }
+  .filters-toggle > span:last-child { display: inline; }
   .header-filters-row {
     display: none;
-    flex-basis: 100%;
-    order: 5;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    width: 100%;
+    flex-basis: auto;
+    order: unset;
     flex-wrap: wrap;
-    padding-top: 8px;
+    padding-top: 2px;
   }
   .header-filters-row.is-open { display: flex; }
-  .header-view-controls { order: 2; }
   .summary-strip { gap: 5px; padding-right: 12px; overscroll-behavior-inline: contain; -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); }
   .summary-strip .summary-filter { min-height: 44px; gap: 5px; padding-inline: 8px; }
   .summary-strip .summary-filter > span { font-size: 9px; }
   .calendar-shell { margin-inline: -12px; }
-  .week-range-controls { width: 34px; }
-  .view-week .day-heading:last-of-type { padding-right: 42px; }
-  .view-week .day-heading:last-of-type .column-earlier-hour-control { right: 36px; }
   .range-full { display: none; }
   .range-compact { display: inline; }
   .calendar-scroll.view-day .event-core { --event-time-rail: 76px; }
@@ -1786,14 +1454,9 @@
   .editor-footer .footer-spacer { display: none; }
   .field-row.three { grid-template-columns: 1fr 1fr; }
   .field-row.three .field:first-child { grid-column: 1 / -1; }
-  .choice-overlay.mobile-choice { place-items: end center; padding: 0; }
-  .mobile-choice .choice-dialog { width: 100%; padding: 22px max(18px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); border-right: 0; border-bottom: 0; border-left: 0; border-radius: 18px 18px 0 0; animation: sheet-in .2s ease-out; }
   .choice-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .choice-actions .button-primary { grid-column: 1 / -1; grid-row: 1; }
   .choice-actions.three { grid-template-columns: 1fr; }
-  .drive-choice-actions { grid-template-columns: 1fr; }
-  .drive-choice-actions .button-primary,
-  .drive-choice-actions .drive-choice-cancel { grid-column: auto; grid-row: auto; }
   .field input,
   .field select,
   .field textarea,
@@ -1810,12 +1473,16 @@
 @media (max-width: 350px) {
   .planner-header .eyebrow { display: none; }
   .planner-header h1 { font-size: 16px; }
-  .planner-header { gap: 4px; }
-  .filters-toggle { min-width: 40px; padding-inline: 7px; }
-  .view-toggle button { min-width: 42px; padding-inline: 4px; }
-  .header-view-controls { gap: 3px; }
-  .header-add-button { min-width: 40px; padding-inline: 7px; }
-  .compact-toggle { min-width: 40px; padding-inline: 7px; }
+  .planner-header { gap: 4px 5px; }
+  .filters-toggle { min-width: 44px; padding-inline: 7px; }
+  .view-toggle button { min-width: 44px; padding-inline: 3px; }
+  .header-view-controls { gap: 4px; }
+  .header-add-button { min-width: 44px; padding-inline: 7px; }
+  .compact-toggle { min-width: 44px; padding-inline: 7px; }
+  /* In Day mode the navigation and the 44px earlier-hour target already use
+     the entire header width. Hide the secondary date rather than leaving a
+     lone clipped letter between the day name and its controls. */
+  .view-day .day-date,
   .view-week .day-heading:last-of-type .day-date { display: none; }
   .color-row { grid-template-columns: repeat(5, 44px); }
 }
@@ -1840,13 +1507,12 @@
    interior. The end clock follows the same pinned/peek rule as the default
    density: pinned when nothing follows immediately below, hover/focus-only
    otherwise -- Compact stays dense, it just isn't a different design. */
+.planner-app.is-compact .calendar-event { --event-stack-radius: 8px; }
 .planner-app.is-compact .event-core {
   --event-time-rail: 44px;
   --event-stroke: 1px;
-  border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .34), inset 0 -1px rgba(4, 17, 21, .14);
 }
-.planner-app.is-compact .event-tools-open .event-core { --event-time-rail: 78px; }
 .planner-app.is-compact .event--micro .event-core { --event-time-rail: 42px; }
 .planner-app.is-compact .event--narrow .event-core { --event-time-rail: 36px; }
 .planner-app.is-compact .event-rail-time { font-size: 11px; }
@@ -1862,10 +1528,6 @@
 .planner-app.is-compact .event--compact .event-content { inset-inline: 6px; }
 .planner-app.is-compact .event--compact .event-content strong { font-size: 13px; }
 .planner-app.is-compact .event--micro .event-content strong { font-size: 12px; }
-.planner-app.is-compact .event-time-handle { height: min(28px, calc(50% - 3px)); border-radius: 8px; font-size: 12px; }
-.planner-app.is-compact .event-departure-button { height: min(27px, calc(50% - 3px)); }
-.planner-app.is-compact .event-edge-tools { width: 25px; }
-.planner-app.is-compact .event-edge-tools button { width: 25px; }
 .planner-app.is-compact .drive-segment { padding-inline: 4px; grid-template-columns: auto minmax(8px, 1fr); gap: 2px; font-size: 7px; letter-spacing: .04em; }
 .planner-app.is-compact .drive-segment-label { display: none; }
 .planner-app.is-compact .drive-segment strong { font-size: 8px; }
@@ -1876,11 +1538,11 @@
 .planner-app.is-compact .event-note { display: none; }
 
 .planner-app.is-compact .calendar-scroll.view-day .event-core { --event-time-rail: 46px; }
-.planner-app.is-compact .calendar-scroll.view-day .event-tools-open .event-core { --event-time-rail: 78px; }
 .planner-app.is-compact .calendar-scroll.view-day .event--narrow .event-core { --event-time-rail: 36px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-rail-time { font-size: 11px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-content { inset: 1px 6px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-content strong { font-size: 15px; line-height: 1; }
+.planner-app.is-compact .calendar-scroll.view-day .event--narrow .event-content strong { font-size: 14px; }
 .planner-app.is-compact .calendar-scroll.view-day .event-note { margin-top: 0; font-size: 8px; }
 .planner-app.is-compact .calendar-scroll.view-day .person-signature { gap: 3px; font-size: 8px; }
 
@@ -2023,13 +1685,16 @@
   }
 }
 
-/* Enough height for a clock row and a name, so the clock comes back as a row
-   rather than disappearing: a row spends height, not the width the name needs.
-   Tools-open still drops it -- its resize handles need the tall rail, and at
-   this width there is nowhere for them to go. */
+/* A non-overlapped narrow card can use a compact clock row. Overlapped cards
+   deliberately retain the same left rail as every other card: one start time
+   at the top-left, with end time revealed only on hover or focus. */
 @container eventcard (max-width: 170px) and (min-height: 34px) {
-  .calendar-event:not(.event-tools-open) .event-core { grid-template-rows: auto minmax(0, 1fr); }
-  .calendar-event:not(.event-tools-open) .event-core .event-time-rail {
+  .calendar-event.event--narrow .event-core {
+    grid-template-columns: min(var(--event-time-rail, 74px), 42%) minmax(0, 1fr);
+  }
+  .calendar-event.event--narrow .event-time-rail { display: block; }
+  .calendar-event:not(.event--narrow) .event-core { grid-template-rows: auto minmax(0, 1fr); }
+  .calendar-event:not(.event--narrow) .event-core .event-time-rail {
     min-height: 16px;
     padding: 2px 4px 0;
     display: flex;
@@ -2037,7 +1702,7 @@
     justify-content: center;
     gap: 4px;
   }
-  .calendar-event:not(.event-tools-open) .event-core .event-rail-time {
+  .calendar-event:not(.event--narrow) .event-core .event-rail-time {
     position: static;
     width: auto;
     height: auto;
@@ -2045,6 +1710,13 @@
     padding: 0 5px;
     font-size: 11px;
   }
+}
+
+/* At the smallest four-lane widths, keep the existing name-first fallback.
+   It is the one case without room for a legible clock rail. */
+@container eventcard (max-width: 110px) {
+  .calendar-event.event--narrow .event-core { grid-template-columns: minmax(0, 1fr); }
+  .calendar-event.event--narrow .event-time-rail { display: none; }
 }
 
 /* Both short and narrow — four lanes on a 320px phone. Neither axis alone has

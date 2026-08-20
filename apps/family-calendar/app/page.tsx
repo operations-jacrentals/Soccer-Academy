@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Fragment,
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
@@ -57,16 +56,9 @@ type Interaction = {
   offsetMinutes: number;
   moved: boolean;
   extensionType: "event" | "drive";
-  pointerType: string;
-  // A desktop card press can still open the editor. A sustained touch hold
-  // starts a move instead, so lifting a held card never turns into an edit.
+  // A mouse press without movement opens the editor; drag remains a direct
+  // desktop adjustment without competing with ordinary touch scrolling.
   editorOnRelease: boolean;
-};
-
-type PendingDriveChoice = {
-  origin: CalendarEvent;
-  finalEvent: CalendarEvent;
-  mode: "resize-start" | "resize-end";
 };
 
 type DeleteChoice = {
@@ -89,19 +81,6 @@ type ResizeSurface = {
   top: number;
 };
 
-type TouchPress = {
-  eventId: string;
-  pointerId: number;
-  startX: number;
-  startY: number;
-  timer: number;
-};
-
-type TouchCardScroll = {
-  pointerId: number;
-  lastY: number;
-};
-
 type BlankSlotPress = {
   pointerId: number;
   day: number;
@@ -120,12 +99,7 @@ type QuickAddPosition = {
   top: number;
 };
 
-type EventToolEdges = {
-  start: boolean;
-  end: boolean;
-};
-
-type HourPickerAnchor = {
+type FloatingAnchor = {
   left: number;
   top: number;
   right: number;
@@ -134,21 +108,10 @@ type HourPickerAnchor = {
   height: number;
 };
 
-type HourPicker = {
-  eventId: string;
-  edge: "start" | "end";
-  anchor: HourPickerAnchor;
-};
-
-type HourPickerPosition = {
-  left: number;
-  top: number;
-};
-
 type AddressPreview = {
   eventId: string;
   address: string;
-  anchor: HourPickerAnchor;
+  anchor: FloatingAnchor;
 };
 
 type AddressPreviewPosition = {
@@ -715,38 +678,6 @@ function layoutEvents(dayEvents: CalendarEvent[]): LaidOutEvent[] {
   return result;
 }
 
-// An event has a "neighbor below" when the next event in the same lane track
-// starts exactly as this one ends -- its end clock can then wait for hover,
-// since the thing directly beneath already prints that same time. That is the
-// neighbour's start clock when it drives nowhere, and its "Leave" band when it
-// does; both read event.start, so neither case needs the time stated twice.
-function sharedTimeBoundaries(dayEvents: LaidOutEvent[]) {
-  const outgoing = new Set<string>();
-  const previousByTrack = new Map<string, LaidOutEvent>();
-  [...dayEvents]
-    .sort((a, b) => a.start - b.start || a.end - b.end || a.id.localeCompare(b.id))
-    .forEach((event) => {
-      const track = `${event.lane}:${event.laneCount}`;
-      const previous = previousByTrack.get(track);
-      if (
-        previous &&
-        previous.laneCount === 1 &&
-        event.laneCount === 1 &&
-        previous.end === event.start &&
-        // Only when nothing of this card's own sits below its end clock: a
-        // trailing "Arrive" band would show a different time, so the clock
-        // still earns its place.
-        driveAfter(previous) === 0 &&
-        activityMinutes(previous) >= 45 &&
-        !previous.tentativeEnd
-      ) {
-        outgoing.add(previous.id);
-      }
-      previousByTrack.set(track, event);
-    });
-  return { outgoing };
-}
-
 function makeId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
@@ -830,17 +761,7 @@ export default function Home() {
   const [syncState, setSyncState] = useState<SyncState>("connecting");
   const [personEntry, setPersonEntry] = useState("");
   const [deleteChoice, setDeleteChoice] = useState<DeleteChoice | null>(null);
-  const [pendingDriveChoice, setPendingDriveChoice] = useState<PendingDriveChoice | null>(null);
   const [resizeSurface, setResizeSurface] = useState<ResizeSurface | null>(null);
-  const [eventToolsId, setEventToolsId] = useState<string | null>(null);
-  // The selected card stays prominent while its direct time collision peers
-  // compress into the remaining lane space. Hover wins on a mouse so someone
-  // can move between visible peer strips; a tapped card falls back to the
-  // open tool state below.
-  const [overlapHoverId, setOverlapHoverId] = useState<string | null>(null);
-  const [eventToolEdges, setEventToolEdges] = useState<EventToolEdges>({ start: true, end: true });
-  const [hourPicker, setHourPicker] = useState<HourPicker | null>(null);
-  const [hourPickerPosition, setHourPickerPosition] = useState<HourPickerPosition | null>(null);
   const [addressPreview, setAddressPreview] = useState<AddressPreview | null>(null);
   const [addressPreviewPosition, setAddressPreviewPosition] = useState<AddressPreviewPosition | null>(null);
   const [baseHourHeight, setBaseHourHeight] = useState(DESKTOP_HOUR_HEIGHT);
@@ -869,25 +790,17 @@ export default function Home() {
   const pendingEditorReturnFocusRef = useRef(false);
   const resizeReturnFocusRef = useRef<HTMLElement | null>(null);
   const restoredDayRef = useRef<number | null>(null);
-  const lastPointerTypeRef = useRef("");
   const resizeSurfaceRef = useRef<ResizeSurface | null>(null);
-  const eventToolsCloseTimerRef = useRef<number | null>(null);
-  const eventToolsOpenTimerRef = useRef<number | null>(null);
-  const eventToolsHoverIdRef = useRef<string | null>(null);
-  const hourPickerRef = useRef<HTMLDivElement>(null);
   const addressPreviewRef = useRef<HTMLDivElement>(null);
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollPointerRef = useRef<AutoScrollPointer | null>(null);
-  const touchPressRef = useRef<TouchPress | null>(null);
-  const touchCardScrollRef = useRef<TouchCardScroll | null>(null);
   const blankSlotPressRef = useRef<BlankSlotPress | null>(null);
-  const longPressEventRef = useRef<string | null>(null);
   eventsRef.current = events;
   resizeSurfaceRef.current = resizeSurface;
   const activeDayRef = useRef(activeDay);
   activeDayRef.current = activeDay;
   const quickAddOpen = Boolean(draft && isNew && !newEventDetailsOpen);
-  const editorOpen = Boolean((draft && !quickAddOpen) || deleteChoice || pendingDriveChoice);
+  const editorOpen = Boolean((draft && !quickAddOpen) || deleteChoice);
   interactionActiveRef.current = Boolean(activeId || preview || editorOpen || resizeSurface);
   const draftId = draft?.id;
   // Compact deliberately changes the time scale as well as card density, so
@@ -1090,43 +1003,6 @@ export default function Home() {
   }, [quickAddAnchor, quickAddOpen]);
 
   useLayoutEffect(() => {
-    const picker = hourPickerRef.current;
-    if (!hourPicker || !picker) return;
-    let selectedScrollFrame = 0;
-    const updatePosition = () => {
-      const currentPicker = hourPickerRef.current;
-      if (!currentPicker) return;
-      const rect = currentPicker.getBoundingClientRect();
-      const gap = 8;
-      const left = clamp(
-        hourPicker.anchor.left + hourPicker.anchor.width / 2 - rect.width / 2,
-        8,
-        Math.max(8, window.innerWidth - rect.width - 8),
-      );
-      let top = hourPicker.anchor.bottom + gap;
-      if (top + rect.height > window.innerHeight - 8) top = hourPicker.anchor.top - rect.height - gap;
-      top = clamp(top, 8, Math.max(8, window.innerHeight - rect.height - 8));
-      setHourPickerPosition((current) => current?.left === left && current.top === top ? current : { left, top });
-    };
-    updatePosition();
-    selectedScrollFrame = requestAnimationFrame(() => {
-      picker.querySelector<HTMLElement>("[data-hour-picker-current='true']")?.scrollIntoView({ block: "center" });
-    });
-    const observer = new ResizeObserver(updatePosition);
-    observer.observe(picker);
-    window.addEventListener("resize", updatePosition);
-    window.visualViewport?.addEventListener("resize", updatePosition);
-    window.visualViewport?.addEventListener("scroll", updatePosition);
-    return () => {
-      cancelAnimationFrame(selectedScrollFrame);
-      observer.disconnect();
-      window.removeEventListener("resize", updatePosition);
-      window.visualViewport?.removeEventListener("resize", updatePosition);
-      window.visualViewport?.removeEventListener("scroll", updatePosition);
-    };
-  }, [hourPicker]);
-
-  useLayoutEffect(() => {
     const preview = addressPreviewRef.current;
     if (!addressPreview || !preview) return;
     let frame = 0;
@@ -1193,30 +1069,6 @@ export default function Home() {
   }, [resizeSurface]);
 
   useEffect(() => {
-    if (!eventToolsId) return;
-    const closeFromOutside = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.closest(".calendar-event, .event-edge-tools-set, .calendar-hour-picker")) return;
-      closeEventTools();
-    };
-    document.addEventListener("pointerdown", closeFromOutside, true);
-    return () => document.removeEventListener("pointerdown", closeFromOutside, true);
-  }, [eventToolsId]);
-
-  useEffect(() => {
-    if (!hourPicker) return;
-    const closeFromOutside = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      // A second clock takes over in one tap. Its click replaces the active
-      // picker instead of forcing a close-then-reopen sequence.
-      if (target?.closest(".calendar-hour-picker, .event-time-handle")) return;
-      closeHourPicker();
-    };
-    document.addEventListener("pointerdown", closeFromOutside, true);
-    return () => document.removeEventListener("pointerdown", closeFromOutside, true);
-  }, [hourPicker]);
-
-  useEffect(() => {
     if (!addressPreview) return;
     const closeFromOutside = (event: PointerEvent) => {
       const target = event.target as HTMLElement | null;
@@ -1228,25 +1080,17 @@ export default function Home() {
   }, [addressPreview]);
 
   useEffect(() => () => {
-    if (eventToolsCloseTimerRef.current !== null) window.clearTimeout(eventToolsCloseTimerRef.current);
-    if (eventToolsOpenTimerRef.current !== null) window.clearTimeout(eventToolsOpenTimerRef.current);
     if (autoScrollFrameRef.current !== null) window.cancelAnimationFrame(autoScrollFrameRef.current);
-    if (touchPressRef.current) window.clearTimeout(touchPressRef.current.timer);
-    touchCardScrollRef.current = null;
   }, []);
 
   useEffect(() => {
     const closeForResize = () => {
       if (interactionRef.current) return;
       setResizeSurface(null);
-      closeEventTools();
-      closeHourPicker();
     };
     const closeForScroll = () => {
       if (interactionRef.current) return;
       if (resizeSurfaceRef.current?.kind !== "keyboard") setResizeSurface(null);
-      closeEventTools();
-      closeHourPicker();
     };
     window.addEventListener("resize", closeForResize);
     window.addEventListener("scroll", closeForScroll);
@@ -1257,10 +1101,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!deleteChoice && !pendingDriveChoice) return;
+    if (!deleteChoice) return;
     const frame = requestAnimationFrame(() => choiceRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus());
     return () => cancelAnimationFrame(frame);
-  }, [deleteChoice, pendingDriveChoice]);
+  }, [deleteChoice]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -1338,11 +1182,6 @@ export default function Home() {
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.defaultPrevented) return;
-      if (event.key === "Escape" && hourPicker) {
-        event.preventDefault();
-        closeHourPicker();
-        return;
-      }
       if (event.key === "Escape" && addressPreview) {
         event.preventDefault();
         closeAddressPreview();
@@ -1366,14 +1205,10 @@ export default function Home() {
         setActiveId(null);
         setAnnouncement("Move cancelled");
       }
-      if (event.key === "Escape" && (resizeSurface || eventToolsId)) {
-        closeResizeSurface(Boolean(resizeSurface));
-        closeEventTools(Boolean(eventToolsId));
+      if (event.key === "Escape" && resizeSurface) {
+        closeResizeSurface(true);
       }
-      if (event.key === "Escape" && pendingDriveChoice) {
-        setPendingDriveChoice(null);
-        setAnnouncement("Resize cancelled");
-      } else if (event.key === "Escape" && deleteChoice) {
+      if (event.key === "Escape" && deleteChoice) {
         setDeleteChoice(null);
       }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z" && !draft) {
@@ -1417,11 +1252,6 @@ export default function Home() {
   const previewConflictCount = preview
     ? previewEvents.filter((event) => event.id !== preview.id && event.day === preview.day && event.start < preview.end && event.end > preview.start).length
     : 0;
-  const sharedTimeBoundariesByDay = useMemo(() => layouts.map(sharedTimeBoundaries), [layouts]);
-  // A mouse hover should immediately own the overlap treatment, even during
-  // the brief delay before its time tools mount. On touch there is no hover,
-  // so the intentionally opened tool card provides the same focus signal.
-  const overlapFocusId = overlapHoverId ?? eventToolsId;
   const classMinutes = useMemo(
     () => visibleEvents.filter((event) => matchesSummaryFilter(event, "class")).reduce((total, event) => total + activityMinutes(event), 0),
     [visibleEvents],
@@ -1483,7 +1313,6 @@ export default function Home() {
     pendingEditorReturnFocusRef.current = false;
     setActiveDay(event.day);
     setResizeSurface(null);
-    setEventToolsId(null);
     setDraft({ ...event, bullets: [...event.bullets], people: [...event.people] });
     setIsNew(false);
     setNewEventDetailsOpen(true);
@@ -1522,7 +1351,6 @@ export default function Home() {
     });
     setActiveDay(day);
     setResizeSurface(null);
-    setEventToolsId(null);
     setIsNew(true);
     setNewEventDetailsOpen(false);
     setQuickAddAnchor(anchor ?? null);
@@ -1601,13 +1429,8 @@ export default function Home() {
     const persisted = events.find((event) => event.id === draft.id);
     if (!persisted) return;
     const tag = normalizeTag(persisted.tag);
-    const matches = tag ? events.filter((event) => normalizeTag(event.tag) === tag) : [];
-    if (matches.length > 1) {
-      setDeleteChoice({ event: persisted, matchingIds: matches.map((event) => event.id) });
-      return;
-    }
-    commit(events.filter((event) => event.id !== persisted.id), `${persisted.title} removed — use Undo to restore it`);
-    closeEditor();
+    const matches = tag ? events.filter((event) => normalizeTag(event.tag) === tag) : [persisted];
+    setDeleteChoice({ event: persisted, matchingIds: matches.map((event) => event.id) });
   }
 
   function confirmDelete(deleteAll: boolean) {
@@ -1675,26 +1498,6 @@ export default function Home() {
     if (restoreFocus) window.setTimeout(() => target?.focus({ preventScroll: true }), 0);
   }
 
-  function closeEventTools(restoreFocus = false) {
-    if (eventToolsOpenTimerRef.current !== null) {
-      window.clearTimeout(eventToolsOpenTimerRef.current);
-      eventToolsOpenTimerRef.current = null;
-    }
-    if (eventToolsCloseTimerRef.current !== null) {
-      window.clearTimeout(eventToolsCloseTimerRef.current);
-      eventToolsCloseTimerRef.current = null;
-    }
-    eventToolsHoverIdRef.current = null;
-    const target = resizeReturnFocusRef.current;
-    setEventToolsId(null);
-    if (restoreFocus) window.setTimeout(() => target?.focus({ preventScroll: true }), 0);
-  }
-
-  function closeHourPicker() {
-    setHourPicker(null);
-    setHourPickerPosition(null);
-  }
-
   function closeAddressPreview() {
     setAddressPreview(null);
     setAddressPreviewPosition(null);
@@ -1730,146 +1533,6 @@ export default function Home() {
     openAddressPreview(clickEvent.currentTarget, event);
   }
 
-  function openEventTools(event: CalendarEvent, card: HTMLElement, announce = true, preferredEdge?: keyof EventToolEdges) {
-    if (eventToolsOpenTimerRef.current !== null) {
-      window.clearTimeout(eventToolsOpenTimerRef.current);
-      eventToolsOpenTimerRef.current = null;
-    }
-    if (eventToolsCloseTimerRef.current !== null) {
-      window.clearTimeout(eventToolsCloseTimerRef.current);
-      eventToolsCloseTimerRef.current = null;
-    }
-    resizeReturnFocusRef.current = card;
-    setResizeSurface(null);
-    // Controls remain inside the selected card. They never need to reserve a
-    // strip of a neighboring event, so a compact or edge-adjacent card stays
-    // adjustable rather than becoming inert.
-    // A normal card can expose both time handles. For a very short card,
-    // deliberately retain the edge nearest the pointer rather than stacking
-    // two labeled handles over each other or clipping one out of reach.
-    const minimumForBothEdges = window.matchMedia("(any-pointer: coarse)").matches ? 52 : 44;
-    // Drive bands make an event's outer box taller without giving its actual
-    // time rail any more room. Choose one safe edge from the core height so
-    // start/end handles never pile on top of a short activity.
-    const coreHeight = card.querySelector<HTMLElement>(".event-core")?.getBoundingClientRect().height ?? card.getBoundingClientRect().height;
-    const showBothEdges = coreHeight >= minimumForBothEdges;
-    const selectedEdges = showBothEdges
-      ? { start: true, end: true }
-      : { start: preferredEdge !== "end", end: preferredEdge === "end" };
-    setEventToolEdges(selectedEdges);
-    setEventToolsId(event.id);
-    if (announce) setAnnouncement(`${event.title} ${showBothEdges ? "start and end time" : "time"} controls shown.`);
-  }
-
-  function scheduleEventToolsOpen(event: CalendarEvent, card: HTMLElement, preferredEdge: keyof EventToolEdges) {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    eventToolsHoverIdRef.current = event.id;
-    if (eventToolsCloseTimerRef.current !== null) {
-      window.clearTimeout(eventToolsCloseTimerRef.current);
-      eventToolsCloseTimerRef.current = null;
-    }
-    if (eventToolsId === event.id) {
-      return;
-    }
-    if (eventToolsOpenTimerRef.current !== null) {
-      window.clearTimeout(eventToolsOpenTimerRef.current);
-      eventToolsOpenTimerRef.current = null;
-    }
-    // Instant: the ref-based scheduling still exists so a pointer that leaves
-    // before this fires can cancel it, but nothing should make a family
-    // member wait to see what a hover already promised.
-    eventToolsOpenTimerRef.current = window.setTimeout(() => {
-      eventToolsOpenTimerRef.current = null;
-      if (eventToolsHoverIdRef.current === event.id && !interactionRef.current) openEventTools(event, card, false, preferredEdge);
-    }, 0);
-  }
-
-  function cancelEventToolsOpen() {
-    if (eventToolsOpenTimerRef.current !== null) {
-      window.clearTimeout(eventToolsOpenTimerRef.current);
-      eventToolsOpenTimerRef.current = null;
-    }
-  }
-
-  function keepEventToolsOpen(eventId: string) {
-    eventToolsHoverIdRef.current = eventId;
-    if (eventToolsOpenTimerRef.current !== null) {
-      window.clearTimeout(eventToolsOpenTimerRef.current);
-      eventToolsOpenTimerRef.current = null;
-    }
-    if (eventToolsCloseTimerRef.current !== null) {
-      window.clearTimeout(eventToolsCloseTimerRef.current);
-      eventToolsCloseTimerRef.current = null;
-    }
-  }
-
-  function scheduleEventToolsClose(eventId: string) {
-    if (eventToolsHoverIdRef.current === eventId) eventToolsHoverIdRef.current = null;
-    cancelEventToolsOpen();
-    if (eventToolsCloseTimerRef.current !== null) window.clearTimeout(eventToolsCloseTimerRef.current);
-    eventToolsCloseTimerRef.current = window.setTimeout(() => {
-      eventToolsCloseTimerRef.current = null;
-      const focusedCard = document.activeElement?.closest<HTMLElement>(".calendar-event");
-      // A direct time/departure button can own keyboard focus after the
-      // pointer leaves the card. Keep that active control mounted until focus
-      // genuinely leaves rather than removing it from under the user.
-      const isFocusedTool = focusedCard?.dataset.eventId === eventId;
-      if (!interactionRef.current && !isFocusedTool && eventToolsHoverIdRef.current !== eventId) {
-        setEventToolsId((current) => current === eventId ? null : current);
-      }
-    }, 180);
-  }
-
-  function beginTouchPress(pointerEvent: ReactPointerEvent<HTMLElement>, event: CalendarEvent) {
-    if (pointerEvent.pointerType !== "touch" && pointerEvent.pointerType !== "pen") return;
-    if (touchPressRef.current) window.clearTimeout(touchPressRef.current.timer);
-    touchCardScrollRef.current = null;
-    const card = pointerEvent.currentTarget;
-    // Capture the initial press. This keeps a held card receiving the pointer
-    // even when the finger leaves its original bounds before the drag begins.
-    card.setPointerCapture(pointerEvent.pointerId);
-    const timer = window.setTimeout(() => {
-      const press = touchPressRef.current;
-      if (!press || press.pointerId !== pointerEvent.pointerId || press.eventId !== event.id) return;
-      touchPressRef.current = null;
-      longPressEventRef.current = event.id;
-      setEventToolsId(null);
-      beginInteraction(pointerEvent, event, "move", "event", true, card);
-      setAnnouncement(`Hold and drag to move ${event.title}`);
-    }, 440);
-    touchPressRef.current = {
-      eventId: event.id,
-      pointerId: pointerEvent.pointerId,
-      startX: pointerEvent.clientX,
-      startY: pointerEvent.clientY,
-      timer,
-    };
-  }
-
-  function cancelTouchPress(pointerEvent?: ReactPointerEvent<HTMLElement>) {
-    const press = touchPressRef.current;
-    if (!press) return;
-    if (pointerEvent && press.pointerId !== pointerEvent.pointerId) return;
-    window.clearTimeout(press.timer);
-    touchPressRef.current = null;
-  }
-
-  function scrollFromTouchedCard(pointerEvent: ReactPointerEvent<HTMLElement>) {
-    const gesture = touchCardScrollRef.current;
-    if (!gesture || gesture.pointerId !== pointerEvent.pointerId) return false;
-    const offset = gesture.lastY - pointerEvent.clientY;
-    if (offset) scrollRef.current?.scrollBy({ top: offset, behavior: "auto" });
-    gesture.lastY = pointerEvent.clientY;
-    return true;
-  }
-
-  function endTouchedCardScroll(pointerEvent?: ReactPointerEvent<HTMLElement>) {
-    const gesture = touchCardScrollRef.current;
-    if (!gesture || (pointerEvent && gesture.pointerId !== pointerEvent.pointerId)) return false;
-    touchCardScrollRef.current = null;
-    return true;
-  }
-
   function openKeyboardResizeSurface(event: CalendarEvent, card: HTMLElement) {
     const rect = card.getBoundingClientRect();
     const width = Math.min(384, window.innerWidth - 16);
@@ -1877,7 +1540,6 @@ export default function Home() {
     const left = clamp(rect.left + rect.width / 2 - width / 2, 8, Math.max(8, window.innerWidth - width - 8));
     const top = rect.bottom + height + 8 <= window.innerHeight ? rect.bottom + 8 : clamp(rect.top - height - 8, 8, window.innerHeight - height - 8);
     resizeReturnFocusRef.current = card;
-    setEventToolsId(null);
     setResizeSurface({ kind: "keyboard", eventId: event.id, left, top });
     requestAnimationFrame(() => document.querySelector<HTMLElement>(".resize-surface button")?.focus());
   }
@@ -1927,90 +1589,18 @@ export default function Home() {
     }
   }
 
-  function openHourPicker(
-    clickEvent: ReactMouseEvent<HTMLButtonElement>,
-    event: CalendarEvent,
-    edge: "start" | "end",
-  ) {
-    clickEvent.stopPropagation();
-    if (ignoreClickRef.current === event.id) {
-      ignoreClickRef.current = null;
+  function addDraftDrive(edge: "start" | "end") {
+    if (!draft) return;
+    const atStart = edge === "start";
+    const hasRoom = atStart ? draft.start > START_MINUTES : draft.end < END_MINUTES;
+    if (!hasRoom) {
+      setFormError(`There is no room to add Drive Time ${atStart ? "before" : "after"} this event.`);
       return;
     }
-    if (interactionRef.current?.origin.id === event.id) return;
-    const rect = clickEvent.currentTarget.getBoundingClientRect();
-    keepEventToolsOpen(event.id);
-    setHourPickerPosition(null);
-    setHourPicker({
-      eventId: event.id,
-      edge,
-      anchor: {
-        left: rect.left,
-        top: rect.top,
-        right: rect.right,
-        bottom: rect.bottom,
-        width: rect.width,
-        height: rect.height,
-      },
-    });
-  }
-
-  function chooseHourPickerTime(event: CalendarEvent, edge: "start" | "end", time: number) {
-    const currentTime = edge === "start" ? activityStart(event) : activityEnd(event);
-    if (time === currentTime) {
-      closeHourPicker();
-      return;
-    }
-    const updated = edge === "start"
-      ? { ...event, start: time - driveBefore(event) }
-      : { ...event, end: time + driveAfter(event), tentativeEnd: false };
-    const changed = commitTaggedUpdate(event, updated, `set ${edge} time to ${formatTime(time)}`);
-    if (changed) closeHourPicker();
-  }
-
-  function handleEventToolClick(
-    clickEvent: ReactMouseEvent<HTMLButtonElement>,
-    event: CalendarEvent,
-    edge: "start" | "end",
-    extensionType: "event" | "drive",
-  ) {
-    clickEvent.stopPropagation();
-    if (ignoreClickRef.current === event.id) {
-      ignoreClickRef.current = null;
-      return;
-    }
-    if (interactionRef.current?.origin.id === event.id) return;
-    nudgeResize(event, edge, extensionType);
-  }
-
-  function handleAddAdjacentToolClick(
-    clickEvent: ReactMouseEvent<HTMLButtonElement>,
-    event: CalendarEvent,
-    edge: "start" | "end",
-  ) {
-    clickEvent.stopPropagation();
-    if (ignoreClickRef.current === event.id) {
-      ignoreClickRef.current = null;
-      return;
-    }
-    if (interactionRef.current?.origin.id === event.id) return;
-    const before = event.start - SNAP_MINUTES;
-    const after = event.end;
-    const canAddBefore = before >= START_MINUTES;
-    const canAddAfter = after <= END_MINUTES - SNAP_MINUTES;
-    if (!canAddBefore && !canAddAfter) {
-      const message = `No 15-minute space is available next to ${event.title}`;
-      setAnnouncement(message);
-      setActionNotice(message);
-      return;
-    }
-    const addBefore = edge === "start" ? canAddBefore || !canAddAfter : !canAddAfter && canAddBefore;
-    const start = addBefore ? before : after;
-    openNew(event.day, start, clickEvent.currentTarget, {
-      clientX: clickEvent.clientX,
-      clientY: clickEvent.clientY,
-    }, SNAP_MINUTES);
-    setAnnouncement(`New 15-minute event ${addBefore ? "before" : "after"} ${event.title}`);
+    setFormError("");
+    setDraft(atStart
+      ? { ...draft, start: draft.start - SNAP_MINUTES, driveBefore: driveBefore(draft) + SNAP_MINUTES }
+      : { ...draft, end: draft.end + SNAP_MINUTES, driveAfter: driveAfter(draft) + SNAP_MINUTES, tentativeEnd: false });
   }
 
   function extensionDetails(event: CalendarEvent, edge: "start" | "end") {
@@ -2041,7 +1631,6 @@ export default function Home() {
     const label = next === "drive" ? "Drive Time" : next ? next[0].toUpperCase() + next.slice(1) : "";
     setActiveFilter(next);
     setResizeSurface(null);
-    setEventToolsId(null);
     setAnnouncement(next
       ? `${label} filter on — ${matchingCount} ${matchingCount === 1 ? "event" : "events"} shown`
       : `Filter cleared — all ${matchingCount} events shown`);
@@ -2095,11 +1684,9 @@ export default function Home() {
   }
 
   function handleCalendarScroll() {
-    lastPointerTypeRef.current = "";
     blankSlotPressRef.current = null;
     if (!interactionRef.current) {
       if (resizeSurface?.kind !== "keyboard") setResizeSurface(null);
-      closeEventTools();
     }
     const scroller = scrollRef.current;
     if (!scroller || viewMode === "week") return;
@@ -2174,13 +1761,10 @@ export default function Home() {
     event: CalendarEvent,
     mode: Interaction["mode"],
     extensionType: Interaction["extensionType"] = "event",
-    keepTools = false,
-    captureTarget?: HTMLElement,
   ) {
     if (pointerEvent.button !== 0) return;
     pointerEvent.stopPropagation();
-    if (!keepTools) setEventToolsId(null);
-    const target = captureTarget ?? pointerEvent.currentTarget;
+    const target = pointerEvent.currentTarget;
     target.setPointerCapture(pointerEvent.pointerId);
     const grid = gridRef.current?.getBoundingClientRect();
     const pointerMinutes = grid
@@ -2197,8 +1781,7 @@ export default function Home() {
       offsetMinutes: pointerMinutes - anchorMinutes,
       moved: false,
       extensionType,
-      pointerType: pointerEvent.pointerType,
-      editorOnRelease: mode === "move" && !keepTools,
+      editorOnRelease: mode === "move",
     };
   }
 
@@ -2278,38 +1861,10 @@ export default function Home() {
       const action = interaction.mode === "move" ? "moved" : "resized";
       const conflicts = conflictCountForCandidate(interaction.origin, finalEvent);
       const conflictNote = conflicts > 0 ? ` — overlaps ${conflicts} ${conflicts === 1 ? "event" : "events"}` : "";
-      const expanded = interaction.mode === "resize-start"
-        ? finalEvent.start < interaction.origin.start
-        : interaction.mode === "resize-end" && finalEvent.end > interaction.origin.end;
-      if ((interaction.pointerType === "touch" || interaction.pointerType === "pen") && interaction.mode !== "move" && interaction.extensionType === "event" && expanded) {
-        setEventToolsId(null);
-        setPendingDriveChoice({ origin: interaction.origin, finalEvent, mode: interaction.mode });
-        setAnnouncement("Choose whether the added time is Drive Time");
-      } else {
-        closeEventTools(interaction.pointerType === "touch");
-        commitTaggedUpdate(interaction.origin, finalEvent, `${action} to ${ALL_DAYS[finalEvent.day]}, ${formatTime(finalEvent.start)}–${formatTime(finalEvent.end)}${conflictNote}`);
-      }
+      commitTaggedUpdate(interaction.origin, finalEvent, `${action} to ${ALL_DAYS[finalEvent.day]}, ${formatTime(finalEvent.start)}–${formatTime(finalEvent.end)}${conflictNote}`);
     } else if (!moved && interaction.mode === "move" && interaction.editorOnRelease) {
       openEditor(interaction.origin, pointerEvent.currentTarget);
     }
-  }
-
-  function resolveDriveChoice(asDriveTime: boolean) {
-    if (!pendingDriveChoice) return;
-    const { origin, finalEvent, mode } = pendingDriveChoice;
-    let resolved = finalEvent;
-    if (asDriveTime && mode === "resize-start") {
-      resolved = { ...finalEvent, driveBefore: driveBefore(origin) + origin.start - finalEvent.start };
-    }
-    if (asDriveTime && mode === "resize-end") {
-      resolved = { ...finalEvent, driveAfter: driveAfter(origin) + finalEvent.end - origin.end };
-    }
-    const conflicts = conflictCountForCandidate(origin, resolved);
-    const conflictNote = conflicts > 0 ? ` — overlaps ${conflicts} ${conflicts === 1 ? "event" : "events"}` : "";
-    const committed = commitTaggedUpdate(origin, resolved, `extended${asDriveTime ? " with Drive Time" : ""}${conflictNote}`);
-    setPendingDriveChoice(null);
-    requestAnimationFrame(() => resizeReturnFocusRef.current?.focus({ preventScroll: true }));
-    if (!committed) return;
   }
 
   function cancelInteraction(pointerEvent: ReactPointerEvent<HTMLElement>) {
@@ -2322,7 +1877,6 @@ export default function Home() {
     setActiveId(null);
     setPreview(null);
     setResizeSurface(null);
-    closeEventTools(true);
     setAnnouncement("Move cancelled");
   }
 
@@ -2384,11 +1938,7 @@ export default function Home() {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
-      if (pendingDriveChoice) {
-        setPendingDriveChoice(null);
-        setAnnouncement("Resize cancelled");
-        requestAnimationFrame(() => resizeReturnFocusRef.current?.focus({ preventScroll: true }));
-      } else if (deleteChoice) {
+      if (deleteChoice) {
         setDeleteChoice(null);
         requestAnimationFrame(() => dialogRef.current?.querySelector<HTMLElement>(".button-danger")?.focus());
       }
@@ -2414,14 +1964,7 @@ export default function Home() {
     (_, index) => START_MINUTES + index * SNAP_MINUTES,
   );
   const resizeEvent = resizeSurface ? events.find((event) => event.id === resizeSurface.eventId) ?? null : null;
-  const eventToolsEvent = eventToolsId ? events.find((event) => event.id === eventToolsId) ?? null : null;
-  const hourPickerEvent = hourPicker ? events.find((event) => event.id === hourPicker.eventId) ?? null : null;
   const addressPreviewEvent = addressPreview ? events.find((event) => event.id === addressPreview.eventId) ?? null : null;
-  const hourPickerTimeOptions = hourPicker && hourPickerEvent
-    ? timeOptions.filter((time) => hourPicker.edge === "start"
-      ? time >= START_MINUTES + driveBefore(hourPickerEvent) && time < activityEnd(hourPickerEvent)
-      : time > activityStart(hourPickerEvent) && time <= END_MINUTES - driveAfter(hourPickerEvent))
-    : [];
   const previewArtwork = preview ? eventArtwork(preview) : null;
   const draftTag = normalizeTag(draft?.tag);
   const draftOrigin = draft ? events.find((event) => event.id === draft.id) : null;
@@ -2440,9 +1983,7 @@ export default function Home() {
       style={{ "--fc-hour-height": `${hourHeight}px` } as CSSProperties}
       aria-hidden={editorOpen || undefined}
       inert={editorOpen || undefined}
-      onPointerDownCapture={(event) => {
-        if (!(event.target as HTMLElement).closest(".event-edge-tools-set")) setResizeSurface(null);
-      }}
+      onPointerDownCapture={() => setResizeSurface(null)}
       onContextMenu={(event) => {
         const target = event.target as HTMLElement;
         const dayColumn = target.closest<HTMLElement>(".day-column");
@@ -2505,7 +2046,6 @@ export default function Home() {
             type="button"
             aria-pressed={compactMode}
             aria-label={compactMode ? "Turn off Compact calendar layout" : "Turn on Compact calendar layout"}
-            title={compactMode ? "Turn off Compact layout" : "Turn on Compact layout"}
             onClick={() => {
               const next = !compactMode;
               setCompactMode(next);
@@ -2574,15 +2114,13 @@ export default function Home() {
                           onClick={extendWeek}
                           disabled={dayCount >= ALL_DAYS.length}
                           aria-label={dayCount < ALL_DAYS.length ? `Show ${ALL_DAYS[dayCount]}` : "All available days are visible"}
-                          title={dayCount < ALL_DAYS.length ? `Show ${ALL_DAYS[dayCount]}` : "All available days are visible"}
-                        >+</button>
+                        ><span aria-hidden="true">+</span><span className="week-range-label" aria-hidden="true">Day</span></button>
                         <button
                           type="button"
                           onClick={shortenWeek}
                           disabled={dayCount <= DEFAULT_DAY_COUNT}
                           aria-label={dayCount > DEFAULT_DAY_COUNT ? `Hide ${visibleDays[visibleDays.length - 1]}` : "Monday through Friday are required"}
-                          title={dayCount > DEFAULT_DAY_COUNT ? `Hide ${visibleDays[visibleDays.length - 1]}` : "Monday through Friday are required"}
-                        >−</button>
+                        ><span aria-hidden="true">−</span><span className="week-range-label" aria-hidden="true">Day</span></button>
                       </div>
                     )}
                     {visualStartMinutes > START_MINUTES && (
@@ -2603,31 +2141,6 @@ export default function Home() {
                   {renderedDayIndexes.map((dayIndex) => {
                     const day = visibleDays[dayIndex];
                     const dayLayout = layouts[dayIndex];
-                    const overlapFocusEvent = overlapFocusId
-                      ? dayLayout.find((event) => event.id === overlapFocusId) ?? null
-                      : null;
-                    // Deliberately test direct interval intersection instead
-                    // of reusing layout lanes. A chained lane group can contain
-                    // cards that never share a visible time slot.
-                    const overlapPeers = overlapFocusEvent
-                      ? dayLayout.filter((event) => (
-                        event.id !== overlapFocusEvent.id
-                        && event.start < overlapFocusEvent.end
-                        && event.end > overlapFocusEvent.start
-                      ))
-                      : [];
-                    const hasOverlapFocus = Boolean(overlapFocusEvent && overlapPeers.length);
-                    const overlapPeerIndexes = new Map(overlapPeers.map((event, index) => [event.id, index]));
-                    const overlapFocusShare = 70;
-                    // Expand toward the lane the card already occupies. That
-                    // keeps the pointer inside the card it activated instead
-                    // of swapping focus back and forth between two lanes.
-                    const overlapFocusStartsRight = Boolean(
-                      overlapFocusEvent
-                      && overlapFocusEvent.laneCount > 1
-                      && overlapFocusEvent.lane / (overlapFocusEvent.laneCount - 1) >= .5,
-                    );
-                    const overlapFocusStart = overlapFocusStartsRight ? 100 - overlapFocusShare : 0;
                     return (
                     <div
                       className={`day-column ${dayIndex === todayIndex ? "today" : ""} ${preview?.day === dayIndex ? "drop-target" : ""}`}
@@ -2636,7 +2149,6 @@ export default function Home() {
                       aria-label={day}
                       onPointerDown={(pointerEvent) => {
                         if (pointerEvent.target !== pointerEvent.currentTarget) return;
-                        lastPointerTypeRef.current = pointerEvent.pointerType;
                         blankSlotPressRef.current = {
                           pointerId: pointerEvent.pointerId,
                           day: dayIndex,
@@ -2659,7 +2171,6 @@ export default function Home() {
                         const press = blankSlotPressRef.current;
                         const safeTap = press?.day === dayIndex && !press.moved;
                         blankSlotPressRef.current = null;
-                        lastPointerTypeRef.current = "";
                         if (!safeTap) return;
                         const rect = pointerEvent.currentTarget.getBoundingClientRect();
                         const start = clamp(snap(visualStartMinutes + ((pointerEvent.clientY - rect.top) / hourHeight) * 60), visualStartMinutes, END_MINUTES - 60);
@@ -2680,22 +2191,12 @@ export default function Home() {
                         const top = ((event.start - visualStartMinutes) / 60) * hourHeight;
                         const height = ((event.end - event.start) / 60) * hourHeight;
                         const duration = activityMinutes(event);
-                        // A card always shows its own start clock. The end clock is only
-                        // pinned when nothing follows immediately below it — otherwise the
-                        // next card's start clock already says where this one ends, and the
-                        // end clock stays quiet until the card is hovered.
-                        const hasNeighborBelow = sharedTimeBoundariesByDay[dayIndex]?.outgoing.has(event.id) ?? false;
-                        const isOverlapFocus = hasOverlapFocus && overlapFocusEvent?.id === event.id;
-                        const overlapPeerIndex = overlapPeerIndexes.get(event.id);
-                        const isOverlapPeer = overlapPeerIndex !== undefined;
-                        // Let the expanded card regain normal content density;
-                        // its concurrent neighbors keep the compact lane view.
-                        const narrow = event.laneCount > 1 && !isOverlapFocus;
+                        // A card always shows its own start clock. End time is supporting
+                        // detail, so it stays out of the resting card and appears only on
+                        // hover or keyboard focus, regardless of its neighbours.
+                        const narrow = event.laneCount > 1;
                         const density = duration <= 15 ? "micro" : duration <= 30 ? "compact" : duration <= 90 ? "standard" : "detailed";
                         const artwork = eventArtwork(event);
-                        const toolsOpen = eventToolsEvent?.id === event.id;
-                        const toolEdges = (["start", "end"] as const).filter((edge) => edge === "start" ? eventToolEdges.start : eventToolEdges.end);
-                        const toolsVisible = toolsOpen && toolEdges.length > 0;
                         // Keep the roster to the Figma master’s three vertical rows.
                         // Extra people are summarized rather than creating a second column.
                         // Chips wrap under the name rather than filling a fixed column,
@@ -2707,17 +2208,6 @@ export default function Home() {
                         const longTitle = event.title.length >= 16;
                         const normalLeft = `calc(${(event.lane / event.laneCount) * 100}% + 3px)`;
                         const normalWidth = `calc(${100 / event.laneCount}% - 6px)`;
-                        const peerShare = overlapPeers.length ? (100 - overlapFocusShare) / overlapPeers.length : 0;
-                        const overlapLeft = isOverlapFocus
-                          ? `calc(${overlapFocusStart}% + 3px)`
-                          : isOverlapPeer
-                            ? `calc(${(overlapFocusStartsRight ? 0 : overlapFocusShare) + (overlapPeerIndex * peerShare)}% + 3px)`
-                            : normalLeft;
-                        const overlapWidth = isOverlapFocus
-                          ? `calc(${overlapFocusShare}% - 6px)`
-                          : isOverlapPeer
-                            ? `calc(${peerShare}% - 6px)`
-                            : normalWidth;
                         // Below EVENT_MIN_HEIGHT a card is held open taller than its own
                         // slot, so in Compact it reaches into the event below it. The
                         // card painted last wins the tap, which would hand a short
@@ -2726,12 +2216,12 @@ export default function Home() {
                         // keeps every card clickable inside its own bounds. States with
                         // their own stacking keep the z-index the stylesheet gives them.
                         const overflowsSlot = height < EVENT_MIN_HEIGHT;
-                        const managedStacking = overflowsSlot && !toolsVisible && !isOverlapFocus && !isOverlapPeer && activeId !== event.id;
+                        const managedStacking = overflowsSlot && activeId !== event.id;
                         const style = {
                           top: `${top}px`,
                           height: `${height}px`,
-                          left: overlapLeft,
-                          width: overlapWidth,
+                          left: normalLeft,
+                          width: normalWidth,
                           ...(managedStacking ? { zIndex: 4 + clamp(Math.ceil(EVENT_MIN_HEIGHT - height), 1, 8) } : {}),
                           ...eventColorTokens(event.color, driveBefore(event), driveAfter(event)),
                           ...eventArtworkTokens(artwork),
@@ -2739,125 +2229,36 @@ export default function Home() {
                         const ariaLabel = `${event.title}, ${day}, ${formatTime(activityStart(event))} to ${formatTime(activityEnd(event))}${event.people.length ? `, with ${event.people.join(", ")}` : ""}${driveBefore(event) || driveAfter(event) ? `, ${formatDuration(driveBefore(event) + driveAfter(event))} Drive Time` : ""}, ${event.bullets.length} notes`;
                         return (
                           <div
-                            className={`calendar-event event--${density} ${narrow ? "event--narrow" : ""} ${longTitle ? "event--long-title" : ""} ${duration < 60 ? "event--short-roster" : ""} ${showRoster ? "event--has-roster" : "event--no-roster"} ${driveBefore(event) > 0 ? "has-drive-before" : ""} ${driveAfter(event) > 0 ? "has-drive-after" : ""} ${toolsVisible ? "event-tools-open" : ""} ${toolsVisible && toolEdges.length === 1 ? "event-tools-single-edge" : ""} ${isOverlapFocus ? "is-overlap-focus" : ""} ${isOverlapPeer ? "is-overlap-peer" : ""} ${activeId === event.id ? "is-dragging" : ""} ${event.tentativeEnd ? "tentative-end" : ""}`}
+                            className={`calendar-event event--${density} ${narrow ? "event--narrow" : ""} ${longTitle ? "event--long-title" : ""} ${duration < 60 ? "event--short-roster" : ""} ${showRoster ? "event--has-roster" : "event--no-roster"} ${driveBefore(event) > 0 ? "has-drive-before" : ""} ${driveAfter(event) > 0 ? "has-drive-after" : ""} ${activeId === event.id ? "is-dragging" : ""} ${event.tentativeEnd ? "tentative-end" : ""}`}
                             key={event.id}
                             style={style}
                             data-event-id={event.id}
-                            role={toolsVisible ? "group" : "button"}
-                            tabIndex={toolsVisible ? -1 : 0}
-                            aria-label={toolsVisible ? `${ariaLabel}. Time handles, Departure, and add controls shown.` : ariaLabel}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={ariaLabel}
                             aria-describedby="calendar-instructions"
-                            aria-keyshortcuts={toolsVisible ? undefined : "Enter Alt+ArrowUp Alt+ArrowDown Alt+ArrowLeft Alt+ArrowRight Shift+F10"}
-                            onKeyDown={toolsVisible ? undefined : (keyboardEvent) => keyboardMove(keyboardEvent, event)}
-                            onMouseEnter={(mouseEvent) => {
-                              setOverlapHoverId(event.id);
-                              const rect = mouseEvent.currentTarget.getBoundingClientRect();
-                              const edge = mouseEvent.clientY - rect.top < rect.height / 2 ? "start" : "end";
-                              scheduleEventToolsOpen(event, mouseEvent.currentTarget, edge);
-                            }}
-                            onMouseLeave={() => {
-                              setOverlapHoverId((current) => current === event.id ? null : current);
-                              scheduleEventToolsClose(event.id);
-                            }}
-                            onFocus={() => setOverlapHoverId(event.id)}
-                            onBlur={(blurEvent) => {
-                              const nextFocus = blurEvent.relatedTarget as HTMLElement | null;
-                              if (!nextFocus || !blurEvent.currentTarget.contains(nextFocus)) {
-                                setOverlapHoverId((current) => current === event.id ? null : current);
-                                if (toolsVisible) scheduleEventToolsClose(event.id);
-                              }
-                            }}
+                            aria-keyshortcuts="Enter Alt+ArrowUp Alt+ArrowDown Alt+ArrowLeft Alt+ArrowRight Shift+F10"
+                            onKeyDown={(keyboardEvent) => keyboardMove(keyboardEvent, event)}
                             onPointerDown={(pointerEvent) => {
-                              lastPointerTypeRef.current = pointerEvent.pointerType;
-                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") {
-                                beginTouchPress(pointerEvent, event);
-                                return;
-                              }
+                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") return;
                               beginInteraction(pointerEvent, event, "move");
                             }}
                             onPointerMove={(pointerEvent) => {
-                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") {
-                                if (scrollFromTouchedCard(pointerEvent)) return;
-                                const press = touchPressRef.current;
-                                if (press && press.pointerId === pointerEvent.pointerId && Math.hypot(pointerEvent.clientX - press.startX, pointerEvent.clientY - press.startY) > 10) {
-                                  const deltaX = pointerEvent.clientX - press.startX;
-                                  const deltaY = pointerEvent.clientY - press.startY;
-                                  cancelTouchPress(pointerEvent);
-                                  // The held-card move owns the pointer after its threshold,
-                                  // but a quick vertical swipe still needs to behave like an
-                                  // ordinary calendar scroll even when it started on an event.
-                                  // Manual scrolling keeps that escape hatch available without
-                                  // sacrificing reliable long-press dragging.
-                                  if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                                    touchCardScrollRef.current = { pointerId: pointerEvent.pointerId, lastY: press.startY };
-                                    ignoreClickRef.current = event.id;
-                                    scrollFromTouchedCard(pointerEvent);
-                                  } else {
-                                    ignoreClickRef.current = event.id;
-                                  }
-                                  return;
-                                }
-                                if (interactionRef.current?.pointerId === pointerEvent.pointerId) moveInteraction(pointerEvent);
-                                return;
-                              }
+                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") return;
                               moveInteraction(pointerEvent);
                             }}
                             onPointerUp={(pointerEvent) => {
-                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") {
-                                if (endTouchedCardScroll(pointerEvent)) {
-                                  window.setTimeout(() => {
-                                    if (ignoreClickRef.current === event.id) ignoreClickRef.current = null;
-                                  }, 0);
-                                  return;
-                                } else if (interactionRef.current?.pointerId === pointerEvent.pointerId) {
-                                  endInteraction(pointerEvent);
-                                  // Pointer clicks are dispatched after pointerup. Clear the
-                                  // held-card guard just after that click has had a chance to
-                                  // consume it so it cannot suppress a later, real tap.
-                                  window.setTimeout(() => {
-                                    if (longPressEventRef.current === event.id) longPressEventRef.current = null;
-                                  }, 0);
-                                } else {
-                                  cancelTouchPress(pointerEvent);
-                                }
-                                return;
-                              }
+                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") return;
                               endInteraction(pointerEvent);
                             }}
                             onPointerCancel={(pointerEvent) => {
-                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") {
-                                if (endTouchedCardScroll(pointerEvent)) {
-                                  // A scroll gesture that the OS cancels must not later be
-                                  // mistaken for an event tap.
-                                  ignoreClickRef.current = event.id;
-                                  window.setTimeout(() => {
-                                    if (ignoreClickRef.current === event.id) ignoreClickRef.current = null;
-                                  }, 0);
-                                } else if (interactionRef.current?.pointerId === pointerEvent.pointerId) cancelInteraction(pointerEvent);
-                                else cancelTouchPress(pointerEvent);
-                                if (longPressEventRef.current === event.id) longPressEventRef.current = null;
-                                return;
-                              }
+                              if (pointerEvent.pointerType === "touch" || pointerEvent.pointerType === "pen") return;
                               cancelInteraction(pointerEvent);
                             }}
                             onClick={(clickEvent) => {
                               if (ignoreClickRef.current === event.id) {
                                 ignoreClickRef.current = null;
-                                if (longPressEventRef.current === event.id) longPressEventRef.current = null;
                                 return;
-                              }
-                              if (longPressEventRef.current === event.id) {
-                                longPressEventRef.current = null;
-                                return;
-                              }
-                              if (lastPointerTypeRef.current === "touch" || lastPointerTypeRef.current === "pen") {
-                                lastPointerTypeRef.current = "";
-                                if (eventToolsId !== event.id) {
-                                  const rect = clickEvent.currentTarget.getBoundingClientRect();
-                                  const edge = clickEvent.clientY - rect.top < rect.height / 2 ? "start" : "end";
-                                  openEventTools(event, clickEvent.currentTarget, true, edge);
-                                  return;
-                                }
                               }
                               openEditor(event, clickEvent.currentTarget);
                             }}
@@ -2880,78 +2281,12 @@ export default function Home() {
                                 </button>
                               </span>
                             )}
-                            {toolsVisible && (
-                              <div
-                                id={`event-tools-${event.id}`}
-                                className="event-edge-tools-set"
-                                role="group"
-                                aria-label={`Add an event around ${event.title}`}
-                                onMouseEnter={() => keepEventToolsOpen(event.id)}
-                                onMouseLeave={() => scheduleEventToolsClose(event.id)}
-                              >
-                                {toolEdges.map((edge) => {
-                                  return (
-                                    <div className={`event-edge-tools event-edge-tools--${edge}`} key={edge}>
-                                      <button
-                                        type="button"
-                                        className="event-edge-add"
-                                        aria-label={`Add an event ${edge === "start" ? "before" : "after"} ${event.title}`}
-                                        title={`Add an event ${edge === "start" ? "before" : "after"}`}
-                                        onPointerDown={(pointerEvent) => pointerEvent.stopPropagation()}
-                                        onClick={(clickEvent) => handleAddAdjacentToolClick(clickEvent, event, edge)}
-                                      ><span aria-hidden="true">+</span></button>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
                             <div className="event-core">
-                              <div className="event-time-rail" aria-hidden={!toolsVisible}>
-                                {toolsVisible && toolEdges.map((edge) => {
-                                  const mode = edge === "start" ? "resize-start" : "resize-end";
-                                  const time = edge === "start" ? activityStart(event) : activityEnd(event);
-                                  const direction = edge === "start" ? "earlier" : "later";
-                                  const position = edge === "start" ? "before" : "after";
-                                  const hourPickerOpen = hourPicker?.eventId === event.id && hourPicker.edge === edge;
-                                  return (
-                                    <Fragment key={edge}>
-                                      <button
-                                        type="button"
-                                        className={`event-time-handle event-time-handle--${edge}${hourPickerOpen ? " is-hour-picker-open" : ""}`}
-                                        aria-label={`Set or drag ${edge} time of ${event.title}, ${formatTime(time)}`}
-                                        aria-haspopup="dialog"
-                                        aria-expanded={hourPickerOpen}
-                                        aria-controls={hourPickerOpen ? "calendar-hour-picker" : undefined}
-                                        title={`Click to choose a time, or drag to make ${event.title} ${direction}`}
-                                        onPointerDown={(pointerEvent) => beginInteraction(pointerEvent, event, mode, "event", true)}
-                                        onPointerMove={moveInteraction}
-                                        onPointerUp={endInteraction}
-                                        onPointerCancel={cancelInteraction}
-                                        onClick={(clickEvent) => openHourPicker(clickEvent, event, edge)}
-                                      >
-                                        <span className="event-time-clock-value">{shortTime(time)}</span>
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className={`event-departure-button event-departure-button--${edge}`}
-                                        aria-label={`Add 15 minutes of travel time ${position} ${event.title}`}
-                                        title={`Add 15 minutes of travel time ${position}`}
-                                        onClick={(clickEvent) => handleEventToolClick(clickEvent, event, edge, "drive")}
-                                      >
-                                        <span className="event-departure-glyph" aria-hidden="true">
-                                          <i className="event-departure-car" />
-                                          <i className="event-departure-plus" />
-                                        </span>
-                                      </button>
-                                    </Fragment>
-                                  );
-                                })}
-                                {!toolsVisible && <span className="event-rail-time event-rail-start">{shortTime(activityStart(event))}</span>}
-                                {!toolsVisible && (
-                                  <span className={`event-rail-time event-rail-end${hasNeighborBelow ? " event-rail-end--peek" : ""}`}>
-                                    {shortTime(activityEnd(event))}
-                                  </span>
-                                )}
+                              <div className="event-time-rail" aria-hidden="true">
+                                <span className="event-rail-time event-rail-start">{shortTime(activityStart(event))}</span>
+                                <span className="event-rail-time event-rail-end event-rail-end--peek">
+                                  {shortTime(activityEnd(event))}
+                                </span>
                               </div>
                               <div className={`event-main ${artwork ? "has-artwork" : ""}`}>
                                 {artwork && <span className="event-artwork-wash" aria-hidden="true" />}
@@ -3021,56 +2356,9 @@ export default function Home() {
       </section>
 
       <p className="sr-only" id="calendar-scroll-help">{viewMode === "day" ? `Day shows ${visibleDays[activeDay]} only. Use the Day controls or left and right arrow keys to choose another day. Vertical swipes scroll the schedule. ` : `Week shows Monday through ${visibleDays[visibleDays.length - 1]}. On a narrow screen, scroll horizontally to see the remaining days. `}Times appear in empty hour slots, and each event announces its exact start and end. Tap an empty time to add there, or press A to add at 9:00 AM and choose another time in the editor. Select an event to edit. Use the up-arrow in the day header to reveal one earlier hour.</p>
-      <p className="sr-only" id="calendar-instructions">Press Enter to edit. On touch, hold a card then drag to move it. Select a card to reveal its start and end time clocks: click a clock to choose a time, drag it to resize, or use the Departure button beside it to add travel time. Hold Alt and use arrow keys to move by day or 15 minutes. Hold Alt and Shift with up or down to resize. Press Shift and F10 for keyboard adjustment actions.</p>
+      <p className="sr-only" id="calendar-instructions">Press Enter or tap a card to edit it. On touch, vertical swipes scroll the schedule. Use the editor to set start and end times or add Drive Time. Hold Alt and use arrow keys to move by day or 15 minutes. Hold Alt and Shift with up or down to resize. Press Shift and F10 for keyboard adjustment actions.</p>
       <div className="sr-only" aria-live="polite">{announcement}</div>
     </main>
-
-      {hourPicker && hourPickerEvent && (
-        <div
-          id="calendar-hour-picker"
-          ref={hourPickerRef}
-          className="calendar-hour-picker"
-          role="dialog"
-          aria-label={`Set ${hourPicker.edge} time for ${hourPickerEvent.title}`}
-          style={{
-            left: `${hourPickerPosition?.left ?? hourPicker.anchor.left}px`,
-            top: `${hourPickerPosition?.top ?? hourPicker.anchor.bottom + 8}px`,
-            visibility: hourPickerPosition ? "visible" : "hidden",
-            ...eventColorTokens(hourPickerEvent.color),
-          } as CSSProperties}
-          onPointerDown={(event) => {
-            event.stopPropagation();
-            keepEventToolsOpen(hourPickerEvent.id);
-          }}
-          onMouseEnter={() => keepEventToolsOpen(hourPickerEvent.id)}
-          onMouseLeave={() => scheduleEventToolsClose(hourPickerEvent.id)}
-        >
-          <div className="calendar-hour-picker-head">
-            <span className="calendar-hour-picker-kicker">{hourPicker.edge === "start" ? "Start time" : "End time"}</span>
-            <button type="button" onClick={closeHourPicker} aria-label="Close time picker">×</button>
-          </div>
-          <div className="calendar-hour-picker-current">
-            <span>{hourPickerEvent.title}</span>
-            <strong>{formatTime(hourPicker.edge === "start" ? activityStart(hourPickerEvent) : activityEnd(hourPickerEvent))}</strong>
-          </div>
-          <div className="calendar-hour-picker-options" role="listbox" aria-label={`Available ${hourPicker.edge} times`}>
-            {hourPickerTimeOptions.map((time) => {
-              const selected = time === (hourPicker.edge === "start" ? activityStart(hourPickerEvent) : activityEnd(hourPickerEvent));
-              return (
-                <button
-                  type="button"
-                  key={time}
-                  className={selected ? "is-current" : ""}
-                  role="option"
-                  aria-selected={selected}
-                  data-hour-picker-current={selected || undefined}
-                  onClick={() => chooseHourPickerTime(hourPickerEvent, hourPicker.edge, time)}
-                >{shortTime(time)}</button>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {addressPreview && addressPreviewEvent && (
         <div
@@ -3138,6 +2426,7 @@ export default function Home() {
               <span>{shortTime(activityStart(resizeEvent))}–{shortTime(activityEnd(resizeEvent))}</span>
             </span>
             {tagScope(events, resizeEvent).count > 1 && <span>Affects all {tagScope(events, resizeEvent).count} {tagScope(events, resizeEvent).tag} items</span>}
+            <button className="resize-surface-close" type="button" onClick={() => closeResizeSurface(true)}>Done</button>
           </div>
           <div className="keyboard-resize-actions">
               {(["start", "end"] as const).map((edge) => {
@@ -3338,6 +2627,33 @@ export default function Home() {
                 </label>
               </div>
 
+              <section className="drive-time-editor" aria-label="Drive Time">
+                <div className="field-label">
+                  <span>Drive Time</span>
+                  <small>Travel sits outside the event and is excluded from its hours.</small>
+                </div>
+                <div className="drive-time-controls">
+                  <button
+                    className="button button-quiet"
+                    type="button"
+                    disabled={draft.start <= START_MINUTES}
+                    onClick={() => addDraftDrive("start")}
+                  >
+                    <strong>+15 min before</strong>
+                    <span>{driveBefore(draft) ? `${formatMinuteDuration(driveBefore(draft))} before` : "No travel before"}</span>
+                  </button>
+                  <button
+                    className="button button-quiet"
+                    type="button"
+                    disabled={draft.end >= END_MINUTES}
+                    onClick={() => addDraftDrive("end")}
+                  >
+                    <strong>+15 min after</strong>
+                    <span>{driveAfter(draft) ? `${formatMinuteDuration(driveAfter(draft))} after` : "No travel after"}</span>
+                  </button>
+                </div>
+              </section>
+
               <fieldset className="color-field">
                 <legend>Color</legend>
                 <div className="color-row">
@@ -3352,7 +2668,7 @@ export default function Home() {
                       onClick={() => setDraft({ ...draft, color: color.value })}
                     ><span /></button>
                   ))}
-                  <label className="custom-color" title="Choose a custom color">
+                  <label className="custom-color">
                     <span>＋</span>
                     <input type="color" value={draft.color} onChange={(event) => setDraft({ ...draft, color: event.target.value })} aria-label="Custom event color" />
                   </label>
@@ -3379,41 +2695,25 @@ export default function Home() {
       {deleteChoice && (() => {
         const tag = normalizeTag(deleteChoice.event.tag);
         const count = deleteChoice.matchingIds.length;
+        const linked = count > 1;
         return (
           <div className="choice-overlay" role="presentation">
             <div className="choice-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-choice-title" ref={choiceRef} onKeyDown={handleChoiceKeys}>
-              <p className="eyebrow">LINKED COPIES</p>
-              <h2 id="delete-choice-title">Delete linked event</h2>
-              <p><strong>{deleteChoice.event.title}</strong> is linked to {count - 1} other {tag} {count === 2 ? "item" : "items"}.</p>
-              <div className="choice-actions three">
+              <p className="eyebrow">{linked ? "LINKED COPIES" : "REMOVE EVENT"}</p>
+              <h2 id="delete-choice-title">{linked ? "Delete linked event" : "Delete event?"}</h2>
+              <p>{linked
+                ? <><strong>{deleteChoice.event.title}</strong> is linked to {count - 1} other {tag} {count === 2 ? "item" : "items"}.</>
+                : <><strong>{deleteChoice.event.title}</strong> will be removed. You can use Undo immediately afterward to restore it.</>}</p>
+              <div className={`choice-actions ${linked ? "three" : "two"}`}>
                 <button className="button button-quiet" type="button" data-autofocus onClick={() => { setDeleteChoice(null); requestAnimationFrame(() => titleInputRef.current?.focus()); }}>Cancel</button>
                 <button className="button button-danger" type="button" onClick={() => confirmDelete(false)}>Delete this</button>
-                <button className="button button-danger solid" type="button" onClick={() => confirmDelete(true)}>Delete all {tag}</button>
+                {linked && <button className="button button-danger solid" type="button" onClick={() => confirmDelete(true)}>Delete all {tag}</button>}
               </div>
             </div>
           </div>
         );
       })()}
 
-      {pendingDriveChoice && (
-        <div className="choice-overlay mobile-choice" role="presentation">
-          <div className="choice-dialog" role="dialog" aria-modal="true" aria-labelledby="drive-choice-title" ref={choiceRef} onKeyDown={handleChoiceKeys}>
-            <p className="eyebrow">ADDED TIME</p>
-            <h2 id="drive-choice-title">What should this time be?</h2>
-            <p>You added <strong>{formatMinuteDuration(pendingDriveChoice.mode === "resize-start" ? pendingDriveChoice.origin.start - pendingDriveChoice.finalEvent.start : pendingDriveChoice.finalEvent.end - pendingDriveChoice.origin.end)}</strong> at the {pendingDriveChoice.mode === "resize-start" ? "start" : "end"} of <strong>{pendingDriveChoice.finalEvent.title}</strong>.{tagScope(events, pendingDriveChoice.origin).count > 1 ? ` This updates all ${tagScope(events, pendingDriveChoice.origin).count} ${tagScope(events, pendingDriveChoice.origin).tag} items.` : ""}</p>
-            <div className="drive-choice-preview" aria-hidden="true">
-              <span>{pendingDriveChoice.mode === "resize-start" ? shortTime(pendingDriveChoice.finalEvent.start) : shortTime(activityEnd(pendingDriveChoice.origin))}</span>
-              <i />
-              <strong>{pendingDriveChoice.mode === "resize-start" ? shortTime(activityStart(pendingDriveChoice.origin)) : shortTime(pendingDriveChoice.finalEvent.end)}</strong>
-            </div>
-            <div className="choice-actions drive-choice-actions">
-              <button className="button button-quiet drive-choice-option" type="button" onClick={() => resolveDriveChoice(false)}><strong>Event time</strong><span>Count it as part of the event</span></button>
-              <button className="button button-primary drive-choice-option" type="button" data-autofocus onClick={() => resolveDriveChoice(true)}><strong>Drive Time</strong><span>Transparent travel time, excluded from event hours</span></button>
-              <button className="button button-quiet drive-choice-cancel" type="button" onClick={() => { setPendingDriveChoice(null); setAnnouncement("Resize cancelled"); requestAnimationFrame(() => resizeReturnFocusRef.current?.focus({ preventScroll: true })); }}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
