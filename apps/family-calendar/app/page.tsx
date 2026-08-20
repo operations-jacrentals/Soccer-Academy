@@ -44,7 +44,6 @@ import {
   WEEK_DAYS,
   type WeekDate,
 } from "./calendar-week";
-import { PwaInstallControl } from "./pwa-install";
 
 type LaidOutEvent = CalendarEvent & { lane: number; laneCount: number };
 
@@ -855,7 +854,6 @@ export default function Home() {
   const connectingRef = useRef(false);
   const syncingRef = useRef(false);
   const syncIdleRef = useRef<Promise<void>>(Promise.resolve());
-  const restoringRef = useRef(false);
   const pendingPatchesRef = useRef<CalendarPatch[]>([]);
   const interactionActiveRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -979,26 +977,6 @@ export default function Home() {
     }
   }, [applySharedEvents, flushPendingChanges, noteSyncFailure]);
 
-  const restoreSharedCalendar = useCallback(async (restoredEvents: CalendarEvent[]) => {
-    restoringRef.current = true;
-    const pendingBeforeRestore = pendingPatchesRef.current;
-    pendingPatchesRef.current = [];
-    try {
-      await syncIdleRef.current;
-      const shared = await sharedCalendarRequest({ type: "replace", events: restoredEvents });
-      sharedRevisionRef.current = shared.revision;
-      sharedReadyRef.current = true;
-      applySharedEvents(shared.events, dayCount, "Shared calendar restored");
-      setActionNotice("Shared calendar restored");
-      setSyncState("synced");
-    } catch (error) {
-      pendingPatchesRef.current = pendingBeforeRestore;
-      noteSyncFailure(error);
-      throw error instanceof Error ? error : new Error("The shared calendar could not be restored.");
-    } finally {
-      restoringRef.current = false;
-    }
-  }, [applySharedEvents, dayCount, noteSyncFailure]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -1319,7 +1297,7 @@ export default function Home() {
         await connectSharedCalendar(dayCount);
         return;
       }
-      if (syncingRef.current || restoringRef.current || pendingPatchesRef.current.length > 0) {
+      if (syncingRef.current || pendingPatchesRef.current.length > 0) {
         void flushPendingChanges();
         return;
       }
@@ -2507,7 +2485,6 @@ export default function Home() {
               <span>Drive Time</span><strong>{formatDuration(driveMinutes)}</strong>
             </button>
           </div>
-          <PwaInstallControl onRestoreCalendar={restoreSharedCalendar} />
         </div>
 
         <div className="header-view-controls">

@@ -33,11 +33,11 @@ test("renders development preview metadata", async () => {
   const html = await response.text();
   assert.match(html, developmentPreviewMeta);
   assert.match(html, />WALL BALL</);
-  assert.doesNotMatch(html, />\s*Install\s*</i);
   assert.doesNotMatch(html, />\s*4 days\s*</i);
   assert.doesNotMatch(html, /data-add-event|day-nav/);
-  assert.match(html, /install-app-button/);
-  assert.match(html, />\s*App data\s*</i);
+  // The App data panel (install prompt + backup/restore) was removed.
+  assert.doesNotMatch(html, /install-app-button/);
+  assert.doesNotMatch(html, />\s*App data\s*</i);
   assert.match(html, /<link(?=[^>]*\brel=["']manifest["'])(?=[^>]*\bhref=["']\/manifest\.webmanifest["'])[^>]*>/i);
   assert.match(html, /<link(?=[^>]*\brel=["']apple-touch-icon["'])(?=[^>]*\bhref=["']\/apple-touch-icon\.png["'])[^>]*>/i);
   assert.match(html, /<meta(?=[^>]*\bname=["']apple-mobile-web-app-capable["'])(?=[^>]*\bcontent=["']yes["'])[^>]*>/i);
@@ -93,12 +93,9 @@ test("service worker uses bounded caches and leaves calendar storage untouched",
   assert.ok(putAssets >= 0 && putAssets < putRoot && putRoot < pruneAssets, "cache updates current chunks, then root, before pruning stale chunks");
 
   const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const installSource = await readFile(new URL("../app/pwa-backup.ts", import.meta.url), "utf8");
   assert.match(pageSource, /family-weekly-calendar:v1/);
   assert.match(pageSource, /family-weekly-calendar:settings:v1/);
   assert.match(pageSource, /JSON\.stringify\(\{ version: 1, events \}\)/);
-  assert.match(installSource, /family-weekly-calendar:v1/);
-  assert.match(installSource, /family-weekly-calendar:settings:v1/);
 });
 
 test("event artwork remains packaged while cards use bright WALL BALL surfaces and distinct travel bands", async () => {
@@ -132,45 +129,6 @@ test("event artwork remains packaged while cards use bright WALL BALL surfaces a
   assert.doesNotMatch(css, /\.ghost-drive \{[^}]*border-inline:\s*var\(--event-stroke\) dotted/);
   assert.match(css, /\.ghost-before[\s\S]*?border-radius: 12px 12px 0 0;/);
   assert.match(css, /\.ghost-after[\s\S]*?border-radius: 0 0 12px 12px;/);
-});
-
-test("backup validation rejects malformed data before it can replace a calendar", async () => {
-  const { makeCalendarBackup, validateCalendarBackup } = await import("../app/pwa-backup.ts");
-  const validEvent = {
-    id: "sentinel",
-    title: "Sentinel event",
-    day: 0,
-    start: 540,
-    end: 600,
-    color: "#287a82",
-    bullets: ["Keep me"],
-    people: ["Sam"],
-    town: false,
-    kind: "fixed",
-    tag: "#sentinel",
-    syncNotes: true,
-    driveBefore: 15,
-    driveAfter: 0,
-  };
-  const validCalendar = JSON.stringify({ version: 1, events: [validEvent] });
-  const validSettings = JSON.stringify({ dayCount: 4, viewMode: "week", activeDay: 0 });
-  assert.deepEqual(validateCalendarBackup(makeCalendarBackup(validCalendar, validSettings)), {
-    calendar: validCalendar,
-    settings: validSettings,
-  });
-
-  for (const malformed of [
-    makeCalendarBackup(JSON.stringify({ version: 1, events: [null] }), validSettings),
-    makeCalendarBackup(JSON.stringify({ version: 1, events: [{ ...validEvent, end: 500 }] }), validSettings),
-    makeCalendarBackup(validCalendar, JSON.stringify({})),
-    makeCalendarBackup(validCalendar, JSON.stringify({ dayCount: 4, viewMode: "week", activeDay: 9 })),
-  ]) {
-    assert.throws(() => validateCalendarBackup(malformed));
-  }
-  assert.throws(
-    () => validateCalendarBackup("{not-json"),
-    /This is not an Our Week backup/,
-  );
 });
 
 test("summary filters toggle cleanly and match the displayed keyword totals", async () => {
