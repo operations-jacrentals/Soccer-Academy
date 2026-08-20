@@ -209,7 +209,7 @@
 .button-danger:hover:not(:disabled) { border-color: rgba(255, 116, 104, .7); background: rgba(255, 116, 104, .13); }
 .button-danger.solid { color: #170706; border-color: #ff948b; background: #ff8177; }
 
-.view-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--fc-border); border-radius: 14px; background: #071014; box-shadow: 0 7px 18px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .035); }
+.view-toggle { display: inline-flex; min-height: var(--fc-control-h); box-sizing: border-box; align-items: center; padding: 3px; border: 1px solid var(--fc-border); border-radius: 14px; background: #071014; box-shadow: 0 7px 18px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .035); }
 .view-toggle button {
   min-width: 62px;
   height: calc(var(--fc-control-h) - 8px);
@@ -267,8 +267,6 @@
 .summary-strip .summary-filter.drive-total { border-style: dotted; }
 .summary-strip .summary-filter.drive-total > strong { color: #bdf6ff; }
 .summary-strip .summary-filter.drive-total[aria-pressed="true"] > strong { color: var(--fc-accent); }
-.header-filters-row > .install-app-button { min-width: 96px; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-.install-app-icon { font-size: 15px; line-height: 1; }
 
 .calendar-section { position: relative; }
 .calendar-shell {
@@ -1639,44 +1637,6 @@
 .choice-dialog > p strong { color: var(--fc-accent); }
 .choice-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 
-.pwa-dialog {
-  width: min(520px, calc(100% - 24px));
-  max-height: min(780px, calc(100dvh - 24px));
-  margin: auto;
-  padding: 0;
-  overflow: hidden;
-  color: var(--fc-ink);
-  border: 1px solid var(--fc-border-strong);
-  border-radius: 17px;
-  background: linear-gradient(145deg, #172126, #0d1518);
-  box-shadow: var(--fc-shadow-deep);
-  font-family: inherit;
-}
-.pwa-dialog::backdrop { background: rgba(2, 6, 8, .82); backdrop-filter: blur(7px); }
-.pwa-dialog-header { min-height: 72px; padding: 14px 17px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--fc-border); }
-.pwa-dialog-header h2 { margin: 0; color: #f1f5f2; font-size: 25px; font-weight: 900; letter-spacing: -.035em; line-height: 1; }
-.pwa-dialog-body { max-height: calc(min(780px, 100dvh - 24px) - 72px); padding: 17px; overflow-y: auto; overscroll-behavior: contain; }
-.pwa-intro { margin: 0 0 14px; color: #b8c4c1; font-size: 12px; font-weight: 650; line-height: 1.5; }
-.pwa-install-card,
-.pwa-transfer-card { padding: 14px; border: 1px solid var(--fc-border); border-radius: 12px; background: rgba(255, 255, 255, .025); }
-.pwa-install-card { margin-bottom: 10px; }
-.pwa-install-card strong,
-.pwa-transfer-card strong { display: block; color: #eef4f0; font-size: 13px; font-weight: 900; }
-.pwa-install-card p,
-.pwa-transfer-card p { margin: 6px 0 12px; color: #9fadaa; font-size: 11px; font-weight: 650; line-height: 1.48; }
-.pwa-install-card ol { margin: 9px 0 0; padding-left: 21px; color: #c3cecb; font-size: 11px; font-weight: 650; line-height: 1.65; }
-.pwa-install-card b { color: var(--fc-ink); }
-.pwa-install-card .button { width: 100%; }
-.pwa-transfer-card { display: grid; gap: 10px; }
-.pwa-transfer-card p { margin-bottom: 0; }
-.pwa-transfer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.pwa-transfer-actions .button { padding-inline: 9px; }
-.pwa-backup-field { display: grid; gap: 6px; }
-.pwa-backup-field > span { color: #aeb9b6; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
-.pwa-backup-field textarea { width: 100%; min-height: 84px; padding: 9px; color: #dce5e1; border: 1px solid #34444a; border-radius: 9px; background: #0a1215; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; line-height: 1.35; resize: vertical; }
-.pwa-message { margin: 11px 0 0; padding: 10px 11px; color: #d9eeaa; border: 1px solid rgba(201, 255, 69, .25); border-radius: 9px; background: rgba(201, 255, 69, .06); font-size: 11px; font-weight: 700; line-height: 1.4; }
-.pwa-local-note { margin: 12px 2px 0; color: #839193; font-size: 10px; font-weight: 650; line-height: 1.45; }
-
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 @keyframes fade-in { from { opacity: 0; } }
@@ -1782,9 +1742,6 @@
   .summary-strip { gap: 5px; padding-right: 12px; overscroll-behavior-inline: contain; -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); }
   .summary-strip .summary-filter { min-height: 44px; gap: 5px; padding-inline: 8px; }
   .summary-strip .summary-filter > span { font-size: 9px; }
-  .header-filters-row > .install-app-button { min-width: 64px; padding: 0 7px; gap: 4px; font-size: 9px; }
-  .header-filters-row > .install-app-button .install-app-icon { font-size: 15px; }
-  .header-filters-row > .install-app-button .install-app-label { font-size: 9px; white-space: nowrap; }
   .calendar-shell { margin-inline: -12px; }
   .week-range-controls { width: 34px; }
   .view-week .day-heading:last-of-type { padding-right: 42px; }
@@ -1837,14 +1794,10 @@
   .drive-choice-actions { grid-template-columns: 1fr; }
   .drive-choice-actions .button-primary,
   .drive-choice-actions .drive-choice-cancel { grid-column: auto; grid-row: auto; }
-  .pwa-dialog { width: 100%; max-width: 100%; max-height: min(92dvh, 780px); margin: auto 0 0; border-right: 0; border-bottom: 0; border-left: 0; border-radius: 18px 18px 0 0; }
-  .pwa-dialog-header { padding: 11px max(14px, env(safe-area-inset-right)) 11px max(14px, env(safe-area-inset-left)); }
-  .pwa-dialog-body { max-height: calc(min(92dvh, 780px) - 68px); padding: 14px max(14px, env(safe-area-inset-right)) calc(15px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
   .field input,
   .field select,
   .field textarea,
   .people-editor input,
-  .pwa-backup-field textarea { font-size: 16px; }
   .field-title input { font-size: 18px; }
 }
 
@@ -1863,8 +1816,6 @@
   .header-view-controls { gap: 3px; }
   .header-add-button { min-width: 40px; padding-inline: 7px; }
   .compact-toggle { min-width: 40px; padding-inline: 7px; }
-  .header-filters-row > .install-app-button { min-width: 57px; padding-inline: 5px; }
-  .header-filters-row > .install-app-button .install-app-label { font-size: 8px; }
   .view-week .day-heading:last-of-type .day-date { display: none; }
   .color-row { grid-template-columns: repeat(5, 44px); }
 }
