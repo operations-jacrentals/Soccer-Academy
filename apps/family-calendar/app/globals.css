@@ -928,9 +928,11 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background:
-    radial-gradient(circle at 100% 0, rgba(255, 255, 255, .26), transparent 38%),
-    linear-gradient(180deg, rgba(255, 255, 255, .11), transparent 46%, rgba(4, 17, 21, .07));
+  /* The core owns the complete card surface. An inner highlight here only
+     covered the content half, which made the time rail read as a second card. */
+  display: none;
+  background: none;
+  opacity: 0;
   pointer-events: none;
 }
 .event-artwork-wash {
@@ -1671,29 +1673,54 @@
   .brand-lockup { gap: 6px; }
   .brand-mark { width: 4px; height: 32px; }
   .planner-header .eyebrow { margin-bottom: 2px; font-size: 8px; letter-spacing: .13em; }
-  .planner-header { min-height: 58px; margin-bottom: 5px; padding-bottom: 6px; }
+  .planner-header {
+    min-height: 58px;
+    margin-bottom: 5px;
+    padding-bottom: 6px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+  }
   .planner-header h1 { font-size: 17px; letter-spacing: -.045em; white-space: nowrap; }
   .header-date-range { display: none; }
-  .header-view-controls { gap: 5px; }
+  .header-view-controls {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+    gap: 5px;
+  }
   .header-add-button { min-width: 44px; min-height: 44px; padding: 0 9px; }
-  .header-add-button > span:last-child { display: none; }
+  .header-add-button > span:last-child { display: inline; }
   .compact-toggle { min-width: 44px; min-height: 44px; padding: 0 9px; }
-  .compact-toggle-label { display: none; }
-  /* The filter chips and totals collapse behind one toggle, so the header
-     stays a single row unless the family actually wants to see them. */
-  .planner-header { gap: 6px; padding-inline: 0; }
-  .view-toggle button { min-width: 46px; padding-inline: 4px; }
-  .filters-toggle { display: inline-flex; min-width: 44px; min-height: 44px; padding: 0 9px; order: 1; }
-  .filters-toggle > span:last-child { display: none; }
+  .compact-toggle-label { display: inline; }
+  /* Phone controls use a calm, readable second row. The chip totals still
+     collapse behind one explicit filter button until someone opens them. */
+  .view-toggle { min-height: 46px; padding: 0; }
+  .view-toggle button { min-width: 44px; min-height: 44px; height: 44px; padding-inline: 4px; }
+  .filters-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 9px;
+    order: unset;
+  }
+  .filters-toggle > span:last-child { display: inline; }
   .header-filters-row {
     display: none;
-    flex-basis: 100%;
-    order: 5;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    width: 100%;
+    flex-basis: auto;
+    order: unset;
     flex-wrap: wrap;
-    padding-top: 8px;
+    padding-top: 2px;
   }
   .header-filters-row.is-open { display: flex; }
-  .header-view-controls { order: 2; }
   .summary-strip { gap: 5px; padding-right: 12px; overscroll-behavior-inline: contain; -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); mask-image: linear-gradient(90deg, #000 0 calc(100% - 17px), transparent 100%); }
   .summary-strip .summary-filter { min-height: 44px; gap: 5px; padding-inline: 8px; }
   .summary-strip .summary-filter > span { font-size: 9px; }
@@ -1765,12 +1792,12 @@
 @media (max-width: 350px) {
   .planner-header .eyebrow { display: none; }
   .planner-header h1 { font-size: 16px; }
-  .planner-header { gap: 4px; }
-  .filters-toggle { min-width: 40px; padding-inline: 7px; }
-  .view-toggle button { min-width: 42px; padding-inline: 4px; }
-  .header-view-controls { gap: 3px; }
-  .header-add-button { min-width: 40px; padding-inline: 7px; }
-  .compact-toggle { min-width: 40px; padding-inline: 7px; }
+  .planner-header { gap: 4px 5px; }
+  .filters-toggle { min-width: 44px; padding-inline: 7px; }
+  .view-toggle button { min-width: 44px; padding-inline: 3px; }
+  .header-view-controls { gap: 4px; }
+  .header-add-button { min-width: 44px; padding-inline: 7px; }
+  .compact-toggle { min-width: 44px; padding-inline: 7px; }
   .view-week .day-heading:last-of-type .day-date { display: none; }
   .color-row { grid-template-columns: repeat(5, 44px); }
 }

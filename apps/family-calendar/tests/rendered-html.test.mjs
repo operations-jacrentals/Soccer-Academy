@@ -300,6 +300,29 @@ test("desktop cards combine the unboxed roster with WALL BALL surface and clock 
   assert.match(cssSource, /\.event-content strong \{[\s\S]*?font-weight: 950/);
   assert.match(cssSource, /\.event-artwork-wash \{[\s\S]*?display: none;[\s\S]*?opacity: 0/);
   assert.match(cssSource, /\.event-main\.has-artwork::before,[\s\S]*?display: none;[\s\S]*?background-image: none;[\s\S]*?opacity: 0/);
+  assert.match(cssSource, /\.event-main\.has-artwork::after,[\s\S]*?display: none;[\s\S]*?background: none;[\s\S]*?opacity: 0/);
+});
+
+test("phone header keeps full-size, labeled controls without hiding the filters", async () => {
+  const cssSource = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  const phoneHeaderStart = cssSource.indexOf("@media (max-width: 620px)");
+  const phoneHeaderEnd = cssSource.indexOf("@media (max-width: 430px)", phoneHeaderStart);
+  const phoneHeader = cssSource.slice(phoneHeaderStart, phoneHeaderEnd);
+  assert.match(phoneHeader, /\.planner-header \{[\s\S]*?display: grid;[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto;/);
+  assert.match(phoneHeader, /\.header-view-controls \{[\s\S]*?grid-column: 1 \/ -1;[\s\S]*?grid-row: 2;/);
+  assert.match(phoneHeader, /\.filters-toggle > span:last-child \{ display: inline; \}/);
+  assert.match(phoneHeader, /\.compact-toggle-label \{ display: inline; \}/);
+  assert.match(phoneHeader, /\.view-toggle button \{ min-width: 44px; min-height: 44px; height: 44px;/);
+
+  const narrowPhoneHeaderStart = cssSource.indexOf("@media (max-width: 350px)");
+  const narrowPhoneHeaderEnd = cssSource.indexOf("@media (max-width: 860px) and (max-height: 520px)", narrowPhoneHeaderStart);
+  const narrowPhoneHeader = cssSource.slice(narrowPhoneHeaderStart, narrowPhoneHeaderEnd);
+  assert.match(narrowPhoneHeader, /\.filters-toggle \{ min-width: 44px;/);
+  assert.match(narrowPhoneHeader, /\.header-add-button \{ min-width: 44px;/);
+  assert.match(narrowPhoneHeader, /\.compact-toggle \{ min-width: 44px;/);
+  assert.match(narrowPhoneHeader, /\.view-toggle button \{ min-width: 44px;/);
+  assert.doesNotMatch(narrowPhoneHeader, /min-width: (?:40|42)px/);
 });
 
 test("every card shows its start clock while its end clock waits for hover or focus", async () => {
